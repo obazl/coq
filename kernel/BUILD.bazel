@@ -1,0 +1,60 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_executable",
+    "ocaml_module",
+)
+
+TOOL = ":genOpcodeFiles"
+
+################################################################
+########
+genrule(
+    name = "genvmopcodes",
+
+    tools = [TOOL],
+    outs = ["vmopcodes.ml"],
+    cmd = "\n".join([
+        "$(location {tool}) copml > $(location vmopcodes.ml)".format( tool = TOOL ),
+    ]),
+)
+
+########
+genrule(
+    name = "genuint63",
+    srcs = select({
+        "//bzl/host:m32": ["uint63_31.ml"],
+        "//bzl/host:m64": ["uint63_63.ml"],
+    }),
+    outs = ["uint63.ml"],
+    cmd = "\n".join([
+        "cp $< $@"
+    ]),
+)
+
+########
+genrule(
+    name = "genfloat64",
+    srcs = select({
+        "//bzl/host:m32": ["float64_31.ml"],
+        "//bzl/host:m64": ["float64_63.ml"],
+    }),
+    outs = ["float64.ml"],
+    cmd = "\n".join([
+        "cp $< $@"
+    ]),
+)
+
+################################################################
+#################
+ocaml_executable(
+    name = "genOpcodeFiles",
+    main = "_GenOpcodeFiles",
+    visibility = ["//visibility:public"],
+)
+
+#############
+ocaml_module(
+    name    = "_GenOpcodeFiles",
+    struct  = "genOpcodeFiles.ml",
+)
+

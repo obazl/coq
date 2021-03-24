@@ -1,0 +1,82 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
+    "ocaml_executable",
+    "ocaml_genrule",
+    "ocaml_lex",
+    "ocaml_module",
+    "ocaml_yacc",
+)
+
+###########
+cc_library(
+    name = "byterun",
+    srcs = [
+        "coq_fix_code.c",
+        "coq_fix_code.h",
+        "coq_float64.c",
+        "coq_interp.c",
+        "coq_interp.h",
+        "coq_memory.c",
+        "coq_memory.h",
+        "coq_uint63_emul.h",
+        "coq_uint63_native.h",
+        "coq_values.c",
+        "coq_values.h",
+        # generated files (see below)
+    ],
+    deps = [
+        "@ocaml//csdk:hdrs",
+        "@ocaml//csdk/ctypes",
+        ":headers"
+    ],
+    # visibility = ["//interop/ffi/case110:__pkg__"],
+)
+
+## We need this intermediary target to avoid needing
+## "-Ibazel-out/darwin-fastbuild/bin/kernel/byterun" in the primary
+## cc_library target.
+cc_library(
+    name = "headers",
+    strip_include_prefix = ".", # this does the magic
+    hdrs = [
+        "coq_arity.h",
+        "coq_instruct.h",
+        "coq_jumptbl.h",
+    ]
+)
+
+################################
+TOOL = "//kernel:genOpcodeFiles"
+
+########
+genrule(
+    name = "geninstruct",
+    tools = [TOOL],
+    outs = ["coq_instruct.h"],
+    cmd = "\n".join([
+        "$(location {tool}) enum > $(location coq_instruct.h)".format( tool = TOOL ),
+    ]),
+)
+
+########
+genrule(
+    name = "genjumptbl",
+    tools = [TOOL],
+    outs = ["coq_jumptbl.h"],
+    cmd = "\n".join([
+        "$(location {tool}) jump > $(location coq_jumptbl.h)".format( tool = TOOL ),
+    ]),
+)
+
+########
+genrule(
+    name = "genarity",
+    tools = [TOOL],
+    outs = ["coq_arity.h"],
+    cmd = "\n".join([
+        "$(location {tool}) arity > $(location coq_arity.h)".format( tool = TOOL ),
+    ]),
+)
