@@ -1,3 +1,7 @@
+.bazel
+bazel-*
+user.bazelrc
+
 *.glob
 *.d
 *.d.raw
