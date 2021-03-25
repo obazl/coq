@@ -1,0 +1,270 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_library",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+##############
+ocaml_library(
+    name = "library",
+    modules = [
+        ":_Coqlib",
+        ":_Global",
+        ":_Globnames",
+        ":_Goptions",
+        ":_Lib",
+        ":_Libnames",
+        ":_Libobject",
+        ":_Nametab",
+        ":_Summary",
+    ],
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Coqlib",
+    struct  = "coqlib.ml",
+    sig     = "_Coqlib.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps    = [
+        ":_Lib",
+        ":_Libobject",
+        ":_Nametab"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coqlib.cmi",
+    src  = "coqlib.mli",
+    deps = [
+        # library/coqlib.mli: Constant DirPath GlobRef ModPath Names Util Libnames
+        "//kernel:_Names",
+        "//lib:_Util",
+        ":_Libnames"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Global",
+    struct  = "global.ml",
+    sig     = "_Global.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Global.cmi",
+    src  = "global.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//kernel:_Safe_typing",
+        ":_Summary"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Globnames",
+    struct  = "globnames.ml",
+    sig     = "_Globnames.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        # library/globnames.ml: Constant Constr GlobRef HMap Hashset KerName Mod_subst MutInd Names
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Globnames.cmi",
+    src  = "globnames.mli",
+    opts = [],
+    deps = [
+        # library/globnames.mli:
+        "//clib:_CMap",
+        "//clib:_CSig.cmi",
+        # Constant
+        "//kernel:_Constr",
+        "//kernel:_Mod_subst",
+        "//kernel:_Names",
+        #Univ
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Goptions",
+    struct  = "goptions.ml",
+    sig     = "_Goptions.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Lib",
+        ":_Libobject",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Goptions.cmi",
+    src  = "goptions.mli",
+    # opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Mod_subst",
+        "//kernel:_Environ",
+        ":_Libnames",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Lib",
+    struct  = "lib.ml",
+    sig     = "_Lib.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//kernel:_Safe_typing",
+        ":_Global"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Lib.cmi",
+    src  = "lib.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Names",
+        "//kernel:_Section",
+        ":_Libobject",
+        ":_Nametab",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Libnames",
+    struct  = "libnames.ml",
+    sig     = "_Libnames.cmi",
+    opts = [
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+# library/libnames.ml: CAst CErrors DirPath Id Int List Map Names Pp String Util
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Libnames.cmi",
+    src  = "libnames.mli",
+    opts = [
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+        # library/libnames.mli: CAst CSig DirPath Id Loc Names Pp
+        "//kernel:_Names",
+
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Libobject",
+    struct  = "libobject.ml",
+    sig     = "_Libobject.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Summary"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Libobject.cmi",
+    src  = "libobject.mli",
+    deps = [
+        # library/libobject.mli: Dyn Mod_subst Names Libnames Globnames
+        "//kernel:_Mod_subst",
+        ":_Globnames",
+        ":_Libnames"
+],
+)
+
+#############
+ocaml_module(
+    name    = "_Nametab",
+    struct  = "nametab.ml",
+    sig     = "_Nametab.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//lib:_CDebug",
+        "//lib:_CWarnings",
+        ":_Summary"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Nametab.cmi",
+    src  = "nametab.mli",
+    opts = [],
+    deps = [
+# library/nametab.mli: CMap Constant DirPath Exninfo GlobRef Id Loc ModPath Names Pp Univ Libnames Globnames
+        "//kernel:_Names",
+        ":_Globnames",
+        ":_Libnames"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Summary",
+    struct  = "summary.ml",
+    sig     = "_Summary.cmi",
+    opts    = [
+        "-w", "-27", # unused variable
+        "-w", "-9"   # labels not bound
+    ],
+    deps = [
+        "//clib:_CEphemeron",
+        "//lib:_CErrors",
+        "//lib:_CWarnings",
+        "//lib:_Pp",
+        "//lib:_Util",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Summary.cmi",
+    src  = "summary.mli",
+    opts = [],
+    deps = [
+        # library/summary.mli: Dyn
+        "//clib:_Dyn"
+    ],
+)
