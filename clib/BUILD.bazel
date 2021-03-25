@@ -1,0 +1,684 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_library",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+##############
+ocaml_library(
+    name = "clib",
+    modules = [
+        ":_CArray",
+        ":_CEphemeron",
+        ":_CList",
+        ":_CMap",
+        ":_CObj",
+        ":_CPath",
+        ":_CSet",
+        ":_CString",
+        ":_CThread",
+        ":_CUnix",
+        ":_Diff2",
+        ":_Dyn",
+        ":_Exninfo",
+        ":_HMap",
+        ":_Hashcons",
+        ":_Hashset",
+        ":_Heap",
+        ":_IStream",
+        ":_Int",
+        ":_Minisys",
+        ":_Monad",
+        ":_Option",
+        ":_OrderedType",
+        ":_Predicate",
+        ":_Range",
+        ":_Segmenttree",
+        ":_Store",
+        ":_Terminal",
+        ":_Trie",
+        ":_Unicode",
+        ":_Unicodetable",
+        ":_Unionfind",
+    ]
+)
+
+#############
+ocaml_module(
+    name    = "_CArray",
+    struct  = "cArray.ml",
+    sig     = "_CArray.cmi",
+    deps = [
+        ":_CList"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CArray.cmi",
+    src  = "cArray.mli",
+    opts = [],
+    deps = [],
+)
+
+
+#############
+ocaml_module(
+    name    = "_CEphemeron",
+    struct  = "cEphemeron.ml",
+    sig     = "_CEphemeron.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CEphemeron.cmi",
+    src  = "cEphemeron.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_CList",
+    struct  = "cList.ml",
+    sig     = "_CList.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CList.cmi",
+    src  = "cList.mli",
+    opts = [],
+    deps = [
+        ":_CSig.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_CMap",
+    struct  = "cMap.ml",
+    sig     = "_CMap.cmi",
+    opts    = [
+        "-w", "-9", #  the following labels are not bound in this record pattern:
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CMap.cmi",
+    src  = "cMap.mli",
+    opts = [],
+    deps = [
+        ":_CSig.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_CObj",
+    struct  = "cObj.ml",
+    sig     = "_CObj.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CObj.cmi",
+    src  = "cObj.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_CPath",
+    struct  = "cPath.ml",
+    sig     = "_CPath.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CPath.cmi",
+    src  = "cPath.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_CSet",
+    struct  = "cSet.ml",
+    sig     = "_CSet.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CSet.cmi",
+    src  = "cSet.mli",
+    opts = [],
+    deps = [
+        ":_Hashcons"
+    ],
+)
+
+################
+ocaml_signature(
+    name = "_CSig.cmi",
+    src  = "cSig.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_CString",
+    struct  = "cString.ml",
+    sig     = "_CString.cmi",
+    deps = [
+        ":_Hashcons"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CString.cmi",
+    src  = "cString.mli",
+    opts = [],
+    deps = [
+        ":_CList",
+        ":_CMap"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_CThread",
+    struct  = "cThread.ml",
+    sig     = "_CThread.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CThread.cmi",
+    src  = "cThread.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_CUnix",
+    struct  = "cUnix.ml",
+    sig     = "_CUnix.cmi",
+    deps = [
+        ":_CString"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CUnix.cmi",
+    src  = "cUnix.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Diff2",
+    struct  = "diff2.ml",
+    sig     = "_Diff2.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Diff2.cmi",
+    src  = "diff2.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Dyn",
+    struct  = "dyn.ml",
+    sig     = "_Dyn.cmi",
+    deps = [
+        ":_Int"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Dyn.cmi",
+    src  = "dyn.mli",
+    opts = [],
+    deps = [
+        ":_CSig.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Exninfo",
+    struct  = "exninfo.ml",
+    sig     = "_Exninfo.cmi",
+    deps = [
+        ":_Store"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Exninfo.cmi",
+    src  = "exninfo.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_HMap",
+    struct  = "hMap.ml",
+    sig     = "_HMap.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_HMap.cmi",
+    src  = "hMap.mli",
+    deps = [
+        ":_CMap",
+        ":_Int"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Hashcons",
+    struct  = "hashcons.ml",
+    sig     = "_Hashcons.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Hashcons.cmi",
+    src  = "hashcons.mli",
+    opts = [],
+    deps = [
+        ":_Hashset"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Hashset",
+    struct  = "hashset.ml",
+    sig     = "_Hashset.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Hashset.cmi",
+    src  = "hashset.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Heap",
+    struct  = "heap.ml",
+    sig     = "_Heap.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Heap.cmi",
+    src  = "heap.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_IStream",
+    struct  = "iStream.ml",
+    sig     = "_IStream.cmi",
+    opts    = [
+        "-rectypes",
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_IStream.cmi",
+    src  = "iStream.mli",
+)
+
+#############
+ocaml_module(
+    name    = "_Int",
+    struct  = "int.ml",
+    sig     = "_Int.cmi",
+    opts    = [
+        "-w", "-27" # unused variable h.
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Int.cmi",
+    src  = "int.mli",
+    opts = [],
+    deps = [
+        ":_CMap"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Minisys",
+    struct  = "minisys.ml",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Unicode"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Monad",
+    struct  = "monad.ml",
+    sig     = "_Monad.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Monad.cmi",
+    src  = "monad.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Option",
+    struct  = "option.ml",
+    sig     = "_Option.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Option.cmi",
+    src  = "option.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_OrderedType",
+    struct  = "orderedType.ml",
+    sig     = "_OrderedType.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_OrderedType.cmi",
+    src  = "orderedType.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Predicate",
+    struct  = "predicate.ml",
+    sig     = "_Predicate.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Predicate.cmi",
+    src  = "predicate.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Range",
+    struct  = "range.ml",
+    sig     = "_Range.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Range.cmi",
+    src  = "range.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Segmenttree",
+    struct  = "segmenttree.ml",
+    sig     = "_Segmenttree.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Segmenttree.cmi",
+    src  = "segmenttree.mli",
+)
+
+#############
+ocaml_module(
+    name    = "_Store",
+    struct  = "store.ml",
+    sig     = "_Store.cmi",
+    deps = [
+        ":_Dyn"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Store.cmi",
+    src  = "store.mli",
+)
+
+#############
+ocaml_module(
+    name    = "_Terminal",
+    struct  = "terminal.ml",
+    sig     = "_Terminal.cmi",
+)
+
+######
+ocaml_signature(
+    name = "_Terminal.cmi",
+    src  = "terminal.mli",
+)
+
+#############
+ocaml_module(
+    name    = "_Trie",
+    struct  = "trie.ml",
+    sig     = "_Trie.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Trie.cmi",
+    src  = "trie.mli",
+)
+
+#############
+ocaml_module(
+    name    = "_Unicode",
+    struct  = "unicode.ml",
+    sig     = "_Unicode.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Segmenttree",
+        ":_Unicodetable"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Unicode.cmi",
+    src  = "unicode.mli",
+    opts = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Unicodetable",
+    struct  = "unicodetable.ml",
+)
+
+#############
+ocaml_module(
+    name    = "_Unionfind",
+    struct  = "unionfind.ml",
+    sig     = "_Unionfind.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Unionfind.cmi",
+    src  = "unionfind.mli",
+    opts = [],
+)
+
+################################################################
+# $ codept -modules clib/ | sort
+# [Notification]: clib/cThread.mli:l31.33−41,
+# a non-resolvable module, Thread, has been replaced by an approximation
+# [Notification]: clib/cUnix.mli:l50.35−54,
+# a non-resolvable module, Unix, has been replaced by an approximation
+# [Notification]: clib/cUnix.ml:l25.12−22,
+# a non-resolvable module, Str, has been replaced by an approximation
+# [Notification]: clib/exninfo.ml:l40.11−23,
+# a non-resolvable module, Mutex, has been replaced by an approximation
+# clib/cArray.ml: Array Hashtbl List Int CList
+# clib/cArray.mli: Array
+# clib/cEphemeron.ml: Ephemeron Hashtbl
+# clib/cEphemeron.mli:
+# clib/cList.ml: Array Hashtbl List Obj Int CSig
+# clib/cList.mli: List CSig
+# clib/cMap.ml: Map Obj Set CSig
+# clib/cMap.mli: Map Set CSig
+# clib/cObj.ml: Gc Hashtbl Obj Sys
+# clib/cObj.mli:
+# clib/cPath.ml: Filename List Sys
+# clib/cPath.mli:
+# clib/cSet.ml: Obj Set Hashset Hashcons
+# clib/cSet.mli: Set Hashcons
+# clib/cSig.mli:
+# clib/cString.ml: Char List Set String Hashcons CMap CList
+# clib/cString.mli: Set String CMap CList
+# clib/cThread.ml: Buffer Bytes Filename Marshal Sys Thread Unix
+# clib/cThread.mli: Bytes Thread
+# clib/cUnix.ml: Array Buffer Bytes Filename Lazy Printf Random Str String Sys Unix CString
+# clib/cUnix.mli: Unix
+# clib/diff2.ml: Array List
+# clib/diff2.mli:
+# clib/dyn.ml: Hashtbl Obj Printf Int CSig
+# clib/dyn.mli: CSig
+# clib/exninfo.ml: Mutex Printexc Thread Store
+# clib/exninfo.mli:
+# clib/hMap.ml: Set Int CMap
+# clib/hMap.mli: CMap
+# clib/hashcons.ml: Char String Hashset
+# clib/hashcons.mli: Hashset
+# clib/hashset.ml: Array Sys Weak Int
+# clib/hashset.mli:
+# clib/heap.ml:
+# clib/heap.mli:
+# clib/int.ml: Array List Obj Set Sys CMap
+# clib/int.mli: Set CMap
+# clib/monad.ml:
+# clib/monad.mli:
+# clib/option.ml:
+# clib/option.mli:
+# clib/orderedType.ml: Int
+# clib/orderedType.mli:
+# clib/predicate.ml: Set
+# clib/predicate.mli:
+# clib/range.ml: Int
+# clib/range.mli:
+# clib/segmenttree.ml: Array List
+# clib/segmenttree.mli:
+# clib/store.ml: Dyn
+# clib/store.mli:
+# clib/terminal.ml: List Printf String Sys Unix
+# clib/terminal.mli: Unix
+# clib/unicode.ml: Array Buffer Char List Printf String Unicodetable Segmenttree
+# clib/unicode.mli:
+# clib/unicodetable.ml:
