@@ -1,16 +1,1396 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
     "ocaml_executable",
+    "ocaml_library",
     "ocaml_module",
+    "ocaml_signature",
 )
+
+DEPS = [":_Names"]
+
+OPTS = [
+    # "-w", "+a-4-44-50"
+]
+
+package(default_visibility = ["//visibility:public"])
+
+ocaml_library(
+    name = "kernel",
+    modules = [
+        ":_CClosure",
+        ":_CPrimitives",
+        ":_Constr",
+        ":_Context",
+        ":_Conv_oracle",
+        ":_Cooking",
+        ":_Declareops",
+        ":_Environ",
+        ":_Esubst",
+        ":_Evar",
+        ":_Float64_common",
+        ":_IndTyping",
+        ":_Indtypes",
+        ":_Inductive",
+        ":_InferCumulativity",
+        ":_Mod_subst",
+        ":_Mod_typing",
+        ":_Modops",
+        ":_Names",
+        ":_Nativecode",
+        ":_Nativeconv",
+        ":_Nativelambda",
+        ":_Nativelib",
+        ":_Nativelibrary",
+        ":_Nativevalues",
+        ":_Opaqueproof",
+        ":_Parray",
+        ":_Primred",
+        ":_Reduction",
+        ":_Relevanceops",
+        ":_Retroknowledge",
+        ":_Safe_typing",
+        ":_Section",
+        ":_Sorts",
+        ":_Subtyping",
+        ":_Term",
+        ":_Term_typing",
+        ":_TransparentState",
+        ":_Type_errors",
+        ":_Typeops",
+        ":_UGraph",
+        ":_Univ",
+        ":_Vars",
+        ":_Vconv",
+        ":_Vm",
+        ":_Vmbytecodes",
+        ":_Vmbytegen",
+        ":_Vmemitcodes",
+        ":_Vmlambda",
+        ":_Vmsymtable",
+        ":_Vmvalues"
+    ]
+)
+
+#############
+ocaml_module(
+    name    = "_CClosure",
+    struct  = "cClosure.ml",
+    sig     = "_CClosure.cmi",
+    opts    = [
+        "-w", "-50" # Error (warning 50): unattached documentation comment (ignored)
+    ],
+    deps = [
+        "//lib:_CErrors",
+        ":_Primred",
+        ":_Term"
+    ],
+)
+
+ocaml_signature(
+    name = "_CClosure.cmi",
+    src  = "cClosure.mli",
+    opts    = [
+        "-w", "-50" # Error (warning 50): unattached documentation comment (ignored)
+    ],
+    deps = [
+        "//lib:_Feedback",
+        ":_Constr",
+        ":_Declarations",
+        ":_Environ",
+        ":_Names",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_CPrimitives",
+    struct  = "cPrimitives.ml",
+    sig     = "_CPrimitives.cmi",
+    deps = [
+        ":_Parray"
+    ],
+)
+
+ocaml_signature(
+    name = "_CPrimitives.cmi",
+    src  = "cPrimitives.mli",
+    opts = [],
+    deps = DEPS + [
+        ":_Constr",
+        ":_Univ"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Constr",
+    struct  = "constr.ml",
+    sig     = "_Constr.cmi",
+    opts    = OPTS + [
+        "-rectypes",
+        "-w", "-50" # Error (warning 50): unattached documentation comment (ignored)
+    ],
+    deps = [
+        "//lib:_Util",
+        ":_Context",
+        ":_Names",
+        ":_Sorts",
+        ":_Univ"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Constr.cmi",
+    src  = "constr.mli",
+    opts = OPTS + [],
+    deps = [
+        ":_Context",
+        ":_Esubst",
+        ":_Evar",
+        ":_Float64",
+        ":_Names",
+        ":_Sorts",
+        ":_Uint63",
+        ":_Univ"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Context",
+    struct  = "context.ml",
+    sig     = "_Context.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Context.cmi",
+    src  = "context.mli",
+    opts = [],
+    deps = [
+        ":_Names",
+        ":_Sorts",
+        ":_UGraph"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Conv_oracle",
+    struct  = "conv_oracle.ml",
+    sig     = "_Conv_oracle.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Conv_oracle.cmi",
+    src  = "conv_oracle.mli",
+    opts = [],
+    deps = [
+        ":_Names",
+        ":_TransparentState"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Cooking",
+    struct  = "cooking.ml",
+    sig     = "_Cooking.cmi",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_Term"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Cooking.cmi",
+    src  = "cooking.mli",
+    opts = [],
+    deps = DEPS + [
+        ":_Constr",
+        ":_Declarations"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Declarations",
+    struct  = "declarations.ml",
+    opts    = [
+        "-w", "-50" # Error (warning 50): unattached documentation comment (ignored)
+    ],
+    deps = [
+        "//lib:_Rtree",
+        ":_Constr",
+        ":_Conv_oracle",
+        ":_CPrimitives",
+        ":_Mod_subst",
+        ":_Names",
+        ":_Opaqueproof",
+        ":_Vmemitcodes"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Declareops",
+    struct  = "declareops.ml",
+    sig     = "_Declareops.cmi",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Declareops.cmi",
+    src  = "declareops.mli",
+    opts    = [
+        "-w", "-50" # Error (warning 50): unattached documentation comment (ignored)
+    ],
+    deps = DEPS + [
+        ":_Declarations",
+        ":_Entries"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Entries",
+    struct  = "entries.ml",
+    deps = [
+        "//lib:_Stateid",
+        ":_Constr",
+        ":_Declarations",
+        ":_Names",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Environ",
+    struct  = "environ.ml",
+    sig     = "_Environ.cmi",
+    deps = [
+        ":_Declareops",
+        ":_Entries"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Environ.cmi",
+    src  = "environ.mli",
+    opts    = [
+        "-w", "-50" # Error (warning 50): unattached documentation comment (ignored)
+    ],
+    deps = [
+        "//clib:_Range",
+        ":_Constr",
+        ":_Declarations",
+        ":_Names"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Esubst",
+    struct  = "esubst.ml",
+    sig     = "_Esubst.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Esubst.cmi",
+    src  = "esubst.mli",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = DEPS + [
+        "//lib:_Util"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Evar",
+    struct  = "evar.ml",
+    sig     = "_Evar.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Evar.cmi",
+    src  = "evar.mli",
+    opts = [],
+    deps = DEPS + [
+        "//clib:_CMap",
+        "//clib:_Int",
+        "//lib:_Pp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Float64",
+    struct  = "float64.ml",
+    sig     = "_Float64.cmi",
+    deps = [
+        ":_Float64_common"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Float64.cmi",
+    src  = "float64.mli",
+    opts = [],
+    deps = [
+        ":_Uint63"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Float64_common",
+    struct  = "float64_common.ml",
+    sig     = "_Float64_common.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Float64_common.cmi",
+    src  = "float64_common.mli",
+    opts = [],
+    deps = [
+        ":_Uint63"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_IndTyping",
+    struct  = "indTyping.ml",
+    sig     = "_IndTyping.cmi",
+    deps = [
+        ":_InferCumulativity",
+        ":_Term",
+        ":_Typeops",
+        ":_Type_errors"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_IndTyping.cmi",
+    src  = "indTyping.mli",
+    opts = [],
+    deps = DEPS + [
+        ":_Environ",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Indtypes",
+    struct  = "indtypes.ml",
+    sig     = "_Indtypes.cmi",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_Inductive",
+        ":_IndTyping",
+        ":_Term"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Indtypes.cmi",
+    src  = "Indtypes.mli",
+    opts = [],
+    deps = DEPS + [
+        ":_Declarations",
+        ":_Environ"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Inductive",
+    struct  = "inductive.ml",
+    sig     = "_Inductive.cmi",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_Reduction",
+        ":_Type_errors"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Inductive.cmi",
+    src  = "inductive.mli",
+    opts    = [
+        "-w", "a-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_Constr",
+        ":_Declarations",
+        ":_Environ",
+        ":_Names"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_InferCumulativity",
+    struct  = "inferCumulativity.ml",
+    sig     = "_InferCumulativity.cmi",
+    deps = [
+        ":_Inductive",
+        ":_Reduction"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_InferCumulativity.cmi",
+    src  = "inferCumulativity.mli",
+    opts = [],
+    deps = [
+        ":_Environ"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Mod_subst",
+    struct  = "mod_subst.ml",
+    sig     = "_Mod_subst.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Mod_subst.cmi",
+    src  = "mod_subst.mli",
+    opts = [],
+    deps = DEPS + [
+        ":_Constr",
+        ":_Retroknowledge",
+        ":_Vars"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Mod_typing",
+    struct  = "mod_typing.ml",
+    sig     = "_Mod_typing.cmi",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_Subtyping",
+        ":_Typeops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Mod_typing.cmi",
+    src  = "mod_typing.mli",
+    deps = DEPS + [
+        ":_Declarations",
+        ":_Environ",
+        ":_Modops",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Modops",
+    struct  = "modops.ml",
+    sig     = "_Modops.cmi",
+    deps = [
+        ":_Primred",
+        ":_Vmbytegen"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Modops.cmi",
+    src  = "modops.mli",
+    opts = [],
+    deps = [
+        ":_Constr",
+        ":_Environ",
+        ":_Names"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Names",
+    struct  = "names.ml",
+    sig     = "_Names.cmi",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)/ambigous document comment
+    ],
+    deps = [
+        "//lib:_CErrors",
+        "//clib:_HMap",
+        "//clib:_Unicode"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Names.cmi",
+    src  = "names.mli",
+    opts = [],
+    deps = [
+        "//clib:_Predicate",
+        "//lib:_CAst",
+        "//lib:_Pp",
+        "//lib:_Util"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Nativecode",
+    struct  = "nativecode.ml",
+    sig     = "_Nativecode.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Nativecode.cmi",
+    src  = "nativecode.mli",
+    opts = [
+        "-rectypes"
+    ],
+    deps = [
+        "//lib:_CDebug",
+        ":_Constr",
+        ":_Declarations",
+        ":_Environ",
+        ":_Names",
+        ":_Nativelambda"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Nativeconv",
+    struct  = "nativeconv.ml",
+    sig     = "_Nativeconv.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_Nativecode",
+        ":_Nativelib",
+        ":_Vconv",
+        ":_Vm"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Nativeconv.cmi",
+    src  = "nativeconv.mli",
+    opts    = [
+        "-rectypes"
+    ],
+    deps = DEPS + [
+        ":_Constr",
+        ":_Declarations",
+        ":_Nativelambda",
+        ":_Reduction"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Nativelambda",
+    struct  = "nativelambda.ml",
+    sig     = "_Nativelambda.cmi",
+    opts    = [
+        "-rectypes"
+    ],
+    deps = [
+        ":_Inductive",
+        ":_Reduction"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Nativelambda.cmi",
+    src  = "nativelambda.mli",
+    opts = [
+        "-rectypes"
+    ],
+    deps = [
+        ":_Constr",
+        ":_Environ",
+        ":_Names",
+        ":_Nativevalues",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Nativelib",
+    struct  = "nativelib.ml",
+    sig     = "_Nativelib.cmi",
+    opts    = [
+        "-rectypes"
+    ],
+    deps = [
+        "//lib:_Envars"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Nativelib.cmi",
+    src  = "nativelib.mli",
+    opts = [
+        "-rectypes"
+    ],
+    deps = [
+        "//clib:_CUnix",
+        ":_Names",
+        ":_Nativecode"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Nativelibrary",
+    struct  = "nativelibrary.ml",
+    sig     = "_Nativelibrary.cmi",
+    opts    = [
+        "-rectypes"
+    ],
+    deps = [
+        ":_Modops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Nativelibrary.cmi",
+    src  = "nativelibrary.mli",
+    opts = [
+        "-rectypes"
+    ],
+    deps = [
+        ":_Declarations",
+        ":_Environ",
+        ":_Names",
+        ":_Nativecode"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Nativevalues",
+    struct  = "nativevalues.ml",
+    sig     = "_Nativevalues.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "a-50" # unattached documentation comment (ignored)
+    ],
+    deps    = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Nativevalues.cmi",
+    src  = "nativevalues.mli",
+    opts = [
+        "-rectypes"
+    ],
+    deps = DEPS + [
+        ":_Constr",
+        ":_Parray"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Opaqueproof",
+    struct  = "opaqueproof.ml",
+    sig     = "_Opaqueproof.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Opaqueproof.cmi",
+    src  = "opaqueproof.mli",
+    opts = [],
+    deps = DEPS + [
+        "//lib:_Future",
+        ":_Constr",
+        ":_Mod_subst"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Parray",
+    struct  = "parray.ml",
+    sig     = "_Parray.cmi",
+    deps = [
+        "//clib:_CArray"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Parray.cmi",
+    src  = "parray.mli",
+    opts = [],
+    deps = [
+        ":_Uint63"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Primred",
+    struct  = "primred.ml",
+    sig     = "_Primred.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Primred.cmi",
+    src  = "primred.mli",
+    opts = [],
+    deps = [
+        ":_Environ",
+        ":_Names"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Reduction",
+    struct  = "reduction.ml",
+    sig     = "_Reduction.cmi",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_CClosure",
+        ":_Environ",
+        ":_Relevanceops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Reduction.cmi",
+    src  = "reduction.mli",
+    opts = [],
+    deps = DEPS + [
+        ":_Constr",
+        ":_Environ",
+        ":_Term",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Relevanceops",
+    struct  = "relevanceops.ml",
+    sig     = "_Relevanceops.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Relevanceops.cmi",
+    src  = "relevanceops.mli",
+    opts = [],
+    deps = [
+        ":_CClosure",
+        ":_Environ"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Retroknowledge",
+    struct  = "retroknowledge.ml",
+    sig     = "_Retroknowledge.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Retroknowledge.cmi",
+    src  = "retroknowledge.mli",
+    opts = [],
+    deps = DEPS + [
+        ":_CPrimitives"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Safe_typing",
+    struct  = "safe_typing.ml",
+    sig     = "_Safe_typing.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_Indtypes",
+        ":_Modops",
+        ":_Mod_typing",
+        ":_Nativelibrary",
+        ":_Term_typing"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Safe_typing.cmi",
+    src  = "safe_typing.mli",
+    opts    = [
+        "-rectypes",
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_Environ",
+        ":_Names",
+        ":_Nativelib",
+        ":_Section"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Section",
+    struct  = "section.ml",
+    sig     = "_Section.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Section.cmi",
+    src  = "section.mli",
+    opts = [],
+    deps = DEPS + [
+        ":_Constr",
+        ":_Environ",
+        ":_Univ"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Sorts",
+    struct  = "sorts.ml",
+    sig     = "_Sorts.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Sorts.cmi",
+    src  = "sorts.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Univ"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Subtyping",
+    struct  = "subtyping.ml",
+    sig     = "_Subtyping.cmi",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_Inductive",
+        ":_Modops",
+        ":_Reduction"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Subtyping.cmi",
+    src  = "subtyping.mli",
+    opts = [],
+    deps = [
+        ":_Declarations",
+        ":_Environ",
+        ":_Univ"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Term",
+    struct  = "term.ml",
+    sig     = "_Term.cmi",
+    deps = [
+        ":_Vars"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Term.cmi",
+    src  = "term.mli",
+    opts = [],
+    deps = DEPS + [
+        ":_Constr",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Term_typing",
+    struct  = "term_typing.ml",
+    sig     = "_Term_typing.cmi",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        "//lib:_Feedback",
+        ":_Typeops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Term_typing.cmi",
+    src  = "term_typing.mli",
+    opts = [],
+    deps = [
+        ":_Constr",
+        ":_Cooking",
+        ":_Environ",
+        ":_Names"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_TransparentState",
+    struct  = "transparentState.ml",
+    sig     = "_TransparentState.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_TransparentState.cmi",
+    src  = "transparentState.mli",
+    opts = [],
+    deps = [
+        ":_Names"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Type_errors",
+    struct  = "type_errors.ml",
+    sig     = "_Type_errors.cmi",
+    deps = [
+        ":_Reduction"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Type_errors.cmi",
+    src  = "type_errors.mli",
+    opts    = [
+        "-w", "-50" # Error (warning 50): unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_Constr",
+        ":_Environ",
+        ":_Names"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Typeops",
+    struct  = "typeops.ml",
+    sig     = "_Typeops.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        "//lib:_CWarnings",
+        ":_Inductive",
+        ":_Nativeconv",
+        ":_Nativelambda",
+        ":_Reduction",
+        ":_Term",
+        ":_Vconv"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Typeops.cmi",
+    src  = "typeops.mli",
+    opts = [],
+    deps = DEPS + [
+        ":_Constr",
+        ":_Environ"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_UGraph",
+    struct  = "uGraph.ml",
+    sig     = "_UGraph.cmi",
+    deps = [
+        "//lib:_CProfile",
+        "//lib:_Flags"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_UGraph.cmi",
+    src  = "uGraph.mli",
+    opts = [],
+    deps = [
+        ":_Univ"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Uint63",
+    struct  = "uint63.ml",
+    sig     = "_Uint63.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Uint63.cmi",
+    src  = "uint63.mli",
+    opts    = [
+        "-w", "-50" # ambiguous document comment
+    ],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Univ",
+    struct  = "univ.ml",
+    sig     = "_Univ.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Univ.cmi",
+    src  = "univ.mli",
+    opts = [],
+    deps = [
+        "//lib:_AcyclicGraph",
+        ":_Names"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vars",
+    struct  = "vars.ml",
+    sig     = "_Vars.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vars.cmi",
+    src  = "vars.mli",
+    opts = [],
+    deps = [
+        ":_Constr",
+        ":_Names"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vconv",
+    struct  = "vconv.ml",
+    sig     = "_Vconv.cmi",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        "//lib:_CWarnings",
+        ":_Vm"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vconv.cmi",
+    src  = "vconv.mli",
+    opts = [],
+    deps = [
+        ":_Constr",
+        ":_Reduction"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vm",
+    struct  = "vm.ml",
+    sig     = "_Vm.cmi",
+    deps = [
+        ":_Vmsymtable"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vm.cmi",
+    src  = "vm.mli",
+    opts = [],
+    deps = [
+        ":_Vmvalues"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vmbytecodes",
+    struct  = "vmbytecodes.ml",
+    sig     = "_Vmbytecodes.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vmbytecodes.cmi",
+    src  = "vmbytecodes.mli",
+    opts = [],
+    deps = [
+        ":_Constr",
+        ":_CPrimitives",
+        ":_Names",
+        ":_Vmvalues"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vmbytegen",
+    struct  = "vmbytegen.ml",
+    sig     = "_Vmbytegen.cmi",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vmbytegen.cmi",
+    src  = "vmbytegen.mli",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_Declarations",
+        ":_Environ",
+        ":_Vmbytecodes",
+        ":_Vmemitcodes",
+        ":_Vmlambda"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vmemitcodes",
+    struct  = "vmemitcodes.ml",
+    sig     = "_Vmemitcodes.cmi",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_Vmopcodes"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vmemitcodes.cmi",
+    src  = "vmemitcodes.mli",
+    opts    = [
+        "-w", "-50" # unattached documentation comment (ignored)
+    ],
+    deps = [
+        ":_Mod_subst",
+        ":_Names",
+        ":_Vmbytecodes",
+        ":_Vmvalues"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vmlambda",
+    struct  = "vmlambda.ml",
+    sig     = "_Vmlambda.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vmlambda.cmi",
+    src  = "vmlambda.mli",
+    opts = [],
+    deps = [
+        ":_Constr",
+        ":_Environ",
+        ":_Inductive",
+        ":_Names",
+        ":_Term",
+        ":_Vmvalues"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vmopcodes",
+    struct  = "vmopcodes.ml",
+    deps = [
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vmsymtable",
+    struct  = "vmsymtable.ml",
+    sig     = "_Vmsymtable.cmi",
+    deps = [
+        ":_Names",
+        ":_Vmbytegen"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vmsymtable.cmi",
+    src  = "vmsymtable.mli",
+    opts = [],
+    deps = [
+        ":_Constr",
+        ":_Environ",
+        ":_Names"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vmvalues",
+    struct  = "vmvalues.ml",
+    sig     = "_Vmvalues.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vmvalues.cmi",
+    src  = "vmvalues.mli",
+    opts = [],
+    deps = [
+        ":_Evar",
+        ":_Float64",
+        ":_Names",
+        ":_Parray",
+        ":_Sorts",
+        ":_Uint63"
+    ],
+)
+
+################################################################
+##    GENERATED FILES    ##
 
 TOOL = ":genOpcodeFiles"
 
-################################################################
 ########
 genrule(
     name = "genvmopcodes",
-
     tools = [TOOL],
     outs = ["vmopcodes.ml"],
     cmd = "\n".join([
