@@ -1,0 +1,714 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_library",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = [
+    # do not sort (buildifier)
+]
+DEPS_OPAM = [
+    # "core_kernel",
+]
+
+##############
+ocaml_library(
+    name = "lib",
+    modules = [
+        ":_AcyclicGraph",
+        ":_Aux_file",
+        ":_CAst",
+        ":_CDebug",
+        ":_CErrors",
+        ":_CProfile",
+        ":_CWarnings",
+        ":_Control",
+        ":_CoqProject_file",
+        ":_DAst",
+        ":_Envars",
+        ":_Explore",
+        ":_Feedback",
+        ":_Flags",
+        ":_Future",
+        ":_Genarg",
+        ":_Hook",
+        ":_Loc",
+        ":_ObjFile",
+        ":_Pp",
+        ":_Pp_diff",
+        ":_RemoteCounter",
+        ":_Rtree",
+        ":_Spawn",
+        ":_Stateid",
+        ":_System",
+        ":_Util",
+    ]
+)
+
+#############
+ocaml_module(
+    name    = "_AcyclicGraph",
+    struct  = "acyclicGraph.ml",
+    sig     = "_AcyclicGraph.cmi",
+    deps = [
+        "//clib:_Unionfind",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_AcyclicGraph.cmi",
+    src  = "acyclicGraph.mli",
+    opts = [],
+    deps = [
+        "//clib:_CMap",
+        "//clib:_CSet",
+        "//clib:_CSig.cmi",
+        "//clib:_Int",
+        ":_CErrors",
+        ":_Pp"
+    ],
+)
+
+
+#############
+ocaml_module(
+    name    = "_Aux_file",
+    struct  = "aux_file.ml",
+    sig     = "_Aux_file.cmi",
+    deps = [
+        "//clib:_CUnix",
+        "//clib:_Option",
+        ":_Flags",
+        ":_Feedback"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Aux_file.cmi",
+    src  = "aux_file.mli",
+    opts = [],
+    deps = [
+        ":_Loc"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_CAst",
+    struct  = "cAst.ml",
+    sig     = "_CAst.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CAst.cmi",
+    src  = "cAst.mli",
+    opts = [],
+    deps = [
+        ":_Loc"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_CDebug",
+    struct  = "cDebug.ml",
+    sig     = "_CDebug.cmi",
+    deps = [
+        "//clib:_CString",
+        "//clib:_Exninfo",
+        ":_CErrors",
+        ":_CWarnings",
+        ":_Feedback",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CDebug.cmi",
+    src  = "cDebug.mli",
+    opts = [],
+    deps = [
+        ":_Pp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_CErrors",
+    struct  = "cErrors.ml",
+    sig     = "_CErrors.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//config:_Coq_config.cmi",
+        "//clib:_Option",
+        ":_Control"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CErrors.cmi",
+    src  = "cErrors.mli",
+    opts = [],
+    deps = [
+        "//clib:_Exninfo",
+        ":_Loc",
+        ":_Pp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_CProfile",
+    struct  = "cProfile.ml",
+    sig     = "_CProfile.cmi",
+    opts    = [
+        "-w", "-27", # unused variable
+        "-w", "-9",  # labels not bound in this record pattern
+    ],
+    deps = [
+        # lib/cProfile.ml: CObj Gc List Printf Sys Flags CErrors
+        "//clib:_CObj",
+        ":_CErrors",
+        ":_Flags"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CProfile.cmi",
+    src  = "cProfile.mli",
+    opts = [],
+    deps = [
+# lib/cProfile.mli:
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_CWarnings",
+    struct  = "cWarnings.ml",
+    sig     = "_CWarnings.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//clib:_CString",
+        ":_CErrors",
+        ":_Feedback",
+        ":_Flags",
+        ":_Util"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CWarnings.cmi",
+    src  = "cWarnings.mli",
+    opts = [],
+    deps = [
+        ":_Loc",
+        ":_Pp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Control",
+    struct  = "control.ml",
+    sig     = "_Control.cmi",
+    deps = [
+        "//clib:_CThread",
+        "//clib:_Exninfo"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Control.cmi",
+    src  = "control.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_CoqProject_file",
+    struct  = "coqProject_file.ml",
+    sig     = "_CoqProject_file.cmi",
+    opts    = [
+        "-w", "-9" # labels not bound
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CoqProject_file.cmi",
+    src  = "coqProject_file.mli",
+    opts = [
+    ],
+    deps = [
+        "//clib:_CUnix"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_DAst",
+    struct  = "dAst.ml",
+    sig     = "_DAst.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_DAst.cmi",
+    src  = "dAst.mli",
+    opts = [],
+    deps = [
+        ":_CAst",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Envars",
+    struct  = "envars.ml",
+    sig     = "_Envars.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//:_Coq_config",
+        "//clib:_CUnix",
+        "//clib:_Option",
+        ":_Util"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Envars.cmi",
+    src  = "envars.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Explore",
+    struct  = "explore.ml",
+    sig     = "_Explore.cmi",
+    deps = [
+        ":_Feedback"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Explore.cmi",
+    src  = "explore.mli",
+    opts = [],
+    deps = [
+        ":_Pp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Feedback",
+    struct  = "feedback.ml",
+    sig     = "_Feedback.cmi",
+    deps = [
+        "//clib:_Option"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Feedback.cmi",
+    src  = "feedback.mli",
+    opts = [],
+    deps = [
+        ":_Loc",
+        ":_Pp",
+        ":_Stateid",
+        ":_Xml_datatype.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Flags",
+    struct  = "flags.ml",
+    sig     = "_Flags.cmi",
+    deps = [
+        "//clib:_Exninfo"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Flags.cmi",
+    src  = "flags.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Future",
+    struct  = "future.ml",
+    sig     = "_Future.cmi",
+    deps = [
+        "//clib:_CEphemeron",
+        "//lib:_CErrors"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Future.cmi",
+    src  = "future.mli",
+    opts = [],
+    deps = [
+        "//clib:_Exninfo",
+        "//lib:_Pp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Genarg",
+    struct  = "genarg.ml",
+    sig     = "_Genarg.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_CErrors",
+        ":_Util"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Genarg.cmi",
+    src  = "genarg.mli",
+    opts = [],
+    deps = [
+        "//clib:_CSig.cmi",
+        ":_Pp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Hook",
+    struct  = "hook.ml",
+    sig     = "_Hook.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Hook.cmi",
+    src  = "hook.mli",
+    opts = [],
+    deps = [],
+)
+
+#lib.mllib
+
+#############
+ocaml_module(
+    name    = "_Loc",
+    struct  = "loc.ml",
+    sig     = "_Loc.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Loc.cmi",
+    src  = "loc.mli",
+    opts = [],
+    deps = [
+        "//clib:_Exninfo"
+    ],
+)
+
+
+#############
+ocaml_module(
+    name    = "_ObjFile",
+    struct  = "objFile.ml",
+    sig     = "_ObjFile.cmi",
+    opts    = [
+        "-w", "-9" # labels not bound
+    ],
+    deps = [
+        ":_Pp",
+        ":_System"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_ObjFile.cmi",
+    src  = "objFile.mli",
+    opts = [],
+    deps = [
+        "//clib:_CString"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Pp",
+    struct  = "pp.ml",
+    sig     = "_Pp.cmi",
+    deps = [
+        "//clib:_CArray"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Pp.cmi",
+    src  = "pp.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Pp_diff",
+    struct  = "pp_diff.ml",
+    sig     = "_Pp_diff.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Pp_diff.cmi",
+    src  = "pp_diff.mli",
+    opts = [],
+    deps = [
+        "//clib:_Diff2",
+        ":_Pp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_RemoteCounter",
+    struct  = "remoteCounter.ml",
+    sig     = "_RemoteCounter.cmi",
+    deps = [
+        ":_CErrors",
+        ":_Flags"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_RemoteCounter.cmi",
+    src  = "remoteCounter.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Rtree",
+    struct  = "rtree.ml",
+    sig     = "_Rtree.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Rtree.cmi",
+    src  = "rtree.mli",
+    opts = [],
+    deps = [
+        ":_Pp",
+        ":_Util"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Spawn",
+    struct  = "spawn.ml",
+    sig     = "_Spawn.cmi",
+    opts    = [
+        "-w", "-9" # labels not bound
+    ],
+    deps = [
+        ":_CDebug"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Spawn.cmi",
+    src  = "spawn.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Stateid",
+    struct  = "stateid.ml",
+    sig     = "_Stateid.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Stateid.cmi",
+    src  = "stateid.mli",
+    opts = [],
+    deps = [
+        "//clib:_Exninfo",
+        ":_Loc",
+        ":_Pp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_System",
+    struct  = "system.ml",
+    sig     = "_System.cmi",
+    deps = [
+        "//clib:_Minisys",
+        ":_CWarnings"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_System.cmi",
+    src  = "system.mli",
+    opts = [],
+    deps = [
+        "//clib:_CUnix",
+        ":_Pp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Util",
+    struct  = "util.ml",
+    sig     = "_Util.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Util.cmi",
+    src  = "util.mli",
+    opts = [],
+    deps = [
+        "//clib:_CArray",
+        "//clib:_CSet",
+        "//clib:_CString",
+        "//clib:_Exninfo",
+        "//clib:_Hashcons",
+    ],
+)
+
+################
+ocaml_signature(
+    name = "_Xml_datatype.cmi",
+    src  = "xml_datatype.mli",
+    opts = [],
+    deps = [],
+)
+
+
+################################################################
+# a non-resolvable module, Minisys, has been replaced by an approximation
+# lib/acyclicGraph.ml: CMap CSet CSig Int List Unionfind Pp CErrors
+# lib/acyclicGraph.mli: CMap CSet CSig Pp
+# lib/aux_file.ml: CUnix Digest Filename Map Option Printf Scanf String Sys Pp Loc Flags Feedback
+# lib/aux_file.mli: Map Loc
+# lib/cAst.ml: Loc
+# lib/cAst.mli: Loc
+# lib/cDebug.ml: CList CString Exninfo List Printexc String Pp Feedback CWarnings CErrors
+# lib/cDebug.mli: Pp
+# lib/cErrors.ml: CList Coq_config Exninfo List Option Printexc Sys Pp Loc Control
+# lib/cErrors.mli: Exninfo Pp Loc
+# lib/cWarnings.ml: CList CString Hashtbl List Str String Util Pp Flags Feedback CErrors
+# lib/cWarnings.mli: Pp Loc
+# lib/control.ml: CThread Exninfo Sys Thread Unix
+# lib/control.mli:
+# lib/coqProject_file.ml: Buffer CList CUnix Filename Format List Option Printf Stream String Sys
+# lib/coqProject_file.mli:
+# lib/dAst.ml: Lazy CAst
+# lib/dAst.mli: Lazy Loc CAst
+# lib/envars.ml: CUnix Coq_config Filename Int Option Printf Scanf Sys Unix Util
+# lib/envars.mli:
+# lib/explore.ml: List Pp Feedback
+# lib/explore.mli: Pp
+# lib/feedback.ml: Format Hashtbl Option Xml_datatype Stateid Pp Loc
+# lib/feedback.mli: Format Xml_datatype Stateid Pp Loc
+# lib/flags.ml: Exninfo List
+# lib/flags.mli:
+# lib/future.ml: CEphemeron CList Condition Exninfo List Map Mutex Printexc Set Pp CErrors
+# lib/future.mli: Exninfo Map Set Pp
+# lib/genarg.ml: CSig Dyn Obj Util Pp CErrors
+# lib/genarg.mli: CSig Pp
+# lib/hook.ml:
+# lib/hook.mli:
+# lib/loc.ml: Exninfo
+# lib/loc.mli: Exninfo
+# lib/objFile.ml: CString Coq_config Digest Int32 Int64 LargeFile Marshal String System Pp CErrors
+# lib/objFile.mli: CString Digest
+# lib/pp.ml: Array CArray Format List String
+# lib/pp.mli: Format
+# lib/pp_diff.ml: Array Buffer Diff2 Format List Printf String Pp
+# lib/pp_diff.mli: Diff2 String Pp
+# lib/remoteCounter.ml: List Mutex Obj Pp Flags CErrors
+# lib/remoteCounter.mli:
+# lib/rtree.ml: Int Util Pp
+# lib/rtree.mli: Pp
+# lib/spawn.ml: Array Option Printexc Printf String Sys Unix CErrors CDebug
+# lib/spawn.mli: Unix
+# lib/stateid.ml: Exninfo Int Set Pp Loc
+# lib/stateid.mli: Exninfo Map Set Pp Loc
+# lib/system.ml: Array CString CUnix Coq_config Exninfo Filename Int Int32 List Marshal Minisys String Sys Unix Pp Feedback CWarnings CErrors
+# lib/system.mli: CUnix Pp
+# lib/util.ml: Buffer Bytes CArray CList CMap CSet CSig CString Char Exninfo Int Stream
+# lib/util.mli: CArray CList CMap CSet CSig CString Exninfo Stream
+# lib/xml_datatype.mli:
