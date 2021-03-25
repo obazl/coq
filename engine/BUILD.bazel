@@ -1,0 +1,465 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_library",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+KERNEL_DEPS = [
+    # do not sort (buildifier)
+    "//kernel:_Constr",
+    "//kernel:_Environ"
+]
+DEPS_OPAM = [
+]
+
+package(default_visibility = ["//visibility:public"])
+
+#################
+ocaml_library(
+    name = "engine",
+    modules = [
+        ":_EConstr",
+        ":_Evar_kinds",
+        ":_Evarutil",
+        ":_Evd",
+        ":_Ftactic",
+        ":_Logic_monad",
+        ":_Namegen",
+        ":_Nameops",
+        ":_Proofview",
+        ":_Proofview_monad",
+        ":_Termops",
+        ":_UState",
+        ":_UnivGen",
+        ":_UnivMinim",
+        ":_UnivNames",
+        ":_UnivProblem",
+        ":_UnivSubst",
+        ":_Univops",
+    ],
+    visibility = [
+        "//visibility:public",
+    ]
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_EConstr",
+    struct  = "eConstr.ml",
+    sig     = "_EConstr.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_EConstr.cmi",
+    src  = "eConstr.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        ":_Evd"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Evar_kinds",
+    struct  = "evar_kinds.ml",
+    sig     = "_Evar_kinds.cmi",
+    deps = [
+        "//kernel:_Names"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Evar_kinds.cmi",
+    src  = "evar_kinds.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Evar",
+        "//kernel:_Names"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Evarutil",
+    struct  = "evarutil.ml",
+    sig     = "_Evarutil.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Termops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Evarutil.cmi",
+    src  = "evarutil.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        ":_Namegen"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Evd",
+    struct  = "evd.ml",
+    sig     = "_Evd.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Nameops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Evd.cmi",
+    src  = "evd.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//clib:_Monad",
+        "//kernel:_Evar",
+        "//lib:_Hook",
+        ":_Evar_kinds",
+        ":_UnivNames",
+        ":_UState"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ftactic",
+    struct  = "ftactic.ml",
+    sig     = "_Ftactic.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ftactic.cmi",
+    src  = "ftactic.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Proofview"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Logic_monad",
+    struct  = "logic_monad.ml",
+    sig     = "_Logic_monad.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Logic_monad.cmi",
+    src  = "logic_monad.mli",
+    opts = [],
+    deps = KERNEL_DEPS + [
+        "//clib:_Monad",
+        "//lib:_Feedback"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Namegen",
+    struct  = "namegen.ml",
+    sig     = "_Namegen.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Namegen.cmi",
+    src  = "namegen.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        ":_EConstr",
+        ":_Evd",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Nameops",
+    struct  = "nameops.ml",
+    sig     = "_Nameops.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Nameops.cmi",
+    src  = "nameops.mli",
+    opts = [],
+    deps = KERNEL_DEPS + [],
+)
+
+#############
+ocaml_module(
+    name    = "_Proofview",
+    struct  = "proofview.ml",
+    sig     = "_Proofview.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Evarutil",
+        "//lib:_System"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Proofview.cmi",
+    src  = "proofview.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        ":_EConstr",
+        ":_Proofview_monad"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Proofview_monad",
+    struct  = "proofview_monad.ml",
+    sig     = "_Proofview_monad.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Proofview_monad.cmi",
+    src  = "proofview_monad.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Environ",
+        ":_Evd",
+        ":_Logic_monad"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Termops",
+    struct  = "termops.ml",
+    sig     = "_Termops.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Namegen"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Termops.cmi",
+    src  = "termops.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        ":_EConstr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_UState",
+    struct  = "uState.ml",
+    sig     = "_UState.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_UnivGen"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_UState.cmi",
+    src  = "uState.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//kernel:_Safe_typing",
+        ":_UnivMinim",
+        ":_UnivNames",
+        ":_UnivProblem",
+        ":_UnivSubst"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_UnivGen",
+    struct  = "univGen.ml",
+    sig     = "_UnivGen.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        "//library:_Nametab"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_UnivGen.cmi",
+    src  = "univGen.mli",
+    deps = KERNEL_DEPS + [
+        "//lib:_RemoteCounter",
+        "//library:_Global"
+    ]
+)
+
+#############
+ocaml_module(
+    name    = "_UnivMinim",
+    struct  = "univMinim.ml",
+    sig     = "_UnivMinim.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        "//clib:_OrderedType",
+        "//library:_Goptions"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_UnivMinim.cmi",
+    src  = "univMinim.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Univ",
+        ":_UnivSubst"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_UnivNames",
+    struct  = "univNames.ml",
+    sig     = "_UnivNames.cmi",
+    deps = [
+        "//library:_Nametab"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_UnivNames.cmi",
+    src  = "univNames.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Univ",
+        "//library:_Libnames"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_UnivProblem",
+    struct  = "univProblem.ml",
+    sig     = "_UnivProblem.cmi",
+    deps = KERNEL_DEPS + [
+        ":_UnivSubst"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_UnivProblem.cmi",
+    src  = "univProblem.mli",
+    opts = [],
+    deps = KERNEL_DEPS + [],
+)
+
+#############
+ocaml_module(
+    name    = "_UnivSubst",
+    struct  = "univSubst.ml",
+    sig     = "_UnivSubst.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_UnivSubst.cmi",
+    src  = "univSubst.mli",
+    opts = [],
+    deps = KERNEL_DEPS + [],
+)
+
+#############
+ocaml_module(
+    name    = "_Univops",
+    struct  = "univops.ml",
+    sig     = "_Univops.cmi",
+    opts    = ["-rectypes"],
+    deps    = [
+        ":_UState"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Univops.cmi",
+    src  = "univops.mli",
+    opts = [],
+    deps = KERNEL_DEPS + [
+    ],
+)
+
+
