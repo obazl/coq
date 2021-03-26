@@ -1,0 +1,332 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_module",
+    "ocaml_library",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+##############
+ocaml_library(
+    name = "stm",
+    modules = [
+        ":_AsyncTaskQueue",
+        ":_CoqworkmgrApi",
+        ":_Dag",
+        ":_Partac",
+        ":_ProofBlockDelimiter",
+        ":_Spawned",
+        ":_Stm",
+        ":_Stmargs",
+        ":_TQueue",
+        ":_Vcs",
+        ":_Vio_checking",
+        ":_WorkerPool"
+    ],
+)
+
+
+#############
+ocaml_module(
+    name    = "_AsyncTaskQueue",
+    struct  = "asyncTaskQueue.ml",
+    sig     = "_AsyncTaskQueue.cmi",
+    opts    = [
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//engine:_UnivGen",
+        "//lib:_System",
+        ":_Spawned",
+        ":_TQueue"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_AsyncTaskQueue.cmi",
+    src  = "asyncTaskQueue.mli",
+    opts = [],
+    deps = [
+        "//lib:_Feedback",
+        "//lib:_Util",
+        ":_CoqworkmgrApi",
+        ":_WorkerPool"
+    ],
+)
+
+
+#############
+ocaml_module(
+    name    = "_CoqworkmgrApi",
+    struct  = "coqworkmgrApi.ml",
+    sig     = "_CoqworkmgrApi.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CoqworkmgrApi.cmi",
+    src  = "coqworkmgrApi.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Dag",
+    struct  = "dag.ml",
+    sig     = "_Dag.cmi",
+    opts    = [
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+        "//clib:_CMap"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Dag.cmi",
+    src  = "dag.mli",
+    opts = [],
+    deps = [
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Partac",
+    struct  = "partac.ml",
+    sig     = "_Partac.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//engine:_UState",
+        "//vernac:_ComTactic",
+        "//vernac:_Vernacstate"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Partac.cmi",
+    src  = "partac.mli",
+    opts = [],
+    deps = [
+        ":_AsyncTaskQueue"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_ProofBlockDelimiter",
+    struct  = "proofBlockDelimiter.ml",
+    sig     = "_ProofBlockDelimiter.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_ProofBlockDelimiter.cmi",
+    src  = "proofBlockDelimiter.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//proofs:_Goal",
+        ":_Stm"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Spawned",
+    struct  = "spawned.ml",
+    sig     = "_Spawned.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Spawned.cmi",
+    src  = "spawned.mli",
+    opts = [],
+    deps = [
+        "//clib:_CThread",
+        "//lib:_Spawn"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Stm",
+    struct  = "stm.ml",
+    sig     = "_Stm.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//vernac:_Vernac_classifier",
+        "//vernac:_Vernacprop",
+        "//sysinit:_Coqinit",
+        ":_Partac",
+        ":_Vcs"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Stm.cmi",
+    src  = "stm.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//sysinit:_Coqargs",
+        ":_AsyncTaskQueue",
+        ":_CoqworkmgrApi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Stmargs",
+    struct  = "stmargs.ml",
+    sig     = "_Stmargs.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Stmargs.cmi",
+    src  = "stmargs.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Stm"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_TQueue",
+    struct  = "tQueue.ml",
+    sig     = "_TQueue.cmi",
+    opts    = [
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//lib:_CErrors",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_TQueue.cmi",
+    src  = "tQueue.mli",
+    opts = [],
+    deps = [
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vcs",
+    struct  = "vcs.ml",
+    sig     = "_Vcs.cmi",
+    opts    = [
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//clib:_CString",
+        "//lib:_CErrors",
+        "//lib:_Pp"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vcs.cmi",
+    src  = "vcs.mli",
+    opts = [],
+    deps = [
+        ":_Dag"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vio_checking",
+    struct  = "vio_checking.ml",
+    sig     = "_Vio_checking.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//lib:_Util",
+        "//vernac:_Library",
+        ":_Stm"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vio_checking.cmi",
+    src  = "vio_checking.mli",
+    opts = [],
+    deps = [
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_WorkerPool",
+    struct  = "workerPool.ml",
+    sig     = "_WorkerPool.cmi",
+    opts    = [
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+        "//lib:_CErrors"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_WorkerPool.cmi",
+    src  = "workerPool.mli",
+    opts = [],
+    deps = [
+        "//clib:_CThread",
+        ":_CoqworkmgrApi"
+    ],
+)
+
+
