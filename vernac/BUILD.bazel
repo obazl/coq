@@ -1,0 +1,1397 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_executable",
+    "ocaml_library",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+ocaml_library(
+    name = "vernac",
+    modules = [
+        ":_Assumptions",
+        ":_Attributes",
+        ":_Auto_ind_decl",
+        ":_Canonical",
+        ":_Classes",
+        ":_ComArguments",
+        ":_ComAssumption",
+        ":_ComCoercion",
+        ":_ComDefinition",
+        ":_ComFixpoint",
+        ":_ComHints",
+        ":_ComInductive",
+        ":_ComPrimitive",
+        ":_ComProgramFixpoint",
+        ":_ComSearch",
+        ":_ComTactic",
+        ":_Declare",
+        ":_DeclareInd",
+        ":_DeclareUniv",
+        ":_Declaremods",
+        ":_Egramcoq",
+        ":_Egramml",
+        ":_Himsg",
+        ":_Indschemes",
+        ":_Library",
+        ":_Loadpath",
+        ":_Locality",
+        ":_Metasyntax",
+        ":_Mltop",
+        ":_Ppvernac",
+        ":_Prettyp",
+        ":_Printmod",
+        ":_Proof_using",
+        ":_Pvernac",
+        ":_RecLemmas",
+        ":_Record",
+        ":_RetrieveObl",
+        ":_Search",
+        ":_Topfmt",
+        ":_Vernac_classifier",
+        ":_Vernacentries",
+        ":_Vernacexpr",
+        ":_Vernacextend",
+        ":_Vernacinterp",
+        ":_Vernacprop",
+        ":_Vernacstate",
+    ]
+)
+
+################################################################
+
+#############
+ocaml_module(
+    name    = "_Assumptions",
+    struct  = "assumptions.ml",
+    sig     = "_Assumptions.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Library"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Assumptions.cmi",
+    src  = "assumptions.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Constr",
+        "//kernel:_Names",
+        "//printing:_Printer"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Attributes",
+    struct  = "attributes.ml",
+    sig     = "_Attributes.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Attributes.cmi",
+    src  = "attributes.mli",
+    opts = [],
+    deps = [
+        "//clib:_Monad",
+        "//interp:_Deprecation",
+        "//library:_Goptions",
+        "//lib:_Pp",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Auto_ind_decl",
+    struct  = "auto_ind_decl.ml",
+    sig     = "_Auto_ind_decl.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Inductiveops",
+        "//tactics:_Auto",
+        "//tactics:_Equality",
+        "//tactics:_Tactics",
+        ":_Declare"
+   ],
+)
+
+######
+ocaml_signature(
+    name = "_Auto_ind_decl.cmi",
+    src  = "auto_ind_decl.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//tactics:_Ind_tables"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Canonical",
+    struct  = "canonical.ml",
+    sig     = "_Canonical.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Canonical.cmi",
+    src  = "canonical.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//library:_Libobject",
+        "//pretyping:_Recordops"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Classes",
+    struct  = "classes.ml",
+    sig     = "_Classes.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Class_tactics"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Classes.cmi",
+    src  = "classes.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//kernel:_Environ",
+        "//kernel:_Names",
+        "//pretyping:_Typeclasses",
+        ":_Declare",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_ComArguments",
+    struct  = "comArguments.ml",
+    sig     = "_ComArguments.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_ComArguments.cmi",
+    src  = "comArguments.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_ComAssumption",
+    struct  = "comAssumption.ml",
+    sig     = "_ComAssumption.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Classes",
+        ":_ComCoercion",
+        ":_Declare"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_ComAssumption.cmi",
+    src  = "comAssumption.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Locality",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_ComCoercion",
+    struct  = "comCoercion.ml",
+    sig     = "_ComCoercion.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_ComCoercion.cmi",
+    src  = "comCoercion.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//pretyping:_Coercionops",
+        ":_Declare"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_ComDefinition",
+    struct  = "comDefinition.ml",
+    sig     = "_ComDefinition.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_ComDefinition.cmi",
+    src  = "comDefinition.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrintern",
+        "//kernel:_Names",
+        "//tactics:_Redexpr",
+        ":_Declare"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_ComFixpoint",
+    struct  = "comFixpoint.ml",
+    sig     = "_ComFixpoint.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_ComFixpoint.cmi",
+    src  = "comFixpoint.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Declare",
+        ":_Locality",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_ComHints",
+    struct  = "comHints.ml",
+    sig     = "_ComHints.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Declare"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_ComHints.cmi",
+    src  = "comHints.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Vernacexpr",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_ComInductive",
+    struct  = "comInductive.ml",
+    sig     = "_ComInductive.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Constrexpr",
+        ":_ComCoercion",
+        ":_DeclareInd",
+        ":_Himsg",
+        ":_Metasyntax"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_ComInductive.cmi",
+    src  = "comInductive.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_ComPrimitive",
+    struct  = "comPrimitive.ml",
+    sig     = "_ComPrimitive.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Declare"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_ComPrimitive.cmi",
+    src  = "comPrimitive.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//kernel:_Names",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_ComProgramFixpoint",
+    struct  = "comProgramFixpoint.ml",
+    sig     = "_ComProgramFixpoint.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_ComFixpoint"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_ComProgramFixpoint.cmi",
+    src  = "comProgramFixpoint.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Declare",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_ComSearch",
+    struct  = "comSearch.ml",
+    sig     = "_ComSearch.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//kernel:_Names",
+        "//printing:_Printer",
+        ":_Search"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_ComSearch.cmi",
+    src  = "comSearch.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Environ",
+        "//engine:_Evd",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_ComTactic",
+    struct  = "comTactic.ml",
+    sig     = "_ComTactic.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+        ":_Vernacentries"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_ComTactic.cmi",
+    src  = "comTactic.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Proofview",
+        ":_Declare"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Declare",
+    struct  = "declare.ml",
+    sig     = "_Declare.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Abstract",
+        "//tactics:_DeclareScheme",
+        "//tactics:_Ind_tables",
+        "//tactics:_Tactics",
+        ":_DeclareUniv",
+        ":_Himsg",
+        ":_Metasyntax"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Declare.cmi",
+    src  = "declare.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_UState",
+        "//kernel:_Names",
+        ":_Locality",
+        ":_Proof_using",
+        ":_RetrieveObl"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_DeclareInd",
+    struct  = "declareInd.ml",
+    sig     = "_DeclareInd.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Notation",
+        ":_Declare",
+        ":_Indschemes"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_DeclareInd.cmi",
+    src  = "declareInd.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Impargs"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_DeclareUniv",
+    struct  = "declareUniv.ml",
+    sig     = "_DeclareUniv.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Constrintern",
+        "//library:_Global",
+
+        "//tactics:_DeclareUctx"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_DeclareUniv.cmi",
+    src  = "declareUniv.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_UnivNames",
+        "//interp:_Constrexpr",
+        "//kernel:_Names",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Declaremods",
+    struct  = "declaremods.ml",
+    sig     = "_Declaremods.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Modintern"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Declaremods.cmi",
+    src  = "declaremods.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//kernel:_Names",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Egramcoq",
+    struct  = "egramcoq.ml",
+    sig     = "_Egramcoq.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//parsing:_Pcoq",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Egramcoq.cmi",
+    src  = "egramcoq.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//parsing:_Notation_gram",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Egramml",
+    struct  = "egramml.ml",
+    sig     = "_Egramml.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Pvernac"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Egramml.cmi",
+    src  = "egramml.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//parsing:_Pcoq",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_proofs",
+    struct  = "g_proofs.ml",
+    opts = [
+        "-rectypes",
+        # "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Constrexpr",
+        # "//interp:_Constrexpr_ops",
+        # "//kernel:_Constr",
+        # "//kernel:_Names",
+        # "//library:_Libnames",
+        "//pretyping:_Glob_term",
+        "//parsing:_Pcoq",
+        ":_G_vernac",
+        ":_Pvernac",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_vernac",
+    struct  = "g_vernac.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//kernel:_Names",
+        "//lib:_Pp",
+        "//lib:_CErrors",
+        "//lib:_Util",
+        "//parsing:_Pcoq",
+        "//pretyping:_Glob_term",
+        ":_Pvernac",
+        ":_Vernacexpr"
+        # # "//interp:_Constrexpr",
+        # # "//interp:_Constrexpr_ops",
+        # # "//kernel:_Constr",
+        # "//kernel:_Names",
+        # "//library:_Libnames",
+        # # "//pretyping:_Glob_term",
+        # ":_Pcoq"
+    ],
+)
+
+###########################
+TOOL = "//coqpp:coqpp_main"
+
+########
+genrule(
+    name = "gvernac",
+    tools = [TOOL],
+    srcs = [
+        "g_proofs.mlg",
+        "g_vernac.mlg"
+    ],
+    outs = [
+        "g_proofs.ml",
+        "g_vernac.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_proofs.mlg);".format( tool = TOOL ),
+        "cp vernac/g_proofs.ml $(location g_proofs.ml);",
+        "$(location {tool}) $(location g_vernac.mlg)".format( tool = TOOL ),
+        "cp vernac/g_vernac.ml $(location g_vernac.ml);"
+    ]),
+)
+
+#############
+ocaml_module(
+    name    = "_Himsg",
+    struct  = "himsg.ml",
+    sig     = "_Himsg.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Modintern",
+        "//pretyping:_Cases",
+        "//pretyping:_Indrec",
+        "//pretyping:_Typeclasses_errors",
+        "//printing:_Printer",
+        "//tactics:_Tacticals",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Himsg.cmi",
+    src  = "himsg.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//kernel:_Environ",
+        "//pretyping:_Pretype_errors",
+        "//proofs:_Logic",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Indschemes",
+    struct  = "indschemes.ml",
+    sig     = "_Indschemes.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Indrec",
+        ":_Auto_ind_decl",
+        ":_Declare"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Indschemes.cmi",
+    src  = "indschemes.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Constr",
+        "//kernel:_Environ",
+        "//kernel:_Names",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Library",
+    struct  = "library.ml",
+    sig     = "_Library.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps    = [
+        "//kernel:_Safe_typing",
+        "//lib:_ObjFile",
+        ":_Declaremods"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Library.cmi",
+    src  = "library.mli",
+    deps = [
+        "//clib:_CUnix",
+        "//lib:_Stateid",
+        "//library:_Lib",
+        "//kernel:_Names",
+        "//kernel:_Opaqueproof",
+        "//kernel:_Univ",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Loadpath",
+    struct  = "loadpath.ml",
+    sig     = "_Loadpath.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+        "//lib:_System",
+        "//library:_Summary",
+        ":_Library",
+        ":_Mltop",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Loadpath.cmi",
+    src  = "loadpath.mli",
+    opts = [],
+    deps = [
+        "//clib:_CUnix",
+        "//kernel:_Names",
+        "//library:_Libnames",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Locality",
+    struct  = "locality.ml",
+    sig     = "_Locality.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Locality.cmi",
+    src  = "locality.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Metasyntax",
+    struct  = "metasyntax.ml",
+    sig     = "_Metasyntax.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//parsing:_Notgram_ops",
+        "//parsing:_Notation_gram",
+        "//parsing:_Pcoq",
+        ":_Egramcoq",
+        ":_Ppvernac",
+        ":_Pvernac",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Metasyntax.cmi",
+    src  = "metasyntax.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Mltop",
+    struct  = "mltop.ml",
+    sig     = "_Mltop.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Mltop.cmi",
+    src  = "mltop.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ppvernac",
+    struct  = "ppvernac.ml",
+    sig     = "_Ppvernac.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Ppred",
+        ":_Egramml",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ppvernac.cmi",
+    src  = "ppvernac.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//lib:_Pp",
+        "//parsing:_Extend",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Prettyp",
+    struct  = "prettyp.ml",
+    sig     = "_Prettyp.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Impargs",
+        "//printing:_Printer",
+        ":_DeclareInd",
+        ":_Printmod"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Prettyp.cmi",
+    src  = "prettyp.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//kernel:_Environ",
+        "//kernel:_Names",
+        "//pretyping:_Coercionops",
+        "//pretyping:_Reductionops"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Printmod",
+    struct  = "printmod.ml",
+    sig     = "_Printmod.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//printing:_Printer",
+        ":_Declaremods",
+        ":_Vernacstate"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Printmod.cmi",
+    src  = "printmod.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_UnivNames",
+        "//engine:_Namegen",
+        "//kernel:_Environ",
+        "//kernel:_Names",
+        "//library:_Goptions",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Proof_using",
+    struct  = "proof_using.ml",
+    sig     = "_Proof_using.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+        "//lib:_Aux_file",
+        ":_G_vernac",
+        ":_Ppvernac"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Proof_using.cmi",
+    src  = "proof_using.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Environ",
+        "//engine:_Evd",
+        "//kernel:_Names",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Pvernac",
+    struct  = "pvernac.ml",
+    sig     = "_Pvernac.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Pvernac.cmi",
+    src  = "pvernac.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//parsing:_Pcoq",
+        "//tactics:_Genredexpr",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_RecLemmas",
+    struct  = "recLemmas.ml",
+    sig     = "_RecLemmas.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_RecLemmas.cmi",
+    src  = "recLemmas.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Declare",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Record",
+    struct  = "record.ml",
+    sig     = "_Record.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_ComAssumption",
+        ":_ComDefinition",
+        ":_ComInductive",
+        ":_Vernacstate"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Record.cmi",
+    src  = "record.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_RetrieveObl",
+    struct  = "retrieveObl.ml",
+    sig     = "_RetrieveObl.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Pretype_errors",
+        "//pretyping:_Program"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_RetrieveObl.cmi",
+    src  = "retrieveObl.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//engine:_Proofview",
+        "//kernel:_Environ",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Search",
+    struct  = "search.ml",
+    sig     = "_Search.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//clib:_Heap",
+        ":_Declare",
+        ":_DeclareInd"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Search.cmi",
+    src  = "search.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Constr",
+        "//kernel:_Environ",
+        "//kernel:_Names",
+        "//pretyping:_Pattern",
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Topfmt",
+    struct  = "topfmt.ml",
+    sig     = "_Topfmt.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Ppvernac"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Topfmt.cmi",
+    src  = "topfmt.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//clib:_Terminal",
+        "//lib:_Pp",
+        "//lib:_Feedback",
+        ":_Vernacexpr"
+    ],
+)
+
+# vernac.mllib
+
+#############
+ocaml_module(
+    name    = "_Vernac_classifier",
+    struct  = "vernac_classifier.ml",
+    sig     = "_Vernac_classifier.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+        ":_Vernacinterp",
+        ":_Vernacprop"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vernac_classifier.cmi",
+    src  = "vernac_classifier.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Vernacextend"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vernacentries",
+    struct  = "vernacentries.ml",
+    sig     = "_Vernacentries.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Assumptions",
+        ":_Canonical",
+        ":_ComArguments",
+        ":_ComAssumption",
+        ":_ComCoercion",
+        ":_ComDefinition",
+        ":_ComFixpoint",
+        ":_ComHints",
+        ":_ComInductive",
+        ":_ComPrimitive",
+        ":_ComProgramFixpoint",
+        ":_ComSearch",
+        ":_Loadpath",
+        ":_Prettyp",
+        ":_Printmod",
+        ":_RecLemmas",
+        ":_Record",
+        ":_Topfmt"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vernacentries.cmi",
+    src  = "vernacentries.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//lib:_Loc",
+        ":_Attributes",
+        ":_Vernacexpr",
+        ":_Vernacextend"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vernacexpr",
+    struct  = "vernacexpr.ml",
+    opts    = [
+        "-rectypes"
+    ],
+    deps    = [
+        "//kernel:_Names",
+        "//interp:_Constrexpr",
+        "//interp:_Decls",
+        "//parsing:_Extend",
+        "//proofs:_Goal_select",
+        "//tactics:_Genredexpr",
+        "//tactics:_Hints",
+        ":_Attributes",
+        ":_Declaremods"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vernacextend",
+    struct  = "vernacextend.ml",
+    sig     = "_Vernacextend.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vernacextend.cmi",
+    src  = "vernacextend.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Declare",
+        ":_Vernacstate"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vernacinterp",
+    struct  = "vernacinterp.ml",
+    sig     = "_Vernacinterp.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Vernacextend",
+        ":_Vernacentries",
+        ":_Topfmt"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vernacinterp.cmi",
+    src  = "vernacinterp.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Vernacstate"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vernacprop",
+    struct  = "vernacprop.ml",
+    sig     = "_Vernacprop.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vernacprop.cmi",
+    src  = "vernacprop.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vernacstate",
+    struct  = "vernacstate.ml",
+    sig     = "_Vernacstate.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Library"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vernacstate.cmi",
+    src  = "vernacstate.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//parsing:_Pcoq",
+        ":_Declare"
+    ],
+)
+
+
+
+
