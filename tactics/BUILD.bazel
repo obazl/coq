@@ -1,0 +1,812 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_signature",
+    "ocaml_library",
+    "ocaml_module",
+)
+
+DEPS = [
+    # do not sort (buildifier)
+]
+DEPS_OPAM = [
+]
+
+package(default_visibility = ["//visibility:public"])
+
+#################
+ocaml_library(
+    name = "tactics",
+    modules = [
+        ":_Abstract",
+        ":_Auto",
+        ":_Autorewrite",
+        ":_Btermdn",
+        ":_Cbn",
+        ":_Class_tactics",
+        ":_Contradiction",
+        ":_DeclareScheme",
+        ":_DeclareUctx",
+        ":_Dn",
+        ":_Dnet",
+        ":_Eauto",
+        ":_Elim",
+        ":_Elimschemes",
+        ":_Eqdecide",
+        ":_Eqschemes",
+        ":_Equality",
+        ":_Genredexpr",
+        ":_Hints",
+        ":_Hipattern",
+        ":_Ind_tables",
+        ":_Inv",
+        ":_Ppred",
+        ":_Redexpr",
+        ":_Redops",
+        ":_Tacticals",
+        ":_Tactics",
+        ":_Term_dnet",
+    ],
+    visibility = [
+        "//visibility:public",
+    ]
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Abstract",
+    struct  = "abstract.ml",
+    sig     = "_Abstract.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Tacticals",
+        "//tactics:_Tactics",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Abstract.cmi",
+    src  = "abstract.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Proofview",
+        "//interp:_Decls",
+        "//kernel:_Names",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Auto",
+    struct  = "auto.ml",
+    sig     = "_Auto.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Stdarg",
+        "//tactics:_Genredexpr",
+        "//tactics:_Tactics",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Auto.cmi",
+    src  = "auto.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//kernel:_Names",
+        "//pretyping:_Pattern",
+        "//tactics:_Hints",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Autorewrite",
+    struct  = "autorewrite.ml",
+    sig     = "_Autorewrite.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Hints",
+        ":_Term_dnet"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Autorewrite.cmi",
+    src  = "autorewrite.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Constr",
+        "//tactics:_Equality"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Btermdn",
+    struct  = "btermdn.ml",
+    sig     = "_Btermdn.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Dn",
+        "//pretyping:_Patternops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Btermdn.cmi",
+    src  = "btermdn.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        "//kernel:_Environ",
+        "//pretyping:_Pattern",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Cbn",
+    struct  = "cbn.ml",
+    sig     = "_Cbn.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//engine:_Termops",
+        "//pretyping:_Reductionops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Cbn.cmi",
+    src  = "cbn.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        "//kernel:_CClosure",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Class_tactics",
+    struct  = "class_tactics.ml",
+    sig     = "_Class_tactics.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Auto",
+        ":_Eauto",
+        ":_Tactics"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Class_tactics.cmi",
+    src  = "class_tactics.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//kernel:_Names",
+        ":_Hints"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Contradiction",
+    struct  = "contradiction.ml",
+    sig     = "_Contradiction.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Hipattern",
+        ":_Tactics"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Contradiction.cmi",
+    src  = "contradiction.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Proofview",
+        "//proofs:_Tactypes",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_DeclareScheme",
+    struct  = "declareScheme.ml",
+    sig     = "_DeclareScheme.cmi",
+    deps = [
+        "//library:_Lib",
+        "//library:_Libobject",
+        "//library:_Summary",
+        "//kernel:_Mod_subst",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_DeclareScheme.cmi",
+    src  = "declareScheme.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Names",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_DeclareUctx",
+    struct  = "declareUctx.ml",
+    sig     = "_DeclareUctx.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        "//library:_Nametab",
+        "//library:_Global",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_DeclareUctx.cmi",
+    src  = "declareUctx.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Univ",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Dn",
+    struct  = "dn.ml",
+    sig     = "_Dn.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//lib:_Util",
+        "//clib:_Trie"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Dn.cmi",
+    src  = "dn.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Dnet",
+    struct  = "dnet.ml",
+    sig     = "_Dnet.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//engine:_EConstr",
+        "//kernel:_Constr",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Dnet.cmi",
+    src  = "dnet.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Eauto",
+    struct  = "eauto.ml",
+    sig     = "_Eauto.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//lib:_Explore",
+        ":_Auto",
+        ":_Tacticals",
+        ":_Tactics"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Eauto.cmi",
+    src  = "eauto.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        ":_Hints"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Elim",
+    struct  = "elim.ml",
+    sig     = "_Elim.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Inductiveops",
+        "//proofs:_Clenv",
+        "//proofs:_Tacmach",
+        ":_Hipattern",
+        ":_Tacticals",
+        ":_Tactics"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Elim.cmi",
+    src  = "elim.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Proofview",
+        "//kernel:_Names",
+        "//proofs:_Tactypes",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Elimschemes",
+    struct  = "elimschemes.ml",
+    sig     = "_Elimschemes.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Indrec",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Elimschemes.cmi",
+    src  = "elimschemes.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Ind_tables"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Eqdecide",
+    struct  = "eqdecide.ml",
+    sig     = "_Eqdecide.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Auto",
+        ":_Equality",
+        ":_Tactics"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Eqdecide.cmi",
+    src  = "eqdecide.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Proofview"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Eqschemes",
+    struct  = "eqschemes.ml",
+    sig     = "_Eqschemes.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//library:_Coqlib",
+        "//pretyping:_Indrec",
+        "//pretyping:_Inductiveops",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Eqschemes.cmi",
+    src  = "eqschemes.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Constr",
+        "//kernel:_Environ",
+        "//kernel:_Names",
+        ":_Ind_tables"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Equality",
+    struct  = "equality.ml",
+    sig     = "_Equality.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Elimschemes",
+        ":_Eqschemes"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Equality.cmi",
+    src  = "equality.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        "//kernel:_Names",
+        "//pretyping:_Locus",
+        "//proofs:_Tactypes",
+        "//tactics:_Ind_tables",
+        "//tactics:_Tactics"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Genredexpr",
+    struct  = "genredexpr.ml",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//interp:_Genintern",
+        "//library:_Libnames",
+        "//pretyping:_Geninterp",
+        "//pretyping:_Locus",
+        "//pretyping:_Tacred"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Hints",
+    struct  = "hints.ml",
+    sig     = "_Hints.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//printing:_Printer",
+        ":_Btermdn"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Hints.cmi",
+    src  = "hints.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//kernel:_Names",
+        "//lib:_Util",
+        "//proofs:_Clenv",
+        "//proofs:_Proof",
+        "//proofs:_Tactypes"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Hipattern",
+    struct  = "hipattern.ml",
+    sig     = "_Hipattern.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//engine:_Termops",
+        "//pretyping:_Inductiveops",
+        "//pretyping:_Constr_matching",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Hipattern.cmi",
+    src  = "hipattern.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//library:_Coqlib",
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        "//kernel:_Names",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ind_tables",
+    struct  = "ind_tables.ml",
+    sig     = "_Ind_tables.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_DeclareScheme",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ind_tables.cmi",
+    src  = "ind_tables.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//engine:_Proofview",
+        "//kernel:_Constr",
+        "//kernel:_Names",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Inv",
+    struct  = "inv.ml",
+    sig     = "_Inv.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Inductiveops",
+        "//printing:_Printer",
+        ":_Elim",
+        ":_Equality",
+        ":_Tacticals",
+        ":_Tactics",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Inv.cmi",
+    src  = "inv.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Proofview",
+        "//kernel:_Names",
+        "//proofs:_Tactypes",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ppred",
+    struct  = "ppred.ml",
+    sig     = "_Ppred.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//printing:_Pputils",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ppred.cmi",
+    src  = "ppred.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//tactics:_Genredexpr",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Redexpr",
+    struct  = "redexpr.ml",
+    sig     = "_Redexpr.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Vnorm",
+        "//pretyping:_Nativenorm",
+        ":_Cbn",
+        ":_Redops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Redexpr.cmi",
+    src  = "redexpr.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//kernel:_Constr",
+        "//pretyping:_Pattern",
+        "//tactics:_Genredexpr",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Redops",
+    struct  = "redops.ml",
+    sig     = "_Redops.cmi",
+    opts = [
+        "-rectypes",
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Redops.cmi",
+    src  = "redops.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//tactics:_Genredexpr",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tacticals",
+    struct  = "tacticals.ml",
+    sig     = "_Tacticals.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//proofs:_Tacmach",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tacticals.cmi",
+    src  = "tacticals.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Proofview",
+        "//kernel:_Names",
+        "//pretyping:_Locus",
+        "//proofs:_Goal",
+        "//proofs:_Goal_select",
+        "//proofs:_Tactypes",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tactics",
+    struct  = "tactics.ml",
+    sig     = "_Tactics.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Indrec",
+        "//printing:_Printer",
+        "//proofs:_Miscprint",
+        "//proofs:_Refine",
+        ":_Hipattern",
+        ":_Ppred",
+        ":_Tacticals",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tactics.cmi",
+    src  = "tactics.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//kernel:_Constr",
+        "//kernel:_Names",
+        "//proofs:_Clenv",
+        "//tactics:_Redexpr",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Term_dnet",
+    struct  = "term_dnet.ml",
+    sig     = "_Term_dnet.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//engine:_Termops",
+        "//library:_Globnames",
+        ":_Dnet"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Term_dnet.cmi",
+    src  = "term_dnet.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Constr",
+        "//kernel:_Mod_subst",
+    ],
+)
