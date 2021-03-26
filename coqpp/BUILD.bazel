@@ -1,0 +1,143 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_executable",
+    "ocaml_lex",
+    "ocaml_module",
+    "ocaml_library",
+    "ocaml_signature",
+    "ocaml_yacc",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+#################
+ocaml_executable(
+    name = "coqpp_main",
+    main = "_Coqpp_main",
+)
+
+
+## No need to aggregate lib coqpp
+# ##############
+# ocaml_library(
+#     name = "_Coqpp",
+#     modules = [
+#         ":_Coqpp_lex",
+#         ":_Coqpp_parse",
+#         ":_Coqpp_parser",
+#     ],
+# )
+
+################
+ocaml_signature(
+    name = "_Coqpp_ast.cmi",
+    src  = "coqpp_ast.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqpp_lex",
+    struct  = "coqpp_lex.ml",
+    deps = [
+        ":_Coqpp_parse"
+    ],
+)
+
+######
+ocaml_lex(
+    name = "_genlexer",
+    src  = "coqpp_lex.mll",
+    out  = "coqpp_lex.ml"
+)
+
+#############
+ocaml_module(
+    name    = "_Coqpp_main",
+    struct  = "coqpp_main.ml",
+    opts    = [
+        "-w", "-9" #  labels are not bound in this record pattern:
+    ],
+    deps = [
+        ":_Coqpp_ast.cmi",
+        ":_Coqpp_parser"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqpp_parse",
+    struct  = "coqpp_parse.ml",
+    deps = [
+        ":_Coqpp_ast.cmi"
+    ],
+)
+
+######
+ocaml_yacc(
+    name = "_genyaccer",
+    src  = "coqpp_parse.mly",
+    out  = "coqpp_parse.ml"
+)
+
+#############
+ocaml_module(
+    name    = "_Coqpp_parser",
+    struct  = "coqpp_parser.ml",
+    sig     = "_Coqpp_parser.cmi",
+    deps = [
+        ":_Coqpp_lex",
+        ":_Coqpp_parse"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coqpp_parser.cmi",
+    src  = "coqpp_parser.mli",
+    opts = [],
+    deps = [
+        ":_Coqpp_ast.cmi"
+    ],
+)
+
+# #################
+# ocaml_executable(
+#     name = "list_plugins",
+#     main = "_List_plugins",
+#     visibility = ["//visibility:public"],
+# )
+
+# #############
+# ocaml_module(
+#     name    = "_List_plugins",
+#     struct  = "list_plugins.ml",
+#     deps = [
+#     ],
+# )
+
+################################################################
+##    GENERATED FILES    ##
+
+# TOOL = ":genOpcodeFiles"
+
+# ########
+# genrule(
+#     name = "genvmopcodes",
+
+#     tools = [TOOL],
+#     outs = ["vmopcodes.ml"],
+#     cmd = "\n".join([
+#         "$(location {tool}) copml > $(location vmopcodes.ml)".format( tool = TOOL ),
+#     ]),
+# )
+
+################################################################
+
+# #############
+# ocaml_module(
+#     name    = "_GenOpcodeFiles",
+#     struct  = "genOpcodeFiles.ml",
+# )
+
