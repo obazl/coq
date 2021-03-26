@@ -1,0 +1,308 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_signature",
+    "ocaml_library",
+    "ocaml_module",
+)
+
+DEPS = [
+    # do not sort (buildifier)
+]
+DEPS_OPAM = [
+]
+
+package(default_visibility = ["//visibility:public"])
+
+#################
+ocaml_library(
+    name = "proofs",
+    modules = [
+        ":_Clenv",
+        ":_Evar_refiner",
+        ":_Goal",
+        ":_Goal_select",
+        ":_Logic",
+        ":_Miscprint",
+        ":_Proof",
+        ":_Proof_bullet",
+        ":_Refine",
+        ":_Tacmach",
+        ":_Tactypes",
+    ],
+    visibility = [
+        "//visibility:public",
+    ]
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Clenv",
+    struct  = "clenv.ml",
+    sig     = "_Clenv.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Logic",
+        ":_Tacmach"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Clenv.cmi",
+    src  = "clenv.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//kernel:_Constr",
+        "//engine:_EConstr",
+        "//kernel:_Environ",
+        "//kernel:_Names",
+        "//pretyping:_Unification",
+        ":_Tactypes"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Evar_refiner",
+    struct  = "evar_refiner.ml",
+    sig     = "_Evar_refiner.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Evarconv",
+        "//pretyping:_Evarsolve",
+        "//pretyping:_Pretyping"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Evar_refiner.cmi",
+    src  = "evar_refiner.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//pretyping:_Glob_term",
+        "//pretyping:_Ltac_pretype"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Goal",
+    struct  = "goal.ml",
+    sig     = "_Goal.cmi",
+    opts    = ["-rectypes"],
+    deps = [
+        "//engine:_Evarutil",
+        "//engine:_Proofview",
+        "//pretyping:_Pretype_errors"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Goal.cmi",
+    src  = "goal.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        "//kernel:_Evar",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Goal_select",
+    struct  = "goal_select.ml",
+    sig     = "_Goal_select.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Goal_select.cmi",
+    src  = "goal_select.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Names",
+        "//library:_Goptions"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Logic",
+    struct  = "logic.ml",
+    sig     = "_Logic.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Inductiveops",
+        "//pretyping:_Reductionops",
+        "//pretyping:_Tacred",
+        "//pretyping:_Typing",
+        ":_Goal"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Logic.cmi",
+    src  = "logic.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//engine:_Proofview",
+        "//kernel:_Constr",
+        "//kernel:_Names",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Miscprint",
+    struct  = "miscprint.ml",
+    sig     = "_Miscprint.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Miscprint.cmi",
+    src  = "miscprint.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Tactypes"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Proof",
+    struct  = "proof.ml",
+    sig     = "_Proof.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Glob_ops",
+        ":_Evar_refiner",
+        ":_Refine"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Proof.cmi",
+    src  = "proof.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//engine:_Proofview",
+        "//pretyping:_Glob_term",
+        ":_Goal",
+        ":_Goal_select"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Proof_bullet",
+    struct  = "proof_bullet.ml",
+    sig     = "_Proof_bullet.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Proof_bullet.cmi",
+    src  = "proof_bullet.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Proof"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Refine",
+    struct  = "refine.ml",
+    sig     = "_Refine.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        "//pretyping:_Typing"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Refine.cmi",
+    src  = "refine.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Proofview"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tacmach",
+    struct  = "tacmach.ml",
+    sig     = "_Tacmach.cmi",
+    opts    = ["-rectypes"],
+    deps = [
+        ":_Logic"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tacmach.cmi",
+    src  = "tacmach.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Proofview",
+        "//kernel:_Constr",
+        "//kernel:_Environ",
+        "//kernel:_Names",
+        "//pretyping:_Locus",
+        "//pretyping:_Tacred",
+        ":_Goal"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tactypes",
+    struct  = "tactypes.ml",
+    opts    = ["-rectypes"],
+    deps    = [
+        "//engine:_Namegen",
+        "//kernel:_Names",
+    ],
+)
+
