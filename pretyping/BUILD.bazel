@@ -1,0 +1,1001 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_signature",
+    "ocaml_library",
+    "ocaml_module",
+)
+
+KERNEL_DEPS = [
+    # do not sort (buildifier)
+    "//kernel:_Constr",
+    "//kernel:_Names"
+]
+
+DEPS_OPAM = [
+]
+
+package(default_visibility = ["//visibility:public"])
+
+#################
+ocaml_library(
+    name = "pretyping",
+    modules = [
+        ":_Arguments_renaming",
+        ":_Cases",
+        ":_Cbv",
+        ":_Coercion",
+        ":_Coercionops",
+        ":_Constr_matching",
+        ":_Detyping",
+        ":_Evarconv",
+        ":_Evardefine",
+        ":_Evarsolve",
+        ":_Find_subterm",
+        ":_Geninterp",
+        ":_GlobEnv",
+        ":_Glob_ops",
+        ":_Glob_term",
+        ":_Heads",
+        ":_Indrec",
+        ":_Inductiveops",
+        ":_Keys",
+        ":_Locus",
+        ":_Locusops",
+        ":_Ltac_pretype",
+        ":_Nativenorm",
+        ":_Pattern",
+        ":_Patternops",
+        ":_Pretype_errors",
+        ":_Pretyping",
+        ":_Program",
+        ":_Recordops",
+        ":_Reductionops",
+        ":_Retyping",
+        ":_Tacred",
+        ":_Typeclasses",
+        ":_Typeclasses_errors",
+        ":_Typing",
+        ":_Unification",
+        ":_Vnorm",
+    ],
+    visibility = [
+        "//visibility:public",
+    ]
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Arguments_renaming",
+    struct  = "arguments_renaming.ml",
+    sig     = "_Arguments_renaming.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        "//library:_Globnames",
+        "//library:_Lib",
+        "//library:_Libobject",
+        ":_Inductiveops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Arguments_renaming.cmi",
+    src  = "arguments_renaming.mli",
+    deps = KERNEL_DEPS + [
+        "//kernel:_Environ",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Cases",
+    struct  = "cases.ml",
+    sig     = "_Cases.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Coercion",
+        ":_Evarconv",
+        ":_Evarsolve",
+        ":_Glob_ops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Cases.cmi",
+    src  = "cases.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        ":_Evardefine",
+        ":_GlobEnv",
+        ":_Glob_term",
+        ":_Inductiveops",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Cbv",
+    struct  = "cbv.ml",
+    sig     = "_Cbv.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Reductionops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Cbv.cmi",
+    src  = "cbv.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        # "//engine:_Evd",
+        # ":_Evarconv",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coercion",
+    struct  = "coercion.ml",
+    sig     = "_Coercion.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Coercionops",
+        ":_Heads",
+        ":_Program"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coercion.cmi",
+    src  = "coercion.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        ":_Evarconv",
+        ":_Glob_term",
+        ":_Typeclasses"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coercionops",
+    struct  = "coercionops.ml",
+    sig     = "_Coercionops.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Reductionops",
+        ":_Tacred"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coercionops.cmi",
+    src  = "coercionops.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//kernel:_Environ"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Constr_matching",
+    struct  = "constr_matching.ml",
+    sig     = "_Constr_matching.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Patternops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Constr_matching.cmi",
+    src  = "constr_matching.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//clib:_IStream",
+        "//engine:_EConstr",
+        # "//kernel:_Environ"
+        ":_Pattern",
+        ":_Ltac_pretype"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Detyping",
+    struct  = "detyping.ml",
+    sig     = "_Detyping.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Constr_matching",
+        ":_Glob_ops",
+        ":_Inductiveops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Detyping.cmi",
+    src  = "detyping.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//engine:_Termops",
+        "//kernel:_Environ",
+        ":_Glob_term",
+        ":_Ltac_pretype",
+        ":_Pattern"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Evarconv",
+    struct  = "evarconv.ml",
+    sig     = "_Evarconv.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        "//library:_Coqlib",
+        ":_Evardefine",
+        ":_Locusops",
+        ":_Recordops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Evarconv.cmi",
+    src  = "evarconv.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        ":_Evarsolve",
+        ":_Locus",
+        ":_Reductionops"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Evardefine",
+    struct  = "evardefine.ml",
+    sig     = "_Evardefine.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps    = KERNEL_DEPS + [
+        "//engine:_Evarutil",
+        "//engine:_Termops",
+        ":_Pretype_errors"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Evardefine.cmi",
+    src  = "evardefine.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Evarsolve",
+    struct  = "evarsolve.ml",
+    sig     = "_Evarsolve.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Retyping"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Evarsolve.cmi",
+    src  = "evarsolve.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//kernel:_Environ",
+        ":_Pretype_errors"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Find_subterm",
+    struct  = "find_subterm.ml",
+    sig     = "_Find_subterm.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Locusops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Find_subterm.cmi",
+    src  = "find_subterm.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        ":_Locus",
+        ":_Pretype_errors",
+        # "//engine:_EConstr",
+        "//engine:_Evd",
+        # "//kernel:_Environ",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Geninterp",
+    struct  = "geninterp.ml",
+    sig     = "_Geninterp.cmi",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Geninterp.cmi",
+    src  = "geninterp.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_Ftactic",
+        "//lib:_Genarg"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_GlobEnv",
+    struct  = "globEnv.ml",
+    sig     = "_GlobEnv.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps    = KERNEL_DEPS + [
+        ":_Retyping"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_GlobEnv.cmi",
+    src  = "globEnv.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        "//kernel:_Environ",
+        ":_Ltac_pretype"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Glob_ops",
+    struct  = "glob_ops.ml",
+    sig     = "_Glob_ops.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Inductiveops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Glob_ops.cmi",
+    src  = "glob_ops.mli",
+    opts    = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        ":_Glob_term",
+        ":_Ltac_pretype"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Glob_term",
+    struct  = "glob_term.ml",
+    opts    = ["-rectypes"],
+    deps    = KERNEL_DEPS + [
+        "//engine:_Evar_kinds",
+        "//engine:_Namegen",
+        "//lib:_DAst",
+        "//lib:_Genarg"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Heads",
+    struct  = "heads.ml",
+    sig     = "_Heads.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Heads.cmi",
+    src  = "heads.mli",
+    opts = [],
+    deps = KERNEL_DEPS + [
+        "//kernel:_Environ",
+        "//kernel:_Reduction"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Indrec",
+    struct  = "indrec.ml",
+    sig     = "_Indrec.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        "//engine:_Namegen",
+        "//pretyping:_Inductiveops",
+        "//pretyping:_Retyping",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Indrec.cmi",
+    src  = "indrec.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_Evd",
+        "//kernel:_Environ",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Inductiveops",
+    struct  = "inductiveops.ml",
+    sig     = "_Inductiveops.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps    = KERNEL_DEPS + [
+        "//engine:_Termops",
+        ":_Reductionops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Inductiveops.cmi",
+    src  = "inductiveops.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        "//kernel:_Declarations",
+        "//kernel:_Environ"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Keys",
+    struct  = "keys.ml",
+    sig     = "_Keys.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        "//library:_Lib",
+        "//library:_Libobject"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Keys.cmi",
+    src  = "keys.mli",
+    opts = [],
+    deps = KERNEL_DEPS + [],
+)
+
+#############
+ocaml_module(
+    name    = "_Locus",
+    struct  = "locus.ml",
+    deps = KERNEL_DEPS + [
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Locusops",
+    struct  = "locusops.ml",
+    sig     = "_Locusops.cmi",
+    opts    = [
+        "-w", "-9", # labels not bound
+    ],
+    deps = KERNEL_DEPS + [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Locusops.cmi",
+    src  = "locusops.mli",
+    opts = [],
+    deps = KERNEL_DEPS + [
+        ":_Locus"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ltac_pretype",
+    struct  = "ltac_pretype.ml",
+    opts    = ["-rectypes"],
+    deps    = KERNEL_DEPS + [
+        ":_Geninterp",
+        ":_Glob_term"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Nativenorm",
+    struct  = "nativenorm.ml",
+    sig     = "_Nativenorm.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Inductiveops",
+        ":_Reductionops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Nativenorm.cmi",
+    src  = "nativenorm.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Pattern",
+    struct  = "pattern.ml",
+    deps = KERNEL_DEPS + [
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Patternops",
+    struct  = "patternops.ml",
+    sig     = "_Patternops.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Glob_ops",
+        ":_Retyping"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Patternops.cmi",
+    src  = "patternops.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//kernel:_Mod_subst",
+        ":_Glob_term",
+        ":_Ltac_pretype",
+        ":_Pattern"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Pretype_errors",
+    struct  = "pretype_errors.ml",
+    sig     = "_Pretype_errors.cmi",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        ":_Reductionops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Pretype_errors.cmi",
+    src  = "pretype_errors.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//kernel:_Environ",
+        ":_Locus"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Pretyping",
+    struct  = "pretyping.ml",
+    sig     = "_Pretyping.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Cases",
+        ":_Coercion",
+        ":_Glob_ops",
+        ":_Nativenorm",
+        ":_Typeclasses",
+        ":_Typing"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Pretyping.cmi",
+    src  = "pretyping.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        "//kernel:_Environ",
+        ":_Evardefine",
+        ":_GlobEnv",
+        ":_Glob_term",
+        ":_Ltac_pretype"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Program",
+    struct  = "program.ml",
+    sig     = "_Program.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        "//engine:_Evarutil",
+        "//library:_Coqlib"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Program.cmi",
+    src  = "program.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        # "//engine:_Evd",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Recordops",
+    struct  = "recordops.ml",
+    sig     = "_Recordops.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps    = KERNEL_DEPS + [
+        ":_Reductionops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Recordops.cmi",
+    src  = "recordops.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        "//kernel:_Environ",
+        "//kernel:_Mod_subst"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Reductionops",
+    struct  = "reductionops.ml",
+    sig     = "_Reductionops.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        "//engine:_Evarutil",
+        "//engine:_Termops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Reductionops.cmi",
+    src  = "reductionops.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Retyping",
+    struct  = "retyping.ml",
+    sig     = "_Retyping.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Arguments_renaming"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Retyping.cmi",
+    src  = "retyping.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        ":_Inductiveops"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tacred",
+    struct  = "tacred.ml",
+    sig     = "_Tacred.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Cbv",
+        ":_Constr_matching",
+        ":_Find_subterm",
+        ":_Patternops",
+        ":_Typing"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tacred.cmi",
+    src  = "tacred.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        "//kernel:_Environ",
+        ":_Locus",
+        ":_Ltac_pretype",
+        ":_Pattern",
+        ":_Reductionops"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Typeclasses",
+    struct  = "typeclasses.ml",
+    sig     = "_Typeclasses.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        "//engine:_Termops",
+        ":_Typeclasses_errors"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Typeclasses.cmi",
+    src  = "typeclasses.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        ":_Pattern"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Typeclasses_errors",
+    struct  = "typeclasses_errors.ml",
+    sig     = "_Typeclasses_errors.cmi",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Typeclasses_errors.cmi",
+    src  = "typeclasses_errors.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Typing",
+    struct  = "typing.ml",
+    sig     = "_Typing.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Arguments_renaming",
+        ":_Evarconv",
+        ":_Evardefine",
+        ":_Inductiveops",
+        ":_Pretype_errors",
+        ":_Reductionops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Typing.cmi",
+    src  = "typing.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//kernel:_Environ",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Unification",
+    struct  = "unification.ml",
+    sig     = "_Unification.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps    = KERNEL_DEPS + [
+        "//pretyping:_Keys"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Unification.cmi",
+    src  = "unification.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+        "//pretyping:_Evarsolve",
+        "//pretyping:_Pretyping"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vnorm",
+    struct  = "vnorm.ml",
+    sig     = "_Vnorm.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = KERNEL_DEPS + [
+        ":_Reductionops",
+        ":_Retyping"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vnorm.cmi",
+    src  = "vnorm.mli",
+    opts = ["-rectypes"],
+    deps = KERNEL_DEPS + [
+        "//engine:_EConstr",
+    ],
+)
+
+
