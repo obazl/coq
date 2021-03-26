@@ -1,0 +1,185 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_signature",
+    "ocaml_library",
+    "ocaml_module",
+)
+
+DEPS = [
+    # do not sort (buildifier)
+]
+DEPS_OPAM = [
+]
+
+package(default_visibility = ["//visibility:public"])
+
+#################
+ocaml_library(
+    name = "printing",
+    modules = [
+        ":_Genprint",
+        ":_Ppconstr",
+        ":_Pputils",
+        ":_Printer",
+        ":_Proof_diffs",
+    ],
+    visibility = [
+        "//visibility:public",
+    ]
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Genprint",
+    struct  = "genprint.ml",
+    sig     = "_Genprint.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Genprint.cmi",
+    src  = "genprint.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//lib:_Genarg",
+        "//pretyping:_Geninterp",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ppconstr",
+    struct  = "ppconstr.ml",
+    sig     = "_Ppconstr.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//parsing:_Ppextend",
+        ":_Pputils"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ppconstr.cmi",
+    src  = "ppconstr.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//library:_Libnames",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Pputils",
+    struct  = "pputils.ml",
+    sig     = "_Pputils.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Genprint"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Pputils.cmi",
+    src  = "pputils.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//interp:_Constrexpr",
+        "//lib:_Genarg",
+        "//pretyping:_Locus",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Printer",
+    struct  = "printer.ml",
+    sig     = "_Printer.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//engine:_Termops",
+        "//interp:_Constrextern",
+        "//library:_Libnames",
+        "//proofs:_Proof_bullet",
+        ":_Ppconstr",
+        ":_Proof_diffs"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Printer.cmi",
+    src  = "printer.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//interp:_Notation_term",
+        "//kernel:_Constr",
+        "//kernel:_Environ",
+        "//kernel:_Names",
+        "//proofs:_Goal",
+        "//proofs:_Proof",
+        "//pretyping:_Glob_term",
+        "//pretyping:_Ltac_pretype",
+        "//pretyping:_Pattern",
+        "//pretyping:_Tacred"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Proof_diffs",
+    struct  = "proof_diffs.ml",
+    sig     = "_Proof_diffs.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//parsing:_CLexer",
+        "//parsing:_Tok",
+        ":_Ppconstr",
+        "//proofs:_Tacmach",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Proof_diffs.cmi",
+    src  = "proof_diffs.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//interp:_Notation_term",
+        "//lib:_Pp_diff",
+        "//pretyping:_Glob_term",
+        "//proofs:_Goal",
+        "//proofs:_Proof",
+    ],
+)
+
