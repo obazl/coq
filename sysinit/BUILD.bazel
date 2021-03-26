@@ -1,0 +1,110 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_module",
+    "ocaml_library",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+##############
+ocaml_library(
+    name = "sysinit",
+    modules = [
+        ":_Coqargs",
+        ":_Coqinit",
+        ":_Coqloadpath",
+        ":_Usage"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqargs",
+    struct  = "coqargs.ml",
+    sig     = "_Coqargs.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        "//vernac:_Topfmt",
+        "//vernac:_Vernacinterp",
+        ":_Coqloadpath"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coqargs.cmi",
+    src  = "coqargs.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Names",
+        "//library:_Goptions",
+        "//vernac:_Loadpath",
+        ":_Usage"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqinit",
+    struct  = "coqinit.ml",
+    sig     = "_Coqinit.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coqinit.cmi",
+    src  = "coqinit.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//library:_Goptions",
+        ":_Coqargs",
+        ":_Usage"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqloadpath",
+    struct  = "coqloadpath.ml",
+    sig     = "_Coqloadpath.cmi",
+    deps = [
+        "//clib:_CPath"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coqloadpath.cmi",
+    src  = "coqloadpath.mli",
+    opts = [],
+    deps = [
+        "//clib:_CUnix",
+        "//vernac:_Loadpath"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Usage",
+    struct  = "usage.ml",
+    sig     = "_Usage.cmi",
+    deps = [
+        "//config:_Coq_config.cmi"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Usage.cmi",
+    src  = "usage.mli",
+    opts = [],
+    deps = [],
+)
+
+
+
+
