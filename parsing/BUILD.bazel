@@ -1,0 +1,264 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_signature",
+    "ocaml_library",
+    "ocaml_module",
+)
+
+DEPS = [
+    # do not sort (buildifier)
+]
+DEPS_OPAM = [
+]
+
+package(default_visibility = ["//visibility:public"])
+
+#################
+ocaml_library(
+    name = "parsing",
+    modules = [
+        ":_CLexer",
+        ":_Extend",
+        ":_Notation_gram",
+        ":_Notgram_ops",
+        ":_Pcoq",
+        ":_Ppextend",
+        ":_Tok",
+        ":_G_constr",
+        ":_G_prim"
+    ],
+    visibility = [
+        "//visibility:public",
+    ]
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_CLexer",
+    struct  = "cLexer.ml",
+    sig     = "_CLexer.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//clib:_Unicode",
+        "//lib:_CWarnings",
+   ],
+)
+
+######
+ocaml_signature(
+    name = "_CLexer.cmi",
+    src  = "cLexer.mli",
+    opts = [],
+    deps = [
+        "//clib:_CString",
+        "//gramlib",
+        "//parsing:_Tok",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Extend",
+    struct  = "extend.ml",
+    sig     = "_Extend.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Extend.cmi",
+    src  = "extend.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//gramlib",
+        "//interp:_Constrexpr",
+        "//interp:_Notation_term",
+        "_Tok"
+    ],
+)
+
+# g_constr.mlg
+# g_prim.mlg
+
+#############
+ocaml_module(
+    name    = "_Notation_gram",
+    struct  = "notation_gram.ml",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//parsing:_Tok",
+        ":_Extend",
+        "//interp:_Notation",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Notgram_ops",
+    struct  = "notgram_ops.ml",
+    sig     = "_Notgram_ops.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Notgram_ops.cmi",
+    src  = "notgram_ops.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        ":_Notation_gram"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Pcoq",
+    struct  = "pcoq.ml",
+    sig     = "_Pcoq.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Stdarg",
+        "//parsing:_CLexer",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Pcoq.cmi",
+    src  = "pcoq.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//gramlib",
+        "//interp:_Constrexpr",
+        "//kernel:_Names",
+        "//lib:_Genarg",
+        "//parsing:_Tok",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ppextend",
+    struct  = "ppextend.ml",
+    sig     = "_Ppextend.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Constrexpr_ops",
+        "//interp:_Constrextern",
+        "//interp:_Notation",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ppextend.cmi",
+    src  = "ppextend.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        ":_Extend"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tok",
+    struct  = "tok.ml",
+    sig     = "_Tok.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tok.cmi",
+    src  = "tok.mli",
+    opts = [],
+    deps = [
+        "//interp:_NumTok"
+    ],
+)
+
+################################################################
+##    GENERATED FILES    ##
+
+#############
+ocaml_module(
+    name    = "_G_constr",
+    struct  = "g_constr.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Constrexpr",
+        "//interp:_Constrexpr_ops",
+        "//kernel:_Constr",
+        "//kernel:_Names",
+        "//library:_Libnames",
+        "//pretyping:_Glob_term",
+        ":_Pcoq"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_prim",
+    struct  = "g_prim.ml",
+    opts = [
+        "-rectypes",
+        # "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        # "//interp:_Constrexpr",
+        # "//interp:_Constrexpr_ops",
+        # "//kernel:_Constr",
+        "//kernel:_Names",
+        "//library:_Libnames",
+        # "//pretyping:_Glob_term",
+        ":_Pcoq"
+    ],
+)
+
+###########################
+TOOL = "//coqpp:coqpp_main"
+
+########
+genrule(
+    name = "geng",
+    tools = [TOOL],
+    srcs = [
+        "g_constr.mlg",
+        "g_prim.mlg"
+    ],
+    outs = [
+        "g_constr.ml",
+        "g_prim.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_constr.mlg);".format( tool = TOOL ),
+        "cp parsing/g_constr.ml $(location g_constr.ml);",
+        "$(location {tool}) $(location g_prim.mlg)".format( tool = TOOL ),
+        "cp parsing/g_prim.ml $(location g_prim.ml);"
+    ]),
+)
+
+# g_constr.mlg
+# g_prim.mlg
