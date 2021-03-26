@@ -1,0 +1,542 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_signature",
+    "ocaml_library",
+    "ocaml_module",
+)
+
+DEPS = [
+    # do not sort (buildifier)
+]
+DEPS_OPAM = [
+    "zarith",
+]
+
+package(default_visibility = ["//visibility:public"])
+
+#################
+ocaml_library(
+    name = "interp",
+    modules = [
+        ":_Constrexpr",
+        ":_Constrexpr_ops",
+        ":_Constrextern",
+        ":_Constrintern",
+        ":_Decls",
+        ":_Deprecation",
+        ":_Dumpglob",
+        ":_Genintern",
+        ":_Impargs",
+        ":_Implicit_quantifiers",
+        ":_Modintern",
+        ":_Notation",
+        ":_Notation_ops",
+        ":_Notation_term",
+        ":_NumTok",
+        ":_Reserve",
+        ":_Smartlocate",
+        ":_Stdarg",
+        ":_Syntax_def",
+    ],
+    visibility = [
+        "//visibility:public",
+    ]
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Constrexpr",
+    struct  = "constrexpr.ml",
+    opts    = ["-rectypes"],
+    deps    = [
+        "//kernel:_Names",
+        "//kernel:_Univ",
+        "//library:_Libnames",
+        "//pretyping:_Glob_term",
+        "//pretyping:_Pattern",
+        ":_NumTok"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Constrexpr_ops",
+    struct  = "constrexpr_ops.ml",
+    sig     = "_Constrexpr_ops.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//engine:_Namegen",
+        ":_Notation",
+        ":_Smartlocate"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Constrexpr_ops.cmi",
+    src  = "constrexpr_ops.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//library:_Libnames",
+        ":_Constrexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Constrextern",
+    struct  = "constrextern.ml",
+    sig     = "_Constrextern.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Constrexpr_ops",
+        ":_Constrintern",
+        ":_Impargs",
+        ":_Reserve",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Constrextern.cmi",
+    src  = "constrextern.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Termops",
+        "//interp:_Constrexpr",
+        "//interp:_Notation",
+        "//interp:_Notation_term",
+        "//kernel:_Names",
+        "//pretyping:_Glob_term",
+        "//pretyping:_Pattern",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Constrintern",
+    struct  = "constrintern.ml",
+    sig     = "_Constrintern.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Constrexpr_ops",
+        ":_Dumpglob",
+        ":_Implicit_quantifiers",
+        ":_Reserve"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Constrintern.cmi",
+    src  = "constrintern.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//kernel:_Names",
+        "//pretyping:_Glob_term",
+        "//pretyping:_Pattern",
+        "//pretyping:_Pretyping",
+        ":_Constrexpr",
+        ":_Genintern",
+        ":_Impargs",
+        ":_Notation_term"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Decls",
+    struct  = "decls.ml",
+    sig     = "_Decls.cmi",
+    opts    = [
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+        "//library:_Lib",
+        "//library:_Summary",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Decls.cmi",
+    src  = "decls.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Names",
+        "//library:_Libnames"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Deprecation",
+    struct  = "deprecation.ml",
+    sig     = "_Deprecation.cmi",
+    deps = [
+        "//lib:_CWarnings"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Deprecation.cmi",
+    src  = "deprecation.mli",
+    opts = [],
+    deps = [
+        "//lib:_Loc",
+        "//lib:_Pp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Dumpglob",
+    struct  = "dumpglob.ml",
+    sig     = "_Dumpglob.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Typeclasses"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Dumpglob.cmi",
+    src  = "dumpglob.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//lib:_Loc",
+        ":_Constrexpr",
+        ":_Decls",
+        ":_Notation"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Genintern",
+    struct  = "genintern.ml",
+    sig     = "_Genintern.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        "//pretyping:_Detyping"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Genintern.cmi",
+    src  = "genintern.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Mod_subst",
+        "//kernel:_Names",
+        "//lib:_Genarg",
+        ":_Notation_term"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Impargs",
+    struct  = "impargs.ml",
+    sig     = "_Impargs.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Arguments_renaming",
+        "//pretyping:_Reductionops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Impargs.cmi",
+    src  = "impargs.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//kernel:_Names",
+        ":_Constrexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Implicit_quantifiers",
+    struct  = "implicit_quantifiers.ml",
+    sig     = "_Implicit_quantifiers.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Typeclasses",
+        ":_Constrexpr_ops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Implicit_quantifiers.cmi",
+    src  = "implicit_quantifiers.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//pretyping:_Glob_term",
+        ":_Constrexpr",
+        ":_Impargs"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Modintern",
+    struct  = "modintern.ml",
+    sig     = "_Modintern.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps    = [
+        ":_Constrintern"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Modintern.cmi",
+    src  = "modintern.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Environ",
+        ":_Constrexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Notation",
+    struct  = "notation.ml",
+    sig     = "_Notation.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Notation_ops"
+    ],
+    deps_opam = [
+        "zarith"
+    ]
+)
+
+######
+ocaml_signature(
+    name = "_Notation.cmi",
+    src  = "notation.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//library:_Libnames",
+        "//pretyping:_Coercionops",
+        ":_Constrexpr",
+        ":_Deprecation",
+        ":_Notation_term"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Notation_ops",
+    struct  = "notation_ops.ml",
+    sig     = "_Notation_ops.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Detyping",
+        "//pretyping:_Glob_ops",
+        ":_Genintern"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Notation_ops.cmi",
+    src  = "notation_ops.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Notation_term"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Notation_term",
+    struct  = "notation_term.ml",
+    opts    = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//pretyping:_Glob_term",
+        ":_Constrexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_NumTok",
+    struct  = "numTok.ml",
+    sig     = "_NumTok.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+    deps_opam = [
+        "zarith"
+    ]
+)
+
+######
+ocaml_signature(
+    name = "_NumTok.cmi",
+    src  = "numTok.mli",
+    opts = [],
+    deps = [
+        "//lib:_Pp",
+        "//lib:_Util"
+    ],
+    deps_opam = [
+        "zarith"
+    ]
+)
+
+#############
+ocaml_module(
+    name    = "_Reserve",
+    struct  = "reserve.ml",
+    sig     = "_Reserve.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Notation_ops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Reserve.cmi",
+    src  = "reserve.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Notation_term"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Smartlocate",
+    struct  = "smartlocate.ml",
+    sig     = "_Smartlocate.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Syntax_def"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Smartlocate.cmi",
+    src  = "smartlocate.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//library:_Globnames",
+        "//library:_Libnames",
+        ":_Constrexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Stdarg",
+    struct  = "stdarg.ml",
+    sig     = "_Stdarg.cmi",
+    opts = [
+        "-rectypes",
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Stdarg.cmi",
+    src  = "stdarg.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//interp:_Constrexpr",
+        "//interp:_Genintern",
+        "//kernel:_Names",
+        "//lib:_Loc",
+        "//pretyping:_Locus",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Syntax_def",
+    struct  = "syntax_def.ml",
+    sig     = "_Syntax_def.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Notation"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Syntax_def.cmi",
+    src  = "syntax_def.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Deprecation",
+        ":_Notation_term"
+    ],
+)
+
+
