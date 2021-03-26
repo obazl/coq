@@ -1,0 +1,118 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_signature",
+    "ocaml_module",
+    "ocaml_ns_archive",
+)
+
+DEPS = [
+    # do not sort (buildifier)
+]
+DEPS_OPAM = [
+    # "core_kernel",
+]
+
+#################
+ocaml_ns_archive(
+    name = "gramlib",
+    submodules = [
+        ":_Gramext",
+        ":_Grammar",
+        ":_Plexing",
+        ":_Ploc"
+    ],
+    visibility = [
+        "//visibility:public",
+    ]
+)
+
+#############
+ocaml_module(
+    name   = "_Gramext",
+    struct = "gramext.ml",
+    sig    = "_Gramext.cmi",
+    deps = DEPS,
+    deps_opam = DEPS_OPAM
+)
+
+#####
+ocaml_signature(
+    name = "_Gramext.cmi",
+    src = "gramext.mli",
+    deps = DEPS + [
+    ],
+    deps_opam = DEPS_OPAM
+)
+
+#############
+ocaml_module(
+    name   = "_Grammar",
+    struct = "grammar.ml",
+    sig    = "_Grammar.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = DEPS + [
+        "//lib:_Feedback",
+        ":_Ploc"
+    ],
+    deps_opam = DEPS_OPAM
+)
+
+#####
+ocaml_signature(
+    name = "_Grammar.cmi",
+    src = "grammar.mli",
+    deps = DEPS + [
+        "//lib:_Loc",
+        ":_Gramext",
+        ":_Plexing"
+    ],
+    deps_opam = DEPS_OPAM
+)
+
+#############
+ocaml_module(
+    name   = "_Plexing",
+    struct = "plexing.ml",
+    sig    = "_Plexing.cmi",
+    deps = DEPS,
+    deps_opam = DEPS_OPAM + [
+        "compiler-libs.common"
+    ]
+)
+
+#####
+ocaml_signature(
+    name = "_Plexing.cmi",
+    src  = "plexing.mli",
+    deps = DEPS + [
+        "//lib:_Loc",
+        "//lib:_Util"
+    ],
+    deps_opam = DEPS_OPAM + [
+        "base",
+        # "compiler-libs.common",
+        "ocaml-compiler-libs"
+    ]
+)
+
+#############
+ocaml_module(
+    name   = "_Ploc",
+    struct = "ploc.ml",
+    sig    = "_Ploc.cmi",
+    deps = DEPS + [
+    ],
+    deps_opam = DEPS_OPAM
+)
+
+#####
+ocaml_signature(
+    name = "_Ploc.cmi",
+    src = "ploc.mli",
+    deps = DEPS + [
+        "//lib:_Loc"
+    ],
+    deps_opam = DEPS_OPAM
+)
