@@ -1,0 +1,177 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_executable",
+    "ocaml_lex",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+#################
+ocaml_executable(
+    name = "main",
+    main = "_Main",
+    opts = [],
+    deps = [
+        "//clib:_CUnix"
+    ],
+    # deps_opam = [
+    #     "unix",
+    #     "threads"
+    # ],
+)
+
+#############
+ocaml_module(
+    name    = "_Alpha",
+    struct  = "alpha.ml",
+    sig     = "_Alpha.cmi",
+    deps = [
+        ":_Cdglobals"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Alpha.cmi",
+    src  = "alpha.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Cdglobals",
+    struct  = "cdglobals.ml",
+    sig     = "_Cdglobals.cmi",
+    deps = [
+        "//:_Coq_config"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Cdglobals.cmi",
+    src  = "cdglobals.mli",
+    opts = [],
+    deps = [],
+)
+
+# coqdoc.css
+# coqdoc.sty
+
+#############
+ocaml_module(
+    name    = "_Cpretty",
+    struct  = "cpretty.ml",
+    sig     = "_Cpretty.cmi",
+    opts    = [
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Output"
+    ],
+)
+
+#####
+ocaml_lex(
+    name = "genpretty",
+    src  = "cpretty.mll",
+    out  = "cpretty.ml"
+)
+
+################
+ocaml_signature(
+    name = "_Cpretty.cmi",
+    src  = "cpretty.mli",
+    opts = [],
+    deps = [
+        ":_Cdglobals"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Index",
+    struct  = "index.ml",
+    sig     = "_Index.cmi",
+    deps = [
+        ":_Alpha"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Index.cmi",
+    src  = "index.mli",
+    opts = [],
+    deps = [
+        ":_Cdglobals"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Main",
+    struct  = "main.ml",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//clib:_CPath",
+        "//clib:_Unicode",
+        ":_Cdglobals",
+        ":_Cpretty",
+        ":_Output"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Output",
+    struct  = "output.ml",
+    sig     = "_Output.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Tokens"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Output.cmi",
+    src  = "output.mli",
+    opts = [],
+    deps = [
+        ":_Cdglobals",
+        ":_Index"
+    ],
+)
+
+# style.css
+
+#############
+ocaml_module(
+    name    = "_Tokens",
+    struct  = "tokens.ml",
+    sig     = "_Tokens.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tokens.cmi",
+    src  = "tokens.mli",
+    opts = [],
+    deps = [
+        ":_Index"
+    ],
+)
+
