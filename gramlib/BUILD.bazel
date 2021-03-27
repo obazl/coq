@@ -3,14 +3,12 @@ load(
     "ocaml_signature",
     "ocaml_module",
     "ocaml_ns_archive",
+    "ocaml_submodule",
 )
 
-DEPS = [
-    # do not sort (buildifier)
-]
-DEPS_OPAM = [
-    # "core_kernel",
-]
+DEPS = []
+
+DEPS_OPAM = []
 
 #################
 ocaml_ns_archive(
@@ -27,7 +25,7 @@ ocaml_ns_archive(
 )
 
 #############
-ocaml_module(
+ocaml_submodule(
     name   = "_Gramext",
     struct = "gramext.ml",
     sig    = "_Gramext.cmi",
@@ -39,13 +37,12 @@ ocaml_module(
 ocaml_signature(
     name = "_Gramext.cmi",
     src = "gramext.mli",
-    deps = DEPS + [
-    ],
+    deps = DEPS + [],
     deps_opam = DEPS_OPAM
 )
 
 #############
-ocaml_module(
+ocaml_submodule(
     name   = "_Grammar",
     struct = "grammar.ml",
     sig    = "_Grammar.cmi",
@@ -72,7 +69,7 @@ ocaml_signature(
 )
 
 #############
-ocaml_module(
+ocaml_submodule(
     name   = "_Plexing",
     struct = "plexing.ml",
     sig    = "_Plexing.cmi",
@@ -88,17 +85,17 @@ ocaml_signature(
     src  = "plexing.mli",
     deps = DEPS + [
         "//lib:_Loc",
-        "//lib:_Util"
+        "//lib:_Util",
+        # ":_Util"
     ],
     deps_opam = DEPS_OPAM + [
         "base",
-        # "compiler-libs.common",
         "ocaml-compiler-libs"
     ]
 )
 
 #############
-ocaml_module(
+ocaml_submodule(
     name   = "_Ploc",
     struct = "ploc.ml",
     sig    = "_Ploc.cmi",
