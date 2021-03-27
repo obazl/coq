@@ -149,7 +149,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//config:_Coq_config.cmi",
+        "//:_Coq_config",
         "//clib:_Option",
         ":_Control"
     ],

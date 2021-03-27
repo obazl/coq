@@ -1,1 +1,66 @@
-# do not remove
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_genrule",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+OCAML = "@ocaml//tools:ocaml"
+
+#############
+ocaml_module(
+    name    = "_Coq_config",
+    struct  = "coq_config.ml",
+    sig     = ":_Coq_config.cmi",
+    opts = ["-I", "config"],
+    deps = [
+    ],
+)
+
+################
+ocaml_signature(
+    name = "_Coq_config.cmi",
+    src  = "coq_config.mli",
+    opts = [],
+    deps = [],
+)
+
+## For .mli/.cmi resolution to work, we need all the sources in the
+## same dir, so we use a genrule to copy:
+########
+genrule(
+    # copy mli file
+    name = "gen_coq_config_sig",
+    srcs = [
+        "//config:coq_config.mli"
+    ],
+    outs = [
+        "coq_config.mli"
+    ],
+    cmd = "\n".join([
+        "cp $(location //config:coq_config.mli) $(location coq_config.mli)"
+    ]),
+)
+
+########
+genrule(
+    # generate .ml file
+    name = "gen_coq_config",
+    srcs = glob(["dev/*"]) + [
+        "configure.ml",
+        "//dev:ocamldebug-coq.run"
+    ],
+    outs = [
+        "coq_config.ml"
+    ],
+    cmd = "\n".join([
+        "set -x",
+        "mkdir config;",
+        "$(location {tool}) configure.ml -no-ask -native-compiler no -bin-annot;".format( tool = OCAML ),
+        "echo `ls config`;",
+        "cp config/coq_config.ml $(location coq_config.ml)"
+    ]),
+    tools = [OCAML]
+)

@@ -8,14 +8,7 @@ load(
 
 package(default_visibility = ["//visibility:public"])
 
-################
-ocaml_signature(
-    name = "_Coq_config.cmi",
-    src  = "coq_config.mli",
-    opts = [],
-    deps = [],
-)
-
+exports_files(["coq_config.mli"])
 
 #################
 ocaml_executable(

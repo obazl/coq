@@ -93,7 +93,7 @@ ocaml_module(
     struct  = "usage.ml",
     sig     = "_Usage.cmi",
     deps = [
-        "//config:_Coq_config.cmi"
+        "//:_Coq_config"
     ],
 )
 
