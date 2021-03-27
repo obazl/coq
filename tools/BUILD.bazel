@@ -1,0 +1,241 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_executable",
+    "ocaml_lex",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+#################
+ocaml_executable(
+    name = "coq_makefile",
+    main = "_Coq_makefile",
+    opts = [
+    ],
+    deps = ["//clib:_CUnix"],
+    deps_opam = [
+        "unix",
+        "threads"
+    ],
+)
+
+
+
+#############
+ocaml_module(
+    name    = "_Coq_makefile",
+    struct  = "coq_makefile.ml",
+    opts    = [
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//clib:_CPath",
+        "//clib:_CUnix",
+        "//lib:_CoqProject_file",
+        "//lib:_Envars",
+        "//lib:_Feedback",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coq_tex",
+    struct  = "coq_tex.ml",
+    deps = [
+    ],
+)
+
+#################
+ocaml_executable(
+    name = "coqdep",
+    # main = "_Coqdep",
+    opts = [
+        "-I", "bazel-out/darwin-fastbuild/bin/__obazl"
+    ],
+    deps = [
+        ":_Coqdep"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqdep",
+    struct  = "coqdep.ml",
+    opts    = [
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+        "//clib:_CPath",
+        "//clib:_Minisys",
+        "//lib:_CoqProject_file",
+        "//lib:_Envars",
+        "//lib:_System",
+        ":_Coqdep_common",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqdep_boot",
+    struct  = "coqdep_boot.ml",
+    deps = [
+        ":_Coqdep_common"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqdep_common",
+    struct  = "coqdep_common.ml",
+    sig     = "_Coqdep_common.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//clib:_Minisys",
+        ":_Coqdep_lexer"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coqdep_common.cmi",
+    src  = "coqdep_common.mli",
+    opts = [],
+    deps = [
+        # ":_Coqdep_lexer.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqdep_lexer",
+    struct  = "coqdep_lexer.ml",
+    sig     = "_Coqdep_lexer.cmi",
+    deps = [
+        "//clib:_Unicode",
+    ],
+)
+
+#####
+ocaml_lex(
+    name = "genlexer",
+    src  = "coqdep_lexer.mll",
+    out  = "coqdep_lexer.ml"
+)
+
+################
+ocaml_signature(
+    name = "_Coqdep_lexer.cmi",
+    src  = "coqdep_lexer.mli",
+)
+
+#################
+ocaml_executable(
+    name = "coqwc",
+    main = "_Coqwc",
+)
+
+#############
+ocaml_module(
+    name    = "_Coqwc",
+    struct  = "coqwc.ml",
+)
+
+##########
+ocaml_lex(
+    name = "gencoqwc",
+    src  = "coqwc.mll",
+    out  = "coqwc.ml"
+)
+
+#################
+ocaml_executable(
+    name = "coqworkmgr",
+    main = "_Coqworkmgr",
+    deps_opam = [
+        "str",
+        "unix"
+    ]
+)
+
+#############
+ocaml_module(
+    name    = "_Coqworkmgr",
+    struct  = "coqworkmgr.ml",
+    opts    = [
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//stm:_CoqworkmgrApi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Md5sum",
+    struct  = "md5sum.ml",
+)
+
+
+#################
+ocaml_executable(
+    name = "ocamllibdep",
+    main = "_Ocamllibdep"
+)
+
+#############
+ocaml_module(
+    name    = "_Ocamllibdep",
+    struct  = "ocamllibdep.ml",
+    deps_opam = [
+        "unix"
+    ]
+)
+
+#####
+ocaml_lex(
+    name = "genlibdep",
+    src  = "ocamllibdep.mll",
+    out  = "ocamllibdep.ml"
+)
+
+
+# ################################
+# TOOL = "//kernel:genOpcodeFiles"
+
+# ########
+# genrule(
+#     name = "geninstruct",
+#     tools = [TOOL],
+#     outs = ["coq_instruct.h"],
+#     cmd = "\n".join([
+#         "$(location {tool}) enum > $(location coq_instruct.h)".format( tool = TOOL ),
+#     ]),
+# )
+
+# ########
+# genrule(
+#     name = "genjumptbl",
+#     tools = [TOOL],
+#     outs = ["coq_jumptbl.h"],
+#     cmd = "\n".join([
+#         "$(location {tool}) jump > $(location coq_jumptbl.h)".format( tool = TOOL ),
+#     ]),
+# )
+
+# ########
+# genrule(
+#     name = "genarity",
+#     tools = [TOOL],
+#     outs = ["coq_arity.h"],
+#     cmd = "\n".join([
+#         "$(location {tool}) arity > $(location coq_arity.h)".format( tool = TOOL ),
+#     ]),
+# )
