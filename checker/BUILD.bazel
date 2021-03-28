@@ -1,0 +1,335 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS_OPAM = [
+    "str",
+    "threads",
+    "unix"
+]
+
+##############
+ocaml_archive(
+    name = "checker",
+    modules = [
+        ":_Analyze",
+        ":_Check",
+        ":_CheckFlags",
+        ":_CheckInductive",
+        ":_CheckTypes",
+        ":_Check_stat",
+        ":_Checker",
+        ":_Coqchk",
+        ":_Mod_checking",
+        ":_Safe_checking",
+        ":_Validate",
+        ":_Values",
+        ":_Votour",
+    ]
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Analyze",
+    struct  = "analyze.ml",
+    sig     = "_Analyze.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Analyze.cmi",
+    src  = "analyze.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Check",
+    struct  = "check.ml",
+    sig     = "_Check.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//lib:_ObjFile",
+        "//lib:_System",
+        ":_Analyze",
+        ":_Mod_checking",
+        ":_Safe_checking",
+        ":_Validate"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Check.cmi",
+    src  = "check.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//clib:_CUnix",
+        "//kernel:_Names",
+        "//kernel:_Safe_typing",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_CheckFlags",
+    struct  = "checkFlags.ml",
+    sig     = "_CheckFlags.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CheckFlags.cmi",
+    src  = "checkFlags.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Declarations",
+        "//kernel:_Environ",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_CheckInductive",
+    struct  = "checkInductive.ml",
+    sig     = "_CheckInductive.cmi",
+    deps = [
+        "//kernel:_Indtypes",
+        "//kernel:_Term",
+        ":_CheckFlags"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CheckInductive.cmi",
+    src  = "checkInductive.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Environ",
+        "//kernel:_Names",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_CheckTypes",
+    struct  = "checkTypes.ml",
+    sig     = "_CheckTypes.cmi",
+    deps = [
+        "//kernel:_Reduction",
+        "//kernel:_Term",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_CheckTypes.cmi",
+    src  = "checkTypes.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Declarations",
+        "//kernel:_Environ",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Check_stat",
+    struct  = "check_stat.ml",
+    sig     = "_Check_stat.cmi",
+    deps = [
+        "//lib:_Feedback",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Check_stat.cmi",
+    src  = "check_stat.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Environ",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Checker",
+    struct  = "checker.ml",
+    sig     = "_Checker.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//clib:_CPath",
+        "//kernel:_Names",
+        "//lib:_CErrors",
+        "//lib:_Pp",
+        "//lib:_System",
+        "//lib:_Util",
+        ":_Check",
+        ":_Check_stat"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Checker.cmi",
+    src  = "checker.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqchk",
+    struct  = "coqchk.ml",
+    sig     = "_Coqchk.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coqchk.cmi",
+    src  = "coqchk.mli",
+    opts = [],
+    deps = [
+        ":_Checker",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Mod_checking",
+    struct  = "mod_checking.ml",
+    sig     = "_Mod_checking.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//kernel:_Modops",
+        "//kernel:_Reduction",
+        "//kernel:_Subtyping",
+        "//kernel:_Typeops",
+        ":_CheckFlags",
+        ":_CheckInductive"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Mod_checking.cmi",
+    src  = "mod_checking.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Environ",
+        "//kernel:_Opaqueproof"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Safe_checking",
+    struct  = "safe_checking.ml",
+    sig     = "_Safe_checking.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Mod_checking"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Safe_checking.cmi",
+    src  = "safe_checking.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Safe_typing"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Validate",
+    struct  = "validate.ml",
+    sig     = "_Validate.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Validate.cmi",
+    src  = "validate.mli",
+    opts = [],
+    deps = [
+        ":_Analyze",
+        ":_Values"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Values",
+    struct  = "values.ml",
+    sig     = "_Values.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Values.cmi",
+    src  = "values.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Votour",
+    struct  = "votour.ml",
+    sig     = "_Votour.cmi",
+    opts    = [
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//clib:_CObj",
+        ":_Analyze",
+        ":_Values"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Votour.cmi",
+    src  = "votour.mli",
+    opts = [],
+    deps = [],
+)
+
+
