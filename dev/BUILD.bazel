@@ -1,0 +1,70 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_executable",
+    "ocaml_library",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+exports_files(["ocamldebug-coq.run"])
+
+DEPS = [":_Names"]
+
+OPTS = [
+]
+
+package(default_visibility = ["//visibility:public"])
+
+#############
+ocaml_module(
+    name    = "_Dynlink",
+    struct  = "dynlink.ml",
+)
+
+    #   ocamlopt -a -o dynlink.cmxa dynlink.ml
+    #   sudo cp -i dynlink.cmxa `ocamlopt -where`
+
+    # Then build coq this way: ./configure -natdynlink no && make world
+
+
+#############
+ocaml_module(
+    name    = "_Top_printers",
+    struct  = "top_printers.ml",
+    sig     = "_Top_printers.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Top_printers.cmi",
+    src  = "top_printers.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//kernel:_Names",
+        "//lib:_Future",
+        "//lib:_Pp",
+        "//library:_Libnames",
+        "//pretyping:_Coercionops",
+        "//proofs:_Clenv",
+        "//tactics:_Hints",
+        "//tactics:_Ind_tables"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vm_printers",
+    struct  = "vm_printers.ml",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//kernel:_Term",
+        "//kernel:_Vmemitcodes",
+        "//lib:_Feedback",
+    ],
+)
+
