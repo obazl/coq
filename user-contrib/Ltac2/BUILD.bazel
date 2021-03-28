@@ -1,0 +1,461 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS_OPAM = [
+    "str",
+    "threads",
+    "unix"
+]
+
+# ltac2_plugin.mlpack
+##############
+ocaml_archive(
+    name = "Ltac2",
+    modules = [
+        ":_Tac2core",
+        ":_Tac2dyn",
+        ":_Tac2entries",
+        ":_Tac2env",
+        ":_Tac2extffi",
+        ":_Tac2ffi",
+        ":_Tac2intern",
+        ":_Tac2interp",
+        ":_Tac2match",
+        ":_Tac2print",
+        ":_Tac2quote",
+        ":_Tac2stdlib",
+        ":_Tac2tactics",
+    ]
+)
+
+# ltac2_plugin.mlpack
+################################################################
+#############
+ocaml_module(
+    name    = "_Tac2core",
+    struct  = "tac2core.ml",
+    sig     = "_Tac2core.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//lib:_Genarg",
+        ":_Tac2entries",
+        ":_Tac2env",
+        ":_Tac2match",
+        ":_Tac2quote"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2core.cmi",
+    src  = "tac2core.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//engine:_Proofview",
+        "//kernel:_Environ",
+        ":_Tac2expr.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tac2dyn",
+    struct  = "tac2dyn.ml",
+    sig     = "_Tac2dyn.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2dyn.cmi",
+    src  = "tac2dyn.mli",
+    opts = [],
+    deps = [
+        "//clib:_CSig.cmi",
+        "//clib:_Dyn.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tac2entries",
+    struct  = "tac2entries.ml",
+    sig     = "_Tac2entries.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Tac2intern",
+        ":_Tac2interp",
+        ":_Tac2print"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2entries.cmi",
+    src  = "tac2entries.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//library:_Libnames",
+        "//vernac:_Declare",
+        ":_Tac2expr.cmi",
+        ":_Tac2qexpr.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tac2env",
+    struct  = "tac2env.ml",
+    sig     = "_Tac2env.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2env.cmi",
+    src  = "tac2env.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Genintern",
+        "//kernel:_Names",
+        "//library:_Libnames",
+        "//library:_Nametab",
+        "//lib:_Genarg",
+        ":_Tac2expr.cmi",
+        ":_Tac2ffi"
+    ],
+)
+
+################
+ocaml_signature(
+    name = "_Tac2expr.cmi",
+    src  = "tac2expr.mli",
+    opts = [],
+    deps = [
+        "//clib:_CSig.cmi",
+        "//kernel:_Names",
+        "//library:_Libnames",
+        ":_Tac2dyn"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tac2extffi",
+    struct  = "tac2extffi.ml",
+    sig     = "_Tac2extffi.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2extffi.cmi",
+    src  = "tac2extffi.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Tac2ffi",
+        ":_Tac2types.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tac2ffi",
+    struct  = "tac2ffi.ml",
+    sig     = "_Tac2ffi.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2ffi.cmi",
+    src  = "tac2ffi.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Proofview",
+        "//pretyping:_Ltac_pretype",
+        "//pretyping:_Pattern",
+        "//kernel:_Names",
+        ":_Tac2dyn",
+        ":_Tac2expr.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tac2intern",
+    struct  = "tac2intern.ml",
+    sig     = "_Tac2intern.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//plugins/ltac:Ltac_plugin",
+        "//pretyping:_Locus",
+        ":_Tac2env",
+        ":_Tac2print"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2intern.cmi",
+    src  = "tac2intern.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Genintern",
+        "//kernel:_Mod_subst",
+        "//kernel:_Names",
+        ":_Tac2expr.cmi",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tac2interp",
+    struct  = "tac2interp.ml",
+    sig     = "_Tac2interp.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2interp.cmi",
+    src  = "tac2interp.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Tac2expr.cmi",
+        ":_Tac2env",
+        ":_Tac2ffi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tac2match",
+    struct  = "tac2match.ml",
+    sig     = "_Tac2match.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Constr_matching",
+        "//pretyping:_Reductionops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2match.cmi",
+    src  = "tac2match.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Proofview",
+        "//kernel:_Names",
+        "//pretyping:_Ltac_pretype",
+        "//pretyping:_Pattern",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tac2print",
+    struct  = "tac2print.ml",
+    sig     = "_Tac2print.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//printing:_Printer",
+        ":_Tac2env"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2print.cmi",
+    src  = "tac2print.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Tac2expr.cmi",
+        ":_Tac2ffi.cmi"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2qexpr.cmi",
+    src  = "tac2qexpr.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//kernel:_Names",
+        "//pretyping:_Locus",
+        ":_Tac2expr.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tac2quote",
+    struct  = "tac2quote.ml",
+    sig     = "_Tac2quote.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Tac2env"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2quote.cmi",
+    src  = "tac2quote.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//plugins/ltac:Ltac_plugin",
+        ":_Tac2dyn",
+        ":_Tac2qexpr.cmi",
+        # ":_Tac2expr.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tac2stdlib",
+    struct  = "tac2stdlib.ml",
+    sig     = "_Tac2stdlib.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        "//tactics:_Class_tactics",
+        "//tactics:_Hints",
+        "//tactics:_Inv",
+        ":_Tac2expr.cmi",
+        ":_Tac2extffi",
+        ":_Tac2env",
+        ":_Tac2ffi",
+        ":_Tac2tactics",
+        ":_Tac2types.cmi"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2stdlib.cmi",
+    src  = "tac2stdlib.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//tactics:_Genredexpr",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tac2tactics",
+    struct  = "tac2tactics.ml",
+    sig     = "_Tac2tactics.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Tac2core",
+        ":_Tac2extffi"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2tactics.cmi",
+    src  = "tac2tactics.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//tactics:_Class_tactics",
+        "//tactics:_Genredexpr",
+        "//tactics:_Hints",
+        "//tactics:_Inv",
+        ":_Tac2expr.cmi",
+        ":_Tac2types.cmi"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tac2types.cmi",
+    src  = "tac2types.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Proofview",
+        "//kernel:_Names",
+        "//pretyping:_Locus",
+        "//proofs:_Tactypes",
+        "//tactics:_Equality",
+        ":_Tac2ffi"
+    ],
+)
+
+COQPP = "//coqpp:coqpp_main"
+########
+genrule(
+    name = "gen_g_ltac2.mlg",
+    tools = [COQPP],
+    srcs = [
+        "g_ltac2.mlg"
+    ],
+    outs = [
+        "g_ltac2.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_ltac2.mlg)".format( tool = COQPP ),
+        "cp plugins/ltac/g_ltac2.ml $(location g_ltac2.ml);"
+    ]),
+)
+
