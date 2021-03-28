@@ -1,0 +1,133 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+################################################################
+ocaml_archive(
+    name = "cc_plugin",
+    modules = [
+        ":_Ccalgo",
+        ":_Ccproof",
+        ":_Cctac",
+        ":_G_congruence"
+    ]
+)
+
+#############
+ocaml_module(
+    name    = "_Ccalgo",
+    struct  = "ccalgo.ml",
+    sig     = "_Ccalgo.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//printing:_Printer",
+        "//proofs:_Tacmach",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ccalgo.cmi",
+    src  = "ccalgo.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//kernel:_Constr",
+        "//lib:_CDebug",
+        "//proofs:_Proof",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ccproof",
+    struct  = "ccproof.ml",
+    sig     = "_Ccproof.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ccproof.cmi",
+    src  = "ccproof.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Constr",
+        ":_Ccalgo"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Cctac",
+    struct  = "cctac.ml",
+    sig     = "_Cctac.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Equality",
+        "//tactics:_Tactics",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Cctac.cmi",
+    src  = "cctac.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        ":_Ccproof"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_congruence",
+    struct  = "g_congruence.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//plugins/ltac:Ltac_plugin",
+        ":_Cctac"
+    ],
+)
+
+
+########
+genrule(
+    name = "gen_g_congruence",
+    tools = [COQPP],
+    srcs = [
+        "g_congruence.mlg"
+    ],
+    outs = [
+        "g_congruence.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_congruence.mlg)".format( tool = COQPP ),
+        "cp plugins/cc/g_congruence.ml $(location g_congruence.ml);"
+    ]),
+)
