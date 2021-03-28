@@ -1,0 +1,74 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_executable",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+################################################################
+
+#############
+ocaml_module(
+    name    = "_G_btauto",
+    struct  = "g_btauto.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//plugins/ltac:Ltac_plugin",
+        ":_Refl_btauto"
+    ],
+)
+
+###########################
+TOOL = "//coqpp:coqpp_main"
+
+########
+genrule(
+    name = "gen_g_btauto",
+    tools = [TOOL],
+    srcs = [
+        "g_btauto.mlg"
+    ],
+    outs = [
+        "g_btauto.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_btauto.mlg)".format( tool = TOOL ),
+        "cp plugins/btauto/g_btauto.ml $(location g_btauto.ml);"
+    ]),
+)
+
+#############
+ocaml_module(
+    name    = "_Refl_btauto",
+    struct  = "refl_btauto.ml",
+    sig     = "_Refl_btauto.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//library:_Coqlib",
+        "//printing:_Printer",
+        "//tactics:_Redexpr",
+        "//tactics:_Tacticals",
+        "//tactics:_Tactics",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Refl_btauto.cmi",
+    src  = "refl_btauto.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Proofview"
+    ],
+)
