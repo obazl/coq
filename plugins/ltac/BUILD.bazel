@@ -1,0 +1,1011 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_executable",
+    "ocaml_library",
+    "ocaml_module",
+    "ocaml_ns_archive",
+    "ocaml_signature",
+)
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+################################################################
+## Resolver module, instead of pack
+ocaml_module(
+    name   = "ltac_plugin",
+    struct = "ltac_plugin.ml",
+    opts   = [
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+        "-rectypes"
+    ],
+    deps = [
+        ":_Tacexpr",
+        ":_Tacarg",
+        ":_Tacsubst",
+        ":_Tacenv",
+        ":_Pptactic",
+        ":_Pltac",
+        ":_Taccoerce",
+        ":_Tactic_debug",
+        ":_Tacintern",
+        ":_Profile_ltac",
+        ":_Tactic_matching",
+        ":_Leminv",
+        ":_Tacinterp",
+        ":_Tacentries",
+        ":_Evar_tactics",
+        ":_Tactic_option",
+        ":_Extraargs",
+        ":_G_obligations",
+        ":_Coretactics",
+        ":_Extratactics",
+        ":_Profile_ltac_tactics",
+        ":_G_auto",
+        ":_G_class",
+        ":_Rewrite",
+        ":_G_rewrite",
+        ":_G_eqdecide",
+        ":_G_tactic",
+        ":_G_ltac",
+    ]
+)
+
+SUBMODS = [
+    "Tacexpr",
+    "Tacarg",
+    "Tacsubst",
+    "Tacenv",
+    "Pptactic",
+    "Pltac",
+    "Taccoerce",
+    "Tactic_debug",
+    "Tacintern",
+    "Profile_ltac",
+    "Tactic_matching",
+    "Leminv",
+    "Tacinterp",
+    "Tacentries",
+    "Evar_tactics",
+    "Tactic_option",
+    "Extraargs",
+    "G_obligations",
+    "Coretactics",
+    "Extratactics",
+    "Profile_ltac_tactics",
+    "G_auto",
+    "G_class",
+    "Rewrite",
+    "G_rewrite",
+    "G_eqdecide",
+    "G_tactic",
+    "G_ltac",
+]
+
+SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in SUBMODS
+]
+
+########
+genrule(
+    name = "gen_plugin_resolver",
+    outs = [
+        "ltac_plugin.ml"
+    ],
+    cmd = "\n".join(SUBMODULES),
+)
+
+################################################################
+
+#############
+ocaml_module(
+    name    = "_Coretactics",
+    struct  = "coretactics.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Stdarg",
+        "//lib:_Util",
+        "//pretyping:_Locus",
+        "//proofs:_Tactypes",
+        "//tactics:_Genredexpr",
+        ":_Extraargs"
+    ],
+)
+
+########
+genrule(
+    name = "gen_coretactics",
+    tools = [COQPP],
+    srcs = [
+        "coretactics.mlg"
+    ],
+    outs = [
+        "coretactics.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location coretactics.mlg)".format( tool = COQPP ),
+        "cp plugins/ltac/coretactics.ml $(location coretactics.ml);"
+    ]),
+)
+
+#############
+ocaml_module(
+    name    = "_Evar_tactics",
+    struct  = "evar_tactics.ml",
+    sig     = "_Evar_tactics.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Evar_tactics.cmi",
+    src  = "evar_tactics.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Tacexpr",
+        ":_Tacinterp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Extraargs",
+    struct  = "extraargs.ml",
+    sig     = "_Extraargs.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Tacentries"
+    ],
+)
+
+########
+genrule(
+    name = "gen_extraargs",
+    tools = [COQPP],
+    srcs = [
+        "extraargs.mlg"
+    ],
+    outs = [
+        "extraargs.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location extraargs.mlg)".format( tool = COQPP ),
+        "cp plugins/ltac/extraargs.ml $(location extraargs.ml);"
+    ]),
+)
+
+################
+ocaml_signature(
+    name = "_Extraargs.cmi",
+    src  = "extraargs.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Genintern",
+        "//parsing:_Pcoq",
+        ":_Tacexpr",
+        ":_Tacinterp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Extratactics",
+    struct  = "extratactics.ml",
+    sig     = "_Extratactics.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Stdarg",
+        "//lib:_Genarg",
+        "//tactics:_Autorewrite",
+        "//tactics:_Contradiction",
+        ":_Evar_tactics",
+        ":_Extraargs",
+        ":_Tacarg"
+    ],
+)
+
+########
+genrule(
+    name = "gen_extratactics",
+    tools = [COQPP],
+    srcs = [
+        "extratactics.mlg"
+    ],
+    outs = [
+        "extratactics.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location extratactics.mlg)".format( tool = COQPP ),
+        "cp plugins/ltac/extratactics.ml $(location extratactics.ml);"
+    ]),
+)
+
+######
+ocaml_signature(
+    name = "_Extratactics.cmi",
+    src  = "extratactics.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Proofview",
+        "//kernel:_Names",
+        "//proofs:_Tactypes",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_auto",
+    struct  = "g_auto.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Stdarg",
+        "//lib:_Pp",
+        "//parsing:_Pcoq",
+        "//tactics:_Hints",
+        "//vernac:_Mltop",
+        ":_Pltac",
+        ":_Tacentries"
+    ],
+)
+
+########
+genrule(
+    name = "gen_g_auto",
+    tools = [COQPP],
+    srcs = [
+        "g_auto.mlg"
+    ],
+    outs = [
+        "g_auto.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_auto.mlg)".format( tool = COQPP ),
+        "cp plugins/ltac/g_auto.ml $(location g_auto.ml);"
+    ]),
+)
+
+#############
+ocaml_module(
+    name    = "_G_class",
+    struct  = "g_class.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Class_tactics",
+        "//vernac:_Classes",
+        "//vernac:_Mltop",
+        "//vernac:_Vernacextend",
+        ":_Tacarg",
+        ":_Tacentries"
+    ],
+)
+
+########
+genrule(
+    name = "gen_g_class",
+    tools = [COQPP],
+    srcs = [
+        "g_class.mlg"
+    ],
+    outs = [
+        "g_class.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_class.mlg)".format( tool = COQPP ),
+        "cp plugins/ltac/g_class.ml $(location g_class.ml);"
+    ]),
+)
+
+#############
+ocaml_module(
+    name    = "_G_eqdecide",
+    struct  = "g_eqdecide.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Eqdecide",
+        "//vernac:_Mltop",
+        ":_Tacentries",
+    ],
+)
+
+########
+genrule(
+    name = "gen_g_eqdecide",
+    tools = [COQPP],
+    srcs = [
+        "g_eqdecide.mlg"
+    ],
+    outs = [
+        "g_eqdecide.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_eqdecide.mlg)".format( tool = COQPP ),
+        "cp plugins/ltac/g_eqdecide.ml $(location g_eqdecide.ml);"
+    ]),
+)
+
+#############
+ocaml_module(
+    name    = "_G_ltac",
+    struct  = "g_ltac.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//parsing:_Pcoq",
+        "//vernac:_G_proofs",
+        "//vernac:_Mltop",
+        "//vernac:_Pvernac",
+        "//vernac:_Vernacextend",
+        ":_Pltac",
+        ":_Pptactic",
+        ":_Tacentries",
+        ":_Tacexpr",
+        ":_Tacinterp"
+    ],
+)
+
+########
+genrule(
+    name = "gen_g_ltac",
+    tools = [COQPP],
+    srcs = [
+        "g_ltac.mlg"
+    ],
+    outs = [
+        "g_ltac.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_ltac.mlg)".format( tool = COQPP ),
+        "cp plugins/ltac/g_ltac.ml $(location g_ltac.ml);"
+    ]),
+)
+
+#############
+ocaml_module(
+    name    = "_G_obligations",
+    struct  = "g_obligations.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Constrexpr",
+        "//interp:_Constrexpr_ops",
+        "//interp:_Stdarg",
+        ":_Extraargs",
+        ":_Tacarg",
+        ":_Tactic_option"
+    ],
+)
+
+########
+genrule(
+    name = "geng_obligations",
+    tools = [COQPP],
+    srcs = [
+        "g_obligations.mlg"
+    ],
+    outs = [
+        "g_obligations.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_obligations.mlg)".format( tool = COQPP ),
+        "cp plugins/ltac/g_obligations.ml $(location g_obligations.ml);"
+    ]),
+)
+
+#############
+ocaml_module(
+    name    = "_G_rewrite",
+    struct  = "g_rewrite.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Constrexpr",
+        "//interp:_Genintern",
+        "//kernel:_Names",
+        "//pretyping:_Locus",
+        ":_Extraargs",
+        ":_Rewrite"
+    ],
+)
+
+########
+genrule(
+    name = "gen_g_rewrite",
+    tools = [COQPP],
+    srcs = [
+        "g_rewrite.mlg"
+    ],
+    outs = [
+        "g_rewrite.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_rewrite.mlg)".format( tool = COQPP ),
+        "cp plugins/ltac/g_rewrite.ml $(location g_rewrite.ml);"
+    ]),
+)
+
+#############
+ocaml_module(
+    name    = "_G_tactic",
+    struct  = "g_tactic.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//engine:_Namegen",
+        "//kernel:_Names",
+        "//lib:_CErrors",
+        "//lib:_Pp",
+        "//lib:_Util",
+        "//parsing:_Pcoq",
+        ":_Extraargs",
+        ":_Tacexpr"
+    ],
+)
+
+########
+genrule(
+    name = "gen_g_tactic",
+    tools = [COQPP],
+    srcs = [
+        "g_tactic.mlg"
+    ],
+    outs = [
+        "g_tactic.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_tactic.mlg)".format( tool = COQPP ),
+        "cp plugins/ltac/g_tactic.ml $(location g_tactic.ml);"
+    ]),
+)
+
+#############
+ocaml_module(
+    name    = "_Leminv",
+    struct  = "leminv.ml",
+    sig     = "_Leminv.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//printing:_Printer",
+        "//proofs:_Clenv",
+        "//tactics:_Tacticals",
+        "//tactics:_Tactics",
+        "//vernac:_Declare"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Leminv.cmi",
+    src  = "leminv.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Proofview",
+        "//interp:_Constrexpr",
+        "//kernel:_Names",
+        "//proofs:_Tactypes",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Pltac",
+    struct  = "pltac.ml",
+    sig     = "_Pltac.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Tacarg"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Pltac.cmi",
+    src  = "pltac.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//parsing:_Pcoq",
+        ":_Tacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Pptactic",
+    struct  = "pptactic.ml",
+    sig     = "_Pptactic.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Stdarg",
+        ":_Tacarg",
+        ":_Tacenv"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Pptactic.cmi",
+    src  = "pptactic.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//interp:_Genintern",
+        "//lib:_Genarg",
+        "//pretyping:_Geninterp",
+        ":_Tacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Profile_ltac",
+    struct  = "profile_ltac.ml",
+    sig     = "_Profile_ltac.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//vernac:_Declaremods",
+        ":_Pptactic"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Profile_ltac.cmi",
+    src  = "profile_ltac.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Tacexpr",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Profile_ltac_tactics",
+    struct  = "profile_ltac_tactics.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//vernac:_Mltop",
+        ":_Profile_ltac",
+        ":_Tacentries"
+    ],
+)
+
+########
+genrule(
+    name = "gen_profile_ltac_tactics",
+    tools = [COQPP],
+    srcs = [
+        "profile_ltac_tactics.mlg"
+    ],
+    outs = [
+        "profile_ltac_tactics.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location profile_ltac_tactics.mlg)".format( tool = COQPP ),
+        "cp plugins/ltac/profile_ltac_tactics.ml $(location profile_ltac_tactics.ml);"
+    ]),
+)
+
+#############
+ocaml_module(
+    name    = "_Rewrite",
+    struct  = "rewrite.ml",
+    sig     = "_Rewrite.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Autorewrite"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Rewrite.cmi",
+    src  = "rewrite.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//interp:_Constrexpr",
+        "//interp:_Genintern",
+        "//kernel:_Environ",
+        "//kernel:_Names",
+        "//proofs:_Tactypes",
+        ":_Tacexpr",
+        ":_Tacinterp"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tacarg",
+    struct  = "tacarg.ml",
+    sig     = "_Tacarg.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Stdarg",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tacarg.cmi",
+    src  = "tacarg.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//interp:_Constrexpr",
+        "//interp:_Genintern",
+        "//lib:_Genarg",
+        "//proofs:_Tactypes",
+        ":_Tacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Taccoerce",
+    struct  = "taccoerce.ml",
+    sig     = "_Taccoerce.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+        "//interp:_Stdarg",
+        ":_Pptactic",
+        ":_Tacarg"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Taccoerce.cmi",
+    src  = "taccoerce.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//kernel:_Names",
+        "//lib:_Genarg",
+        "//lib:_Util",
+        "//pretyping:_Geninterp",
+        "//pretyping:_Ltac_pretype",
+        "//pretyping:_Tacred",
+        "//proofs:_Tactypes",
+        ":_Tacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tacentries",
+    struct  = "tacentries.ml",
+    sig     = "_Tacentries.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//vernac:_Mltop",
+        "//vernac:_Prettyp",
+        ":_Pltac",
+        ":_Taccoerce",
+        ":_Tacintern",
+        ":_Tacinterp"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tacentries.cmi",
+    src  = "tacentries.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//parsing:_Pcoq",
+        "//vernac:_Vernacexpr",
+        "//vernac:_Vernacextend",
+        ":_Pptactic",
+        ":_Tacexpr",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tacenv",
+    struct  = "tacenv.ml",
+    sig     = "_Tacenv.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Tacsubst"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tacenv.cmi",
+    src  = "tacenv.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//library:_Libnames",
+        ":_Tacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tacexpr",
+    struct  = "tacexpr.ml",
+    sig     = "_Tacexpr.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tacexpr.cmi",
+    src  = "tacexpr.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//kernel:_Names",
+        "//lib:_Loc",
+        "//proofs:_Tactypes",
+        "//tactics:_Genredexpr",
+        "//tactics:_Inv",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tacintern",
+    struct  = "tacintern.ml",
+    sig     = "_Tacintern.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Stdarg",
+        ":_Pptactic",
+        ":_Tacarg",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tacintern.cmi",
+    src  = "tacintern.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Tacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tacinterp",
+    struct  = "tacinterp.ml",
+    sig     = "_Tacinterp.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Leminv",
+        ":_Profile_ltac",
+        ":_Taccoerce",
+        ":_Tacintern",
+        ":_Tactic_matching"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tacinterp.cmi",
+    src  = "tacinterp.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//vernac:_ComTactic",
+        ":_Tactic_debug"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tacsubst",
+    struct  = "tacsubst.ml",
+    sig     = "_Tacsubst.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Stdarg",
+        ":_Tacarg"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tacsubst.cmi",
+    src  = "tacsubst.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Tacexpr",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tactic_debug",
+    struct  = "tactic_debug.ml",
+    sig     = "_Tactic_debug.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Pptactic"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tactic_debug.cmi",
+    src  = "tactic_debug.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Environ",
+        "//pretyping:_Pattern",
+        ":_Tacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tactic_matching",
+    struct  = "tactic_matching.ml",
+    sig     = "_Tactic_matching.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tactic_matching.cmi",
+    src  = "tactic_matching.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//pretyping:_Constr_matching",
+        ":_Tacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Tactic_option",
+    struct  = "tactic_option.ml",
+    sig     = "_Tactic_option.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Tacinterp",
+        ":_Tacsubst"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tactic_option.cmi",
+    src  = "tactic_option.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//vernac:_Vernacexpr",
+        ":_Tacexpr"
+    ],
+)
+
+#################
+ocaml_ns_archive(
+    name = "tauto_plugin",
+    submodules = [
+        ":_Tauto"
+    ]
+)
+
+#############
+ocaml_module(
+    name    = "_Tauto",
+    struct  = "tauto.ml",
+    sig     = "_Tauto.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Hipattern"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Tauto.cmi",
+    src  = "tauto.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//kernel:_Constr",
+        ":ltac_plugin"
+    ],
+)
