@@ -1,0 +1,80 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+################################################################
+ocaml_archive(
+    name = "derive_plugin",
+    modules = [
+        ":_Derive",
+        ":_G_derive"
+    ]
+)
+
+#############
+ocaml_module(
+    name    = "_Derive",
+    struct  = "derive.ml",
+    sig     = "_Derive.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Derive.cmi",
+    src  = "derive.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//kernel:_Names",
+        "//vernac:_Declare",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_derive",
+    struct  = "g_derive.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Stdarg",
+        "//vernac:_Mltop",
+        "//vernac:_Vernacextend",
+        ":_Derive"
+    ],
+)
+
+
+########
+genrule(
+    name = "gen_g_derive",
+    tools = [COQPP],
+    srcs = [
+        "g_derive.mlg"
+    ],
+    outs = [
+        "g_derive.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_derive.mlg)".format( tool = COQPP ),
+        "cp plugins/derive/g_derive.ml $(location g_derive.ml);"
+    ]),
+)
