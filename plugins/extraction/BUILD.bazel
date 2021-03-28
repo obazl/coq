@@ -1,0 +1,368 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+################################################################
+ocaml_archive(
+    name = "extraction_plugin",
+    modules = [
+        ":_Big",
+        ":_Common",
+        ":_Extract_env",
+        ":_Extraction",
+        ":_Haskell",
+        ":_Json",
+        ":_Miniml",
+        ":_Mlutil",
+        ":_Modutil",
+        ":_Ocaml",
+        ":_Scheme",
+        ":_Table",
+    ]
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Big",
+    struct  = "big.ml",
+    deps = [
+    ],
+    deps_opam = [
+        "zarith"
+    ]
+)
+
+#############
+ocaml_module(
+    name    = "_Common",
+    struct  = "common.ml",
+    sig     = "_Common.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Mlutil",
+        ":_Table",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Common.cmi",
+    src  = "common.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Namegen",
+        "//kernel:_Names",
+        ":_Miniml"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Extract_env",
+    struct  = "extract_env.ml",
+    sig     = "_Extract_env.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//vernac:_Topfmt",
+        ":_Common",
+        ":_Extraction",
+        ":_Haskell",
+        ":_Json",
+        ":_Modutil",
+        ":_Ocaml",
+        ":_Scheme",
+        ":_Table"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Extract_env.cmi",
+    src  = "extract_env.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        "//kernel:_Environ",
+        "//kernel:_Names",
+        "//library:_Libnames",
+        "//vernac:_Declare",
+        ":_Miniml"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Extraction",
+    struct  = "extraction.ml",
+    sig     = "_Extraction.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//pretyping:_Inductiveops",
+        "//pretyping:_Recordops",
+        ":_Mlutil",
+        ":_Table",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Extraction.cmi",
+    src  = "extraction.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        "//kernel:_Environ",
+        "//kernel:_Declarations",
+        "//kernel:_Names",
+        "//pretyping:_Reductionops",
+        ":_Miniml"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Haskell",
+    struct  = "haskell.ml",
+    sig     = "_Haskell.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Common",
+        ":_Mlutil"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Haskell.cmi",
+    src  = "haskell.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Miniml",
+        ":_Table"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Json",
+    struct  = "json.ml",
+    sig     = "_Json.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Common",
+        ":_Mlutil",
+        ":_Table"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Json.cmi",
+    src  = "json.mli",
+    opts = [],
+    deps = [
+        ":_Miniml",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Miniml",
+    struct  = "miniml.ml",
+    sig     = "_Miniml.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Miniml.cmi",
+    src  = "miniml.mli",
+    opts = [],
+    deps = [
+        "//kernel:_Names",
+        "//kernel:_Float64",
+        "//kernel:_Uint63",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Mlutil",
+    struct  = "mlutil.ml",
+    sig     = "_Mlutil.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Mlutil.cmi",
+    src  = "mlutil.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Miniml",
+        ":_Table"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Modutil",
+    struct  = "modutil.ml",
+    sig     = "_Modutil.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Mlutil"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Modutil.cmi",
+    src  = "modutil.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Miniml",
+        ":_Table"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ocaml",
+    struct  = "ocaml.ml",
+    sig     = "_Ocaml.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Common",
+        ":_Mlutil",
+        ":_Modutil",
+        ":_Table"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ocaml.cmi",
+    src  = "ocaml.mli",
+    opts = [],
+    deps = [
+        ":_Miniml"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Scheme",
+    struct  = "scheme.ml",
+    sig     = "_Scheme.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Common"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Scheme.cmi",
+    src  = "scheme.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Mlutil",
+        ":_Miniml"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Table",
+    struct  = "table.ml",
+    sig     = "_Table.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//printing:_Printer",
+        "//vernac:_Library"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Table.cmi",
+    src  = "table.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Namegen",
+        "//kernel:_Declarations",
+        "//kernel:_Environ",
+        "//kernel:_Names",
+        "//kernel:_Term",
+        "//lib:_Hook",
+        "//library:_Libnames",
+        ":_Miniml"
+    ],
+)
+
+################################################################
+########
+genrule(
+    name = "gen_g_extraction",
+    tools = [COQPP],
+    srcs = [
+        "g_extraction.mlg"
+    ],
+    outs = [
+        "g_extraction.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_extraction.mlg)".format( tool = COQPP ),
+        "cp plugins/extraction/g_extraction.ml $(location g_extraction.ml);"
+    ]),
+)
+
