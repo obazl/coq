@@ -1,0 +1,217 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+################################################################
+ocaml_archive(
+    name = "ground_plugin",
+    modules = [
+        ":_Formula",
+        ":_Ground",
+        ":_Instances",
+        ":_Rules",
+        ":_Sequent",
+        ":_Unify",
+        ":_G_ground"
+    ]
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Formula",
+    struct  = "formula.ml",
+    sig     = "_Formula.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Hipattern"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Formula.cmi",
+    src  = "formula.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//kernel:_Constr",
+        "//kernel:_Names",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ground",
+    struct  = "ground.ml",
+    sig     = "_Ground.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//plugins/ltac:Ltac_plugin",
+        ":_Instances",
+        ":_Rules"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ground.cmi",
+    src  = "ground.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Proofview",
+        ":_Sequent"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Instances",
+    struct  = "instances.ml",
+    sig     = "_Instances.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Instances.cmi",
+    src  = "instances.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        ":_Rules"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Rules",
+    struct  = "rules.ml",
+    sig     = "_Rules.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        "//tactics:_Tactics"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Rules.cmi",
+    src  = "rules.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//kernel:_Constr",
+        "//kernel:_Names",
+        "//engine:_Proofview",
+        ":_Sequent"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Sequent",
+    struct  = "sequent.ml",
+    sig     = "_Sequent.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Unify"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Sequent.cmi",
+    src  = "sequent.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//clib:_Heap",
+        "//engine:_EConstr",
+        "//kernel:_Names",
+        "//tactics:_Hints",
+        ":_Formula"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Unify",
+    struct  = "unify.ml",
+    sig     = "_Unify.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//engine:_Termops",
+        "//pretyping:_Reductionops"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Unify.cmi",
+    src  = "unify.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//kernel:_Constr",
+    ],
+)
+
+################################################################
+
+#############
+ocaml_module(
+    name    = "_G_ground",
+    struct  = "g_ground.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//plugins/ltac:Ltac_plugin",
+        ":_Formula",
+        ":_Ground",
+        ":_Sequent"
+    ],
+)
+
+
+########
+genrule(
+    name = "gen_g_ground",
+    tools = [COQPP],
+    srcs = [
+        "g_ground.mlg"
+    ],
+    outs = [
+        "g_ground.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_ground.mlg)".format( tool = COQPP ),
+        "cp plugins/firstorder/g_ground.ml $(location g_ground.ml);"
+    ]),
+)
+
