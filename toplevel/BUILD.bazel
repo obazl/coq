@@ -1,0 +1,258 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_signature",
+    "ocaml_library",
+    "ocaml_module",
+)
+
+DEPS = [
+    # do not sort (buildifier)
+]
+DEPS_OPAM = [
+]
+
+#################
+ocaml_library(
+    name = "toplevel",
+    modules = [
+        ":_Ccompile",
+        ":_Coqc",
+        ":_Coqcargs",
+        ":_Coqloop",
+        ":_Coqrc",
+        ":_Coqtop",
+        ":_Vernac",
+        ":_WorkerLoop",
+    ],
+    visibility = [
+        "//visibility:public",
+    ]
+)
+
+#############
+ocaml_module(
+    name    = "_Ccompile",
+    struct  = "ccompile.ml",
+    sig     = "_Ccompile.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//stm:_Vio_checking",
+        ":_Coqrc"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ccompile.cmi",
+    src  = "ccompile.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//sysinit:_Coqargs",
+        ":_Coqcargs",
+        ":_Vernac"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqc",
+    struct  = "coqc.ml",
+    sig     = "_Coqc.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        "//clib:_CUnix",
+        "//vernac:_Vernacstate",
+        ":_Coqcargs",
+        ":_Coqtop"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coqc.cmi",
+    src  = "coqc.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqcargs",
+    struct  = "coqcargs.ml",
+    sig     = "_Coqcargs.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        "//vernac:_Topfmt"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coqcargs.cmi",
+    src  = "coqcargs.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Dumpglob"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqloop",
+    struct  = "coqloop.ml",
+    sig     = "_Coqloop.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_G_toplevel"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coqloop.cmi",
+    src  = "coqloop.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//stm:_Stm",
+        ":_Vernac"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqrc",
+    struct  = "coqrc.ml",
+    sig     = "_Coqrc.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coqrc.cmi",
+    src  = "coqrc.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Vernac"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqtop",
+    struct  = "coqtop.ml",
+    sig     = "_Coqtop.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+        "//stm:_Stmargs",
+        ":_Ccompile",
+        ":_Coqloop"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coqtop.cmi",
+    src  = "coqtop.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//stm:_Stm",
+        "//sysinit:_Coqargs",
+        "//sysinit:_Usage",
+        ":_Coqcargs",
+        ":_Vernac"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_toplevel",
+    struct  = "g_toplevel.ml",
+    opts = [
+        "-rectypes",
+        # "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//parsing:_Pcoq",
+        "//vernac:_Pvernac",
+        "//vernac:_Vernacexpr"
+    ]
+)
+
+###########################
+TOOL = "//coqpp:coqpp_main"
+
+########
+genrule(
+    name = "gentoplevel",
+    tools = [TOOL],
+    srcs = [
+        "g_toplevel.mlg",
+    ],
+    outs = [
+        "g_toplevel.ml",
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_toplevel.mlg);".format( tool = TOOL ),
+        "cp toplevel/g_toplevel.ml $(location g_toplevel.ml);",
+    ]),
+)
+
+#############
+ocaml_module(
+    name    = "_Vernac",
+    struct  = "vernac.ml",
+    sig     = "_Vernac.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vernac.cmi",
+    src  = "vernac.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//stm:_Stm"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_WorkerLoop",
+    struct  = "workerLoop.ml",
+    sig     = "_WorkerLoop.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Coqtop"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_WorkerLoop.cmi",
+    src  = "workerLoop.mli",
+    opts = [],
+    deps = [
+        "//stm:_Stmargs"
+    ],
+)
+
+
+
