@@ -1,0 +1,128 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_executable",
+    "ocaml_library",
+    "ocaml_module",
+    "ocaml_ns_archive",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+################################################################
+## Resolver module, instead of omega_plugin.mlpack
+ocaml_module(
+    name   = "omega_plugin",
+    struct = "omega_plugin.ml",
+    opts   = [
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+        "-rectypes"
+    ],
+    deps = [
+        ":_Omega",
+        ":_Coq_omega",
+        ":_G_omega",
+    ]
+)
+
+SUBMODS = [
+    "Omega",
+    "Coq_omega",
+    "G_Omega"
+]
+
+SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in SUBMODS
+]
+
+########
+genrule(
+    name = "gen_plugin_resolver",
+    outs = [
+        "omega_plugin.ml"
+    ],
+    cmd = "\n".join(SUBMODULES),
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Coq_omega",
+    struct  = "coq_omega.ml",
+    sig     = "_Coq_omega.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Contradiction",
+        "//tactics:_Equality",
+        "//tactics:_Tacticals",
+        "//tactics:_Tactics",
+        ":_Omega"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coq_omega.cmi",
+    src  = "coq_omega.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Proofview"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Omega",
+    struct  = "omega.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//lib:_Util",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_omega",
+    struct  = "g_omega.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//vernac:_Mltop",
+        "//plugins/ltac:Ltac_plugin",
+        ":_Coq_omega"
+    ],
+)
+
+########
+genrule(
+    name = "gen_g_omega",
+    tools = [COQPP],
+    srcs = [
+        "g_omega.mlg"
+    ],
+    outs = [
+        "g_omega.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_omega.mlg)".format( tool = COQPP ),
+        "cp plugins/omega/g_omega.ml $(location g_omega.ml);"
+    ]),
+)
+
