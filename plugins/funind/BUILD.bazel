@@ -1,0 +1,337 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+################################################################
+# recdef_plugin.mlpack
+ocaml_archive(
+    name = "recdef_plugin",
+    modules = [
+        ":_Functional_principles_proofs",
+        ":_Functional_principles_types",
+        ":_Gen_principle",
+        ":_Glob_term_to_relation",
+        ":_Glob_termops",
+        ":_Indfun",
+        ":_Indfun_common",
+        ":_Invfun",
+        ":_Recdef",
+        ":_G_indfun"
+    ]
+)
+
+#############
+ocaml_module(
+    name    = "_Functional_principles_proofs",
+    struct  = "functional_principles_proofs.ml",
+    sig     = "_Functional_principles_proofs.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Eauto",
+        ":_Recdef"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Functional_principles_proofs.cmi",
+    src  = "functional_principles_proofs.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//engine:_Evd",
+        "//kernel:_Names",
+        "//engine:_Proofview",
+        ":_Indfun_common"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Functional_principles_types",
+    struct  = "functional_principles_types.ml",
+    sig     = "_Functional_principles_types.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Tactics",
+        ":_Indfun_common"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Functional_principles_types.cmi",
+    src  = "functional_principles_types.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Constr",
+        "//printing:_Printer"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Gen_principle",
+    struct  = "gen_principle.ml",
+    sig     = "_Gen_principle.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//vernac:_ComDefinition",
+        "//vernac:_ComFixpoint",
+        "//plugins/ltac:Ltac_plugin",
+        ":_Functional_principles_proofs",
+        ":_Functional_principles_types",
+        ":_Glob_term_to_relation"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Gen_principle.cmi",
+    src  = "gen_principle.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//lib:_Loc",
+        "//lib:_Pp",
+        "//vernac:_Declare",
+        "//vernac:_Vernacexpr",
+        ":_Indfun_common"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Glob_term_to_relation",
+    struct  = "glob_term_to_relation.ml",
+    sig     = "_Glob_term_to_relation.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//printing:_Printer",
+        "//vernac:_ComInductive",
+        ":_Glob_termops",
+        ":_Indfun_common",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Glob_term_to_relation.cmi",
+    src  = "glob_term_to_relation.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//interp:_Constrexpr",
+        "//kernel:_Constr",
+        "//kernel:_Names",
+        "//pretyping:_Glob_term"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Glob_termops",
+    struct  = "glob_termops.ml",
+    sig     = "_Glob_termops.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Indfun_common"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Glob_termops.cmi",
+    src  = "glob_termops.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//pretyping:_Glob_term",
+        "//pretyping:_Pretyping"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Indfun",
+    struct  = "indfun.ml",
+    sig     = "_Indfun.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Indfun_common"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Indfun.cmi",
+    src  = "indfun.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//plugins/ltac:Ltac_plugin",
+        "//proofs:_Tactypes",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Indfun_common",
+    struct  = "indfun_common.ml",
+    sig     = "_Indfun_common.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Impargs",
+        "//interp:_Constrextern",
+        "//printing:_Printer",
+        "//tactics:_Equality",
+        "//tactics:_Tacticals",
+        "//vernac:_Vernacstate"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Indfun_common.cmi",
+    src  = "indfun_common.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//library:_Libnames",
+        "//pretyping:_Glob_term",
+        "//proofs:_Tacmach"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Invfun",
+    struct  = "invfun.ml",
+    sig     = "_Invfun.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//proofs:_Tacmach",
+        "//tactics:_Inv",
+        "//tactics:_Tactics",
+        ":_Indfun_common",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Invfun.cmi",
+    src  = "invfun.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Proofview",
+        "//proofs:_Tactypes",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Recdef",
+    struct  = "recdef.ml",
+    sig     = "_Recdef.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//plugins/extraction:Extraction_plugin",
+        "//tactics:_Auto",
+        "//tactics:_Eauto",
+        "//tactics:_Elim",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Recdef.cmi",
+    src  = "recdef.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Proofview",
+        "//interp:_Constrintern",
+        "//kernel:_Constr",
+        ":_Indfun_common"
+    ],
+)
+
+################################################################
+################################################################
+
+#############
+ocaml_module(
+    name    = "_G_indfun",
+    struct  = "g_indfun.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//plugins/ltac:Ltac_plugin",
+        "//vernac:_Vernac_classifier",
+        ":_Gen_principle",
+        ":_Indfun",
+        ":_Indfun_common",
+        ":_Invfun",
+    ],
+)
+
+
+########
+genrule(
+    name = "gen_g_indfun",
+    tools = [COQPP],
+    srcs = [
+        "g_indfun.mlg"
+    ],
+    outs = [
+        "g_indfun.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_indfun.mlg)".format( tool = COQPP ),
+        "cp plugins/funind/g_indfun.ml $(location g_indfun.ml);"
+    ]),
+)
+
