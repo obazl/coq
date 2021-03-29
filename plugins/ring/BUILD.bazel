@@ -1,0 +1,132 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_executable",
+    "ocaml_library",
+    "ocaml_module",
+    "ocaml_ns_archive",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+################################################################
+## Resolver module, instead of ring_plugin.mlpack
+ocaml_module(
+    name   = "ring_plugin",
+    struct = "ring_plugin.ml",
+    opts   = [
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+        "-rectypes"
+    ],
+    deps = [
+        ":_Ring",
+        ":_Ring_ast",
+    ]
+)
+
+SUBMODS = [
+    "Ring",
+    "Ring_ast",
+]
+
+SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in SUBMODS
+]
+
+########
+genrule(
+    name = "gen_plugin_resolver",
+    outs = [
+        "ring_plugin.ml"
+    ],
+    cmd = "\n".join(SUBMODULES),
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Ring",
+    struct  = "ring.ml",
+    sig     = "_Ring.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ring.cmi",
+    src  = "ring.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_EConstr",
+        "//interp:_Constrexpr",
+        "//kernel:_Names",
+        ":_Ring_ast"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ring_ast",
+    struct  = "ring_ast.ml",
+    sig     = "_Ring_ast.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ring_ast.cmi",
+    src  = "ring_ast.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//kernel:_Constr",
+        "//library:_Libnames",
+        "//plugins/ltac:Ltac_plugin"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_ring",
+    struct  = "g_ring.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//plugins/ltac:Ltac_plugin",
+        ":_Ring",
+        ":_Ring_ast"
+    ],
+)
+
+########
+genrule(
+    name = "gen_g_ring",
+    tools = [COQPP],
+    srcs = [
+        "g_ring.mlg"
+    ],
+    outs = [
+        "g_ring.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_ring.mlg)".format( tool = COQPP ),
+        "cp plugins/ring/g_ring.ml $(location g_ring.ml);"
+    ]),
+)
+
