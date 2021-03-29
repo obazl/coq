@@ -1,0 +1,555 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+## FIXME: archive/library?
+################################################################
+ocaml_module( ## Resolver module, instead of pack
+    name   = "micromega_plugin",
+    struct = "micromega_plugin.ml",
+    opts   = [
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+        # "-rectypes"
+    ],
+    deps = [
+        ":_Micromega",
+        ":_NumCompat",
+        ":_Mutils",
+        ":_Itv",
+        ":_Vect",
+        ":_Sos_types",
+        ":_Polynomial",
+        ":_Mfourier",
+        ":_Simplex",
+        ":_Certificate",
+        ":_Persistent_cache",
+        ":_Coq_micromega",
+        ":_G_micromega",
+    ]
+)
+
+MICROMEGA_SUBMODS = [
+    "Micromega",
+    "NumCompat",
+    "Mutils",
+    "Itv",
+    "Vect",
+    "Sos_types",
+    "Polynomial",
+    "Mfourier",
+    "Simplex",
+    "Certificate",
+    "Persistent_cache",
+    "Coq_micromega",
+    "G_micromega",
+]
+
+MICROMEGA_SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in MICROMEGA_SUBMODS
+]
+
+########
+genrule(
+    name = "gen_micromega_resolver",
+    outs = [
+        "micromega_plugin.ml"
+    ],
+    cmd = "\n".join(MICROMEGA_SUBMODULES),
+)
+
+################################################################
+# zify_plugin.mlpack
+ocaml_module( ## Resolver module, instead of pack
+    name   = "zify_plugin",
+    struct = "zify_plugin.ml",
+    opts   = [
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+        # "-rectypes"
+    ],
+    deps = [":_Zify", ":_G_zify"]
+)
+
+ZIFY_SUBMODS = ["Zify", "G_zify"]
+
+ZIFY_SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in ZIFY_SUBMODS
+]
+
+########
+genrule(
+    name = "gen_zify_resolver",
+    outs = [
+        "zify_plugin.ml"
+    ],
+    cmd = "\n".join(ZIFY_SUBMODULES),
+)
+
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Certificate",
+    struct  = "certificate.ml",
+    sig     = "_Certificate.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//library:_Goptions",
+        ":_Mfourier",
+        ":_Polynomial",
+        ":_Simplex"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Certificate.cmi",
+    src  = "certificate.mli",
+    opts = [],
+    deps = [
+        ":_Micromega",
+        ":_Sos_types"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coq_micromega",
+    struct  = "coq_micromega.ml",
+    sig     = "_Coq_micromega.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//library:_Coqlib",
+        "//proofs:_Tactypes",
+        "//pretyping:_Retyping",
+        "//pretyping:_Typeclasses",
+        "//printing:_Printer",
+        "//tactics:_Redexpr",
+        "//tactics:_Tacticals",
+        "//tactics:_Tactics",
+        ":_Certificate",
+        ":_Mutils",
+        ":_Persistent_cache"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Coq_micromega.cmi",
+    src  = "coq_micromega.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Proofview",
+        ":_Micromega"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_micromega",
+    struct  = "g_micromega.ml",
+    sig     = "_G_micromega.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//plugins/ltac:Ltac_plugin",
+        ":_Coq_micromega"
+    ],
+)
+
+########
+genrule(
+    name = "gen_g_micromega",
+    tools = [COQPP],
+    srcs = [
+        "g_micromega.mlg"
+    ],
+    outs = [
+        "g_micromega.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_micromega.mlg)".format( tool = COQPP ),
+        "cp plugins/micromega/g_micromega.ml $(location g_micromega.ml);"
+    ]),
+)
+
+################
+ocaml_signature(
+    name = "_G_micromega.cmi",
+    src  = "g_micromega.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_G_zify",
+    struct  = "g_zify.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//plugins/ltac:Ltac_plugin",
+        ":_Zify"
+    ],
+)
+
+########
+genrule(
+    name = "gen_g_zify",
+    tools = [COQPP],
+    srcs = [
+        "g_zify.mlg"
+    ],
+    outs = [
+        "g_zify.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_zify.mlg)".format( tool = COQPP ),
+        "cp plugins/micromega/g_zify.ml $(location g_zify.ml);"
+    ]),
+)
+
+#############
+ocaml_module(
+    name    = "_Itv",
+    struct  = "itv.ml",
+    sig     = "_Itv.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Itv.cmi",
+    src  = "itv.mli",
+    opts = [],
+    deps = [
+        ":_NumCompat",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Mfourier",
+    struct  = "mfourier.ml",
+    sig     = "_Mfourier.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//lib:_CErrors",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Mfourier.cmi",
+    src  = "mfourier.mli",
+    opts = [],
+    deps = [
+        "//clib:_CSig.cmi",
+        "//lib:_Util",
+        ":_Itv",
+        ":_Polynomial"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Micromega",
+    struct  = "micromega.ml",
+    sig     = "_Micromega.cmi",
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Micromega.cmi",
+    src  = "micromega.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Mutils",
+    struct  = "mutils.ml",
+    sig     = "_Mutils.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//clib:_Hashset"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Mutils.cmi",
+    src  = "mutils.mli",
+    opts = [],
+    deps = [
+        "//clib:_CSig.cmi",
+        ":_Micromega",
+        ":_NumCompat"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_NumCompat",
+    struct  = "numCompat.ml",
+    sig     = "_NumCompat.cmi",
+    deps = [
+    ],
+    deps_opam = [ "zarith" ]
+)
+
+######
+ocaml_signature(
+    name = "_NumCompat.cmi",
+    src  = "numCompat.mli",
+    opts = [],
+    deps = [
+        
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Persistent_cache",
+    struct  = "persistent_cache.ml",
+    sig     = "_Persistent_cache.cmi",
+    opts    = [
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//clib:_Int",
+        "//lib:_CErrors",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Persistent_cache.cmi",
+    src  = "persistent_cache.mli",
+    opts = [],
+    deps = [
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Polynomial",
+    struct  = "polynomial.ml",
+    sig     = "_Polynomial.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Polynomial.cmi",
+    src  = "polynomial.mli",
+    opts = [],
+    deps = [
+        ":_Mutils",
+        ":_Vect"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Simplex",
+    struct  = "simplex.ml",
+    sig     = "_Simplex.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Simplex.cmi",
+    src  = "simplex.mli",
+    opts = [],
+    deps = [
+        ":_NumCompat",
+        ":_Polynomial"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Sos_types",
+    struct  = "sos_types.ml",
+    sig     = "_Sos_types.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Sos_types.cmi",
+    src  = "sos_types.mli",
+    opts = [],
+    deps = [
+        ":_NumCompat",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Vect",
+    struct  = "vect.ml",
+    sig     = "_Vect.cmi",
+    opts    = [
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Vect.cmi",
+    src  = "vect.mli",
+    opts = [],
+    deps = [
+        ":_Mutils",
+        ":_NumCompat"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Zify",
+    struct  = "zify.ml",
+    sig     = "_Zify.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Zify.cmi",
+    src  = "zify.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//engine:_Proofview",
+        "//plugins/ltac:Ltac_plugin"
+    ],
+)
+
+
+################################################################
+## executable
+#############
+ocaml_module(
+    name    = "_Csdpcert",
+    struct  = "csdpcert.ml",
+    sig     = "_Csdpcert.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//clib:_CList",
+        ":_Micromega",
+        ":_Mutils",
+        ":_NumCompat",
+        ":_Sos"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Csdpcert.cmi",
+    src  = "csdpcert.mli",
+    opts = [],
+    deps = [
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Sos",
+    struct  = "sos.ml",
+    sig     = "_Sos.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Sos_lib"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Sos.cmi",
+    src  = "sos.mli",
+    opts = [],
+    deps = [
+        ":_NumCompat",
+        ":_Sos_types"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Sos_lib",
+    struct  = "sos_lib.ml",
+    sig     = "_Sos_lib.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Sos_lib.cmi",
+    src  = "sos_lib.mli",
+    opts = [],
+    deps = [
+    ],
+)
