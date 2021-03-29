@@ -1,0 +1,183 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_executable",
+    "ocaml_library",
+    "ocaml_module",
+    "ocaml_ns_archive",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+################################################################
+## Resolver module, instead of nsatz_plugin.mlpack
+ocaml_module(
+    name   = "nsatz_plugin",
+    struct = "nsatz_plugin.ml",
+    opts   = [
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+        "-rectypes"
+    ],
+    deps = [
+        ":_Ideal",
+        ":_Nsatz",
+        ":_Polynom",
+        ":_Utile"
+    ]
+)
+
+SUBMODS = [
+    "Ideal",
+    "Nsatz",
+    "Polynom",
+    "Utile"
+]
+
+SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in SUBMODS
+]
+
+########
+genrule(
+    name = "gen_plugin_resolver",
+    outs = [
+        "nsatz_plugin.ml"
+    ],
+    cmd = "\n".join(SUBMODULES),
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Ideal",
+    struct  = "ideal.ml",
+    sig     = "_Ideal.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ideal.cmi",
+    src  = "ideal.mli",
+    opts = [],
+    deps = [
+        ":_Polynom"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Nsatz",
+    struct  = "nsatz.ml",
+    sig     = "_Nsatz.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//tactics:_Tactics",
+        ":_Ideal",
+        ":_Polynom",
+        ":_Utile"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Nsatz.cmi",
+    src  = "nsatz.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Constr",
+        "//engine:_Proofview"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Polynom",
+    struct  = "polynom.ml",
+    sig     = "_Polynom.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Utile"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Polynom.cmi",
+    src  = "polynom.mli",
+    opts = [],
+
+    ## FIXME: all three of these resolve module Q; which to use?
+    deps = [
+        "//plugins/ltac:Ltac_plugin"
+        # "//plugins/micromega:micromega_plugin"
+    ],
+    # deps_opam = ["zarith"]
+)
+
+#############
+ocaml_module(
+    name    = "_Utile",
+    struct  = "utile.ml",
+    sig     = "_Utile.cmi",
+    opts    = [
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//lib:_CDebug",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Utile.cmi",
+    src  = "utile.mli",
+    opts = [],
+    deps = [
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_nsatz",
+    struct  = "g_nsatz.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+########
+genrule(
+    name = "gen_g_nsatz",
+    tools = [COQPP],
+    srcs = [
+        "g_nsatz.mlg"
+    ],
+    outs = [
+        "g_nsatz.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_nsatz.mlg)".format( tool = COQPP ),
+        "cp plugins/nsatz/g_nsatz.ml $(location g_nsatz.ml);"
+    ]),
+)
+
