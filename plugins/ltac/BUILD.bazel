@@ -7,6 +7,8 @@ load(
     "ocaml_signature",
 )
 
+package(default_visibility = ["//visibility:public"])
+
 DEPS = []
 DEPS_OPAM = []
 
@@ -15,7 +17,7 @@ COQPP = "//coqpp:coqpp_main"
 ################################################################
 ## Resolver module, instead of pack
 ocaml_module(
-    name   = "ltac_plugin",
+    name   = "Ltac_plugin",
     struct = "ltac_plugin.ml",
     opts   = [
         "-no-alias-deps",
@@ -1006,6 +1008,6 @@ ocaml_signature(
     deps = [
         "//engine:_EConstr",
         "//kernel:_Constr",
-        ":ltac_plugin"
+        ":Ltac_plugin"
     ],
 )
