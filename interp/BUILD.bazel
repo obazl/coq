@@ -498,6 +498,7 @@ ocaml_module(
         "-rectypes",
     ],
     deps = [
+        "//pretyping:_Geninterp",
     ],
 )
 

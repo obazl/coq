@@ -9,7 +9,7 @@ load(
 
 ###########
 cc_library(
-    name = "byterun",
+    name = "coqrun",  # byterun
     srcs = [
         "coq_fix_code.c",
         "coq_fix_code.h",
@@ -27,9 +27,14 @@ cc_library(
     deps = [
         "@ocaml//csdk:hdrs",
         "@ocaml//csdk/ctypes",
+        "@ocaml//csdk",
         ":headers"
     ],
-    # visibility = ["//interop/ffi/case110:__pkg__"],
+    visibility = [
+        "//visibility:public"
+        # "//kernel:__pkg__",
+        # "//bin:__pkg__"
+    ],
 )
 
 ## We need this intermediary target to avoid needing

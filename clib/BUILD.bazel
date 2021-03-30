@@ -222,6 +222,9 @@ ocaml_module(
     sig     = "_CThread.cmi",
     deps = [
     ],
+    deps_opam = [
+        "threads"
+    ]
 )
 
 ######
@@ -240,6 +243,7 @@ ocaml_module(
     deps = [
         ":_CString"
     ],
+    deps_opam = DEPS_OPAM
 )
 
 ######
@@ -295,6 +299,7 @@ ocaml_module(
     deps = [
         ":_Store"
     ],
+    deps_opam = DEPS_OPAM
 )
 
 ######
@@ -621,70 +626,3 @@ ocaml_signature(
     src  = "unionfind.mli",
     opts = [],
 )
-
-################################################################
-# $ codept -modules clib/ | sort
-# [Notification]: clib/cThread.mli:l31.33−41,
-# a non-resolvable module, Thread, has been replaced by an approximation
-# [Notification]: clib/cUnix.mli:l50.35−54,
-# a non-resolvable module, Unix, has been replaced by an approximation
-# [Notification]: clib/cUnix.ml:l25.12−22,
-# a non-resolvable module, Str, has been replaced by an approximation
-# [Notification]: clib/exninfo.ml:l40.11−23,
-# a non-resolvable module, Mutex, has been replaced by an approximation
-# clib/cArray.ml: Array Hashtbl List Int CList
-# clib/cArray.mli: Array
-# clib/cEphemeron.ml: Ephemeron Hashtbl
-# clib/cEphemeron.mli:
-# clib/cList.ml: Array Hashtbl List Obj Int CSig
-# clib/cList.mli: List CSig
-# clib/cMap.ml: Map Obj Set CSig
-# clib/cMap.mli: Map Set CSig
-# clib/cObj.ml: Gc Hashtbl Obj Sys
-# clib/cObj.mli:
-# clib/cPath.ml: Filename List Sys
-# clib/cPath.mli:
-# clib/cSet.ml: Obj Set Hashset Hashcons
-# clib/cSet.mli: Set Hashcons
-# clib/cSig.mli:
-# clib/cString.ml: Char List Set String Hashcons CMap CList
-# clib/cString.mli: Set String CMap CList
-# clib/cThread.ml: Buffer Bytes Filename Marshal Sys Thread Unix
-# clib/cThread.mli: Bytes Thread
-# clib/cUnix.ml: Array Buffer Bytes Filename Lazy Printf Random Str String Sys Unix CString
-# clib/cUnix.mli: Unix
-# clib/diff2.ml: Array List
-# clib/diff2.mli:
-# clib/dyn.ml: Hashtbl Obj Printf Int CSig
-# clib/dyn.mli: CSig
-# clib/exninfo.ml: Mutex Printexc Thread Store
-# clib/exninfo.mli:
-# clib/hMap.ml: Set Int CMap
-# clib/hMap.mli: CMap
-# clib/hashcons.ml: Char String Hashset
-# clib/hashcons.mli: Hashset
-# clib/hashset.ml: Array Sys Weak Int
-# clib/hashset.mli:
-# clib/heap.ml:
-# clib/heap.mli:
-# clib/int.ml: Array List Obj Set Sys CMap
-# clib/int.mli: Set CMap
-# clib/monad.ml:
-# clib/monad.mli:
-# clib/option.ml:
-# clib/option.mli:
-# clib/orderedType.ml: Int
-# clib/orderedType.mli:
-# clib/predicate.ml: Set
-# clib/predicate.mli:
-# clib/range.ml: Int
-# clib/range.mli:
-# clib/segmenttree.ml: Array List
-# clib/segmenttree.mli:
-# clib/store.ml: Dyn
-# clib/store.mli:
-# clib/terminal.ml: List Printf String Sys Unix
-# clib/terminal.mli: Unix
-# clib/unicode.ml: Array Buffer Char List Printf String Unicodetable Segmenttree
-# clib/unicode.mli:
-# clib/unicodetable.ml:
