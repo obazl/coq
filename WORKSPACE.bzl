@@ -18,17 +18,14 @@ opam = OpamConfig(
     version = "2.0",
     builds  = {
         "coq-8.13.1": BuildConfig(
-            default  = True,
             switch   = "coq-8.13.1",
             compiler = "4.11.1",
             packages = opam_pkgs,
-            tools    = [
-                "cppo",
-                "ocaml-crunch"
-            ]
         ),
         "4.11.1": BuildConfig(
+            default  = True,
             compiler = "4.11.1",
+            # switch   = "4.11.1", # default switch name matches key
             packages = opam_pkgs
         ),
     }

@@ -20,7 +20,7 @@ bazel_skylib_workspace()
 git_repository(
     name = "obazl_rules_ocaml",
     remote = "https://github.com/obazl/rules_ocaml",
-    branch = "main",
+    branch = "dev",
 )
 load("@obazl_rules_ocaml//ocaml:bootstrap.bzl", "ocaml_configure")
 
