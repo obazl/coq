@@ -1,0 +1,121 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+################################################################
+ocaml_archive(
+    name   = "ssrmatching",
+    modules = [
+        ":_Ssrmatching",
+        ":_G_ssrmatching",
+        ":_Ssrmatching_plugin"
+    ]
+)
+
+#############
+ocaml_module(
+    name   = "_Ssrmatching_plugin",
+    struct = "ssrmatching_plugin.ml",
+    opts   = [
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
+)
+
+SUBMODS = [
+    "Ssrmatching",
+    "G_ssrmatching",
+]
+
+SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in SUBMODS
+]
+
+########
+genrule(
+    name = "gen_plugin_resolver",
+    outs = [
+        "ssrmatching_plugin.ml"
+    ],
+    cmd = "\n".join(SUBMODULES),
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Ssrmatching",
+    struct  = "ssrmatching.ml",
+    sig     = "_Ssrmatching.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//plugins/ltac"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ssrmatching.cmi",
+    src  = "ssrmatching.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Genintern",
+        "//proofs:_Goal",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_ssrmatching",
+    struct  = "g_ssrmatching.ml",
+    sig     = "_G_ssrmatching.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+
+########
+genrule(
+    name = "gen_g_ssrmatching",
+    tools = [COQPP],
+    srcs = [
+        "g_ssrmatching.mlg"
+    ],
+    outs = [
+        "g_ssrmatching.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_ssrmatching.mlg)".format( tool = COQPP ),
+        "cp plugins/ssrmatching/g_ssrmatching.ml $(location g_ssrmatching.ml);"
+    ]),
+)
+
+################
+ocaml_signature(
+    name = "_G_ssrmatching.cmi",
+    src  = "g_ssrmatching.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//lib:_Genarg",
+        ":_Ssrmatching"
+    ],
+)
+

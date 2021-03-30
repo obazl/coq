@@ -1,0 +1,420 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+################################################################
+ocaml_archive(
+    name   = "ssr",
+    modules = [
+        # ":_Ssrast",
+        ":_Ssrprinters",
+        ":_Ssrcommon",
+        ":_Ssrtacticals",
+        ":_Ssrelim",
+        ":_Ssrview",
+        ":_Ssrbwd",
+        ":_Ssrequality",
+        ":_Ssripats",
+        ":_Ssrfwd",
+        ":_Ssrparser",
+        ":_Ssrvernac",
+        ":_Ssreflect_plugin"
+    ]
+)
+
+#############
+ocaml_module(
+    name   = "_Ssreflect_plugin",
+    struct = "ssreflect_plugin.ml",
+    opts   = [
+        # "-rectypes",
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
+)
+
+SUBMODS = [
+        "Ssrast",
+        "Ssrprinters",
+        "Ssrcommon",
+        "Ssrtacticals",
+        "Ssrelim",
+        "Ssrview",
+        "Ssrbwd",
+        "Ssrequality",
+        "Ssripats",
+        "Ssrfwd",
+        "Ssrparser",
+        "Ssrvernac",
+]
+
+SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in SUBMODS
+]
+
+########
+genrule(
+    name = "gen_plugin_resolver",
+    outs = [
+        "ssreflect_plugin.ml"
+    ],
+    cmd = "\n".join(SUBMODULES),
+)
+
+################################################################
+
+################
+ocaml_signature(
+    name = "_Ssrast.cmi",
+    src  = "ssrast.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//plugins/ltac",
+        "//plugins/ssrmatching"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ssrbwd",
+    struct  = "ssrbwd.ml",
+    sig     = "_Ssrbwd.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Ssrcommon",
+        ":_Ssrview"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ssrbwd.cmi",
+    src  = "ssrbwd.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Ssrast.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ssrcommon",
+    struct  = "ssrcommon.ml",
+    sig     = "_Ssrcommon.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Ssrprinters"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ssrcommon.cmi",
+    src  = "ssrcommon.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//interp:_Constrexpr",
+        "//proofs:_Tacmach",
+        ":_Ssrast.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ssrelim",
+    struct  = "ssrelim.ml",
+    sig     = "_Ssrelim.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Ssrcommon",
+        ":_Ssrprinters"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ssrelim.cmi",
+    src  = "ssrelim.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//plugins/ssrmatching",
+        ":_Ssrast.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ssrequality",
+    struct  = "ssrequality.ml",
+    sig     = "_Ssrequality.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Ssrcommon",
+        ":_Ssrelim",
+        ":_Ssrprinters"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ssrequality.cmi",
+    src  = "ssrequality.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//plugins/ssrmatching",
+        ":_Ssrast.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ssrfwd",
+    struct  = "ssrfwd.ml",
+    sig     = "_Ssrfwd.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Ssripats",
+        ":_Ssrtacticals"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ssrfwd.cmi",
+    src  = "ssrfwd.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//kernel:_Names",
+        "//plugins/ltac",
+        ":_Ssrast.cmi",
+        ":_Ssrequality"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ssripats",
+    struct  = "ssripats.ml",
+    sig     = "_Ssripats.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Ssrast.cmi",
+        ":_Ssrcommon",
+        ":_Ssrelim",
+        ":_Ssrequality",
+        ":_Ssrprinters",
+        ":_Ssrview"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ssripats.cmi",
+    src  = "ssripats.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Ssrast.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ssrparser",
+    struct  = "ssrparser.ml",
+    sig     = "_Ssrparser.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Ssrbwd",
+        ":_Ssrfwd",
+        ":_Ssripats",
+        ":_Ssrtacticals"
+    ],
+)
+
+########
+genrule(
+    name = "gen_ssrparser",
+    tools = [COQPP],
+    srcs = [
+        "ssrparser.mlg"
+    ],
+    outs = [
+        "ssrparser.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location ssrparser.mlg)".format( tool = COQPP ),
+        "cp plugins/ssr/ssrparser.ml $(location ssrparser.ml);"
+    ]),
+)
+
+################
+ocaml_signature(
+    name = "_Ssrparser.cmi",
+    src  = "ssrparser.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//plugins/ltac",
+        "//plugins/ssrmatching",
+        ":_Ssrast.cmi",
+        ":_Ssrequality"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ssrprinters",
+    struct  = "ssrprinters.ml",
+    sig     = "_Ssrprinters.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ssrprinters.cmi",
+    src  = "ssrprinters.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Ssrast.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ssrtacticals",
+    struct  = "ssrtacticals.ml",
+    sig     = "_Ssrtacticals.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+    ],
+    deps = [
+        ":_Ssrcommon"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ssrtacticals.cmi",
+    src  = "ssrtacticals.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//plugins/ltac",
+        "//plugins/ssrmatching",
+        ":_Ssrast.cmi"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Ssrvernac",
+    struct  = "ssrvernac.ml",
+    sig     = "_Ssrvernac.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Constrexpr_ops",
+        "//interp:_Constrexpr",
+        "//kernel:_Constr",
+        "//kernel:_Names",
+        "//parsing:_Pcoq",
+        "//plugins/ltac",
+        "//vernac:_Pvernac",
+        ":_Ssrcommon",
+        ":_Ssrprinters",
+        ":_Ssrview"
+    ],
+)
+
+########
+genrule(
+    name = "gen_ssrvernac",
+    tools = [COQPP],
+    srcs = [
+        "ssrvernac.mlg"
+    ],
+    outs = [
+        "ssrvernac.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location ssrvernac.mlg)".format( tool = COQPP ),
+        "cp plugins/ssr/ssrvernac.ml $(location ssrvernac.ml);"
+    ]),
+)
+
+################
+ocaml_signature(
+    name = "_Ssrvernac.cmi",
+    src  = "ssrvernac.mli",
+    opts = [],
+    deps = [],
+)
+
+#############
+ocaml_module(
+    name    = "_Ssrview",
+    struct  = "ssrview.ml",
+    sig     = "_Ssrview.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-9", # labels not bound
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        ":_Ssrcommon"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Ssrview.cmi",
+    src  = "ssrview.mli",
+    opts = ["-rectypes"],
+    deps = [
+        ":_Ssrast.cmi"
+    ],
+)
