@@ -1,7 +1,8 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
     "ocaml_executable",
-    "ocaml_library",
+    "ocaml_pack_library",
     "ocaml_module",
     "ocaml_ns_archive",
     "ocaml_signature",
@@ -14,17 +15,71 @@ DEPS_OPAM = []
 
 COQPP = "//coqpp:coqpp_main"
 
+# Currently ocaml_pack_library does not build; use the ocaml_archive below.
+
+PACK = []
+
+# PACK = ["-for-pack", "Ltac_plugin"]
+# ocaml_pack_library(
+#     name   = "Ltac_plugin",
 ################################################################
-## Resolver module, instead of pack
-ocaml_module(
-    name   = "Ltac_plugin",
-    struct = "ltac_plugin.ml",
+# File "bazel-out/darwin-fastbuild/bin/plugins/ltac/__obazl/Ltac_plugin.cmx", line 1:
+# Error: File bazel-out/darwin-fastbuild/bin/plugins/ltac/__obazl/Tacsubst.cmx
+#        was compiled without access to the .cmx file for module Tacarg,
+#        which was produced by `ocamlopt -for-pack'.
+#        Please recompile bazel-out/darwin-fastbuild/bin/plugins/ltac/__obazl/Tacsubst.cmx
+#        with the correct `-I' option so that Tacarg.cmx is found.
+
+################################################################
+#     opts   = [
+#         "-verbose",
+#         "-rectypes",
+#         "-linkall",
+#         # "-absname"
+#     ],
+#     deps   = [
+#         ":_Tacarg",
+#         ":_Tacexpr",
+#         # ":_Tacenv",
+#         ":_Pptactic",
+#         ":_Pltac",
+#         ":_Taccoerce",
+#         ":_Tactic_debug",
+#         ":_Tacintern",
+#         ":_Profile_ltac",
+#         ":_Tactic_matching",
+#         ":_Leminv",
+#         ":_Tacinterp",
+#         ":_Tacentries",
+#         ":_Evar_tactics",
+#         ":_Tactic_option",
+#         ":_Extraargs",
+#         ":_G_obligations",
+#         ":_Coretactics",
+#         ":_Extratactics",
+#         ":_Profile_ltac_tactics",
+#         ":_G_auto",
+#         ":_G_class",
+#         ":_Rewrite",
+#         ":_G_rewrite",
+#         ":_G_eqdecide",
+#         ":_G_tactic",
+#         ":_G_ltac",
+#         # ":_Tacsubst",
+#         # ":Ltac_plugin_resolver",
+#     ]
+# )
+
+################################################################
+ocaml_archive(
+    name   = "ltac",
     opts   = [
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-        "-rectypes"
+        "-verbose",
+        "-rectypes",
+        "-linkall",
+        # "-absname"
     ],
-    deps = [
+    modules = [
         ":_Tacexpr",
         ":_Tacarg",
         ":_Tacsubst",
@@ -53,7 +108,18 @@ ocaml_module(
         ":_G_eqdecide",
         ":_G_tactic",
         ":_G_ltac",
+        ":_Ltac_plugin",
     ]
+)
+
+#############
+ocaml_module(
+    name   = "_Ltac_plugin",
+    struct = "ltac_plugin.ml",
+    opts   = [
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
 )
 
 SUBMODS = [
@@ -111,6 +177,7 @@ ocaml_module(
         "-rectypes",
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//interp:_Stdarg",
         "//lib:_Util",
@@ -146,6 +213,7 @@ ocaml_module(
         "-rectypes",
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
     ],
 )
@@ -172,6 +240,7 @@ ocaml_module(
         "-w", "-9", # labels not bound
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         ":_Tacentries"
     ],
@@ -216,6 +285,7 @@ ocaml_module(
         "-w", "-9", # labels not bound
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//interp:_Stdarg",
         "//lib:_Genarg",
@@ -263,6 +333,7 @@ ocaml_module(
         "-rectypes",
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//interp:_Stdarg",
         "//lib:_Pp",
@@ -298,6 +369,7 @@ ocaml_module(
         "-rectypes",
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//tactics:_Class_tactics",
         "//vernac:_Classes",
@@ -332,6 +404,7 @@ ocaml_module(
         "-rectypes",
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//tactics:_Eqdecide",
         "//vernac:_Mltop",
@@ -364,6 +437,7 @@ ocaml_module(
         "-w", "-9", # labels not bound
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//parsing:_Pcoq",
         "//vernac:_G_proofs",
@@ -402,6 +476,7 @@ ocaml_module(
         "-rectypes",
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//interp:_Constrexpr",
         "//interp:_Constrexpr_ops",
@@ -436,6 +511,7 @@ ocaml_module(
         "-rectypes",
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//interp:_Constrexpr",
         "//interp:_Genintern",
@@ -471,6 +547,7 @@ ocaml_module(
         "-w", "-9", # labels not bound
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//engine:_Namegen",
         "//kernel:_Names",
@@ -509,6 +586,7 @@ ocaml_module(
         "-w", "-9", # labels not bound
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//printing:_Printer",
         "//proofs:_Clenv",
@@ -537,7 +615,11 @@ ocaml_module(
     name    = "_Pltac",
     struct  = "pltac.ml",
     sig     = "_Pltac.cmi",
-    opts = ["-rectypes"],
+    opts = [
+        "-verbose",
+        "-rectypes",
+        "-I", "bazel-out/darwin-fastbuild/bin/plugins/ltac"
+    ],  # + PACK,
     deps = [
         ":_Tacarg"
     ],
@@ -564,6 +646,7 @@ ocaml_module(
         "-w", "-9", # labels not bound
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//interp:_Stdarg",
         ":_Tacarg",
@@ -595,6 +678,7 @@ ocaml_module(
         "-w", "-9", # labels not bound
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//vernac:_Declaremods",
         ":_Pptactic"
@@ -619,6 +703,7 @@ ocaml_module(
         "-rectypes",
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//vernac:_Mltop",
         ":_Profile_ltac",
@@ -652,6 +737,7 @@ ocaml_module(
         "-w", "-9", # labels not bound
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//tactics:_Autorewrite"
     ],
@@ -679,10 +765,18 @@ ocaml_module(
     name    = "_Tacarg",
     struct  = "tacarg.ml",
     sig     = "_Tacarg.cmi",
-    opts = ["-rectypes"],
+    opts = [
+        "-linkall",
+        "-rectypes",
+        "-no-opaque",
+    ],
+    # pack = "Ltac_plugin",
     deps = [
         "//interp:_Stdarg",
     ],
+    # cc_deps = {
+    #     "//kernel/byterun:coqrun": "static"
+    # },
 )
 
 ######
@@ -690,13 +784,14 @@ ocaml_signature(
     name = "_Tacarg.cmi",
     src  = "tacarg.mli",
     opts = ["-rectypes"],
+    # pack = "Ltac_plugin",
     deps = [
         "//engine:_EConstr",
         "//interp:_Constrexpr",
         "//interp:_Genintern",
         "//lib:_Genarg",
         "//proofs:_Tactypes",
-        ":_Tacexpr"
+        ":_Tacexpr.cmi"
     ],
 )
 
@@ -709,6 +804,7 @@ ocaml_module(
         "-rectypes",
         "-w", "-9", # labels not bound
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//interp:_Stdarg",
         ":_Pptactic",
@@ -743,6 +839,7 @@ ocaml_module(
         "-rectypes",
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//vernac:_Mltop",
         "//vernac:_Prettyp",
@@ -776,6 +873,7 @@ ocaml_module(
         "-rectypes",
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         ":_Tacsubst"
     ],
@@ -798,9 +896,16 @@ ocaml_module(
     name    = "_Tacexpr",
     struct  = "tacexpr.ml",
     sig     = "_Tacexpr.cmi",
-    opts = ["-rectypes"],
-    deps = [
+    opts = [
+        "-rectypes",
     ],
+    # pack = "Ltac_plugin",
+    deps = [
+        # "//kernel:_Names",
+    ],
+    # cc_deps = {
+    #     "//kernel/byterun:coqrun": "static"
+    # },
 )
 
 ######
@@ -828,6 +933,7 @@ ocaml_module(
         "-w", "-9", # labels not bound
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//interp:_Stdarg",
         ":_Pptactic",
@@ -856,12 +962,14 @@ ocaml_module(
         "-w", "-9", # labels not bound
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         ":_Leminv",
         ":_Profile_ltac",
-        ":_Taccoerce",
         ":_Tacintern",
-        ":_Tactic_matching"
+        ":_Taccoerce",
+        ":_Tactic_matching",
+        ":_Tactic_debug"
     ],
 )
 
@@ -883,13 +991,22 @@ ocaml_module(
     struct  = "tacsubst.ml",
     sig     = "_Tacsubst.cmi",
     opts = [
+        "-linkall",
         "-rectypes",
-        "-w", "-9", # labels not bound
-        "-w", "-27" # unused variable
+        "-w", "-9",  # labels not bound
+        "-w", "-27", # unused variable
+        "-no-opaque",
+        # "-I",
+        # "ltac/__obazl",
+        # "-I", "ltac",
+        # "-I",
+        # "__obazl",
     ],
+    # pack = "Ltac_plugin",
     deps = [
         "//interp:_Stdarg",
-        ":_Tacarg"
+        ":_Tacexpr",
+        ":_Tacarg",
     ],
 )
 
@@ -913,6 +1030,7 @@ ocaml_module(
         "-w", "-9", # labels not bound
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
         ":_Pptactic"
     ],
@@ -940,6 +1058,7 @@ ocaml_module(
         "-w", "-9", # labels not bound
         "-w", "-27" # unused variable
     ],
+    # pack = "Ltac_plugin",
     deps = [
     ],
 )
@@ -961,6 +1080,7 @@ ocaml_module(
     struct  = "tactic_option.ml",
     sig     = "_Tactic_option.cmi",
     opts = ["-rectypes"],
+    # pack = "Ltac_plugin",
     deps = [
         ":_Tacinterp",
         ":_Tacsubst"
@@ -977,6 +1097,10 @@ ocaml_signature(
         ":_Tacexpr"
     ],
 )
+
+################################################################
+## tauto_plugin.mlpack:
+# Tauto
 
 #################
 ocaml_ns_archive(

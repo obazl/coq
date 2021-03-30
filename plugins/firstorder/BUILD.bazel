@@ -14,16 +14,52 @@ COQPP = "//coqpp:coqpp_main"
 
 ################################################################
 ocaml_archive(
-    name = "ground_plugin",
+    name = "firstorder",
     modules = [
         ":_Formula",
-        ":_Ground",
-        ":_Instances",
-        ":_Rules",
-        ":_Sequent",
         ":_Unify",
-        ":_G_ground"
+        ":_Sequent",
+        ":_Rules",
+        ":_Instances",
+        ":_Ground",
+        ":_G_ground",
+        ":_Ground_plugin"
     ]
+)
+
+#############
+ocaml_module(
+    name   = "_Ground_plugin",
+    struct = "ground_plugin.ml",
+    opts   = [
+        "-rectypes",
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
+)
+
+SUBMODS = [
+    "Formula",
+    "Unify",
+    "Sequent",
+    "Rules",
+    "Instances",
+    "Ground",
+    "G_ground",
+]
+
+SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in SUBMODS
+]
+
+########
+genrule(
+    name = "gen_plugin_resolver",
+    outs = [
+        "ground_plugin.ml"
+    ],
+    cmd = "\n".join(SUBMODULES),
 )
 
 ################################################################
@@ -63,7 +99,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac:Ltac_plugin",
+        "//plugins/ltac",
         ":_Instances",
         ":_Rules"
     ],
@@ -191,7 +227,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac:Ltac_plugin",
+        "//plugins/ltac",
         ":_Formula",
         ":_Ground",
         ":_Sequent"

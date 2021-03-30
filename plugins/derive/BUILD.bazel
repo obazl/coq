@@ -14,11 +14,42 @@ COQPP = "//coqpp:coqpp_main"
 
 ################################################################
 ocaml_archive(
-    name = "derive_plugin",
+    name = "derive",
     modules = [
         ":_Derive",
-        ":_G_derive"
+        ":_G_derive",
+        ":_Derive_plugin"
     ]
+)
+
+#############
+ocaml_module(
+    name   = "_Derive_plugin",
+    struct = "derive_plugin.ml",
+    opts   = [
+        "-rectypes",
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
+)
+
+SUBMODS = [
+        "Derive",
+        "G_derive"
+]
+
+SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in SUBMODS
+]
+
+########
+genrule(
+    name = "gen_plugin_resolver",
+    outs = [
+        "derive_plugin.ml"
+    ],
+    cmd = "\n".join(SUBMODULES),
 )
 
 #############

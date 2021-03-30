@@ -1,6 +1,6 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
-    "ocaml_executable",
+    "ocaml_archive",
     "ocaml_module",
     "ocaml_signature",
 )
@@ -11,6 +11,48 @@ DEPS = []
 DEPS_OPAM = []
 
 ################################################################
+ocaml_archive(
+    name   = "btauto",
+    opts   = [
+        "-rectypes",
+        # "-linkall",
+    ],
+    modules = [
+        ":_Refl_btauto",
+        ":_G_btauto",
+        ":_Btauto_plugin"
+    ]
+)
+
+#############
+ocaml_module(
+    name   = "_Btauto_plugin",
+    struct = "btauto_plugin.ml",
+    opts   = [
+        "-rectypes",
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
+)
+
+SUBMODS = [
+        "Refl_btauto",
+        "G_btauto",
+]
+
+SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in SUBMODS
+]
+
+########
+genrule(
+    name = "gen_plugin_resolver",
+    outs = [
+        "btauto_plugin.ml"
+    ],
+    cmd = "\n".join(SUBMODULES),
+)
 
 #############
 ocaml_module(
@@ -21,18 +63,18 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac:Ltac_plugin",
+        "//plugins/ltac",
         ":_Refl_btauto"
     ],
 )
 
 ###########################
-TOOL = "//coqpp:coqpp_main"
+COQPP = "//coqpp:coqpp_main"
 
 ########
 genrule(
     name = "gen_g_btauto",
-    tools = [TOOL],
+    tools = [COQPP],
     srcs = [
         "g_btauto.mlg"
     ],
@@ -40,7 +82,7 @@ genrule(
         "g_btauto.ml"
     ],
     cmd = "\n".join([
-        "$(location {tool}) $(location g_btauto.mlg)".format( tool = TOOL ),
+        "$(location {tool}) $(location g_btauto.mlg)".format( tool = COQPP ),
         "cp plugins/btauto/g_btauto.ml $(location g_btauto.ml);"
     ]),
 )

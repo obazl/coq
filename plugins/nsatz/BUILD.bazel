@@ -1,9 +1,7 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
-    "ocaml_executable",
-    "ocaml_library",
+    "ocaml_archive",
     "ocaml_module",
-    "ocaml_ns_archive",
     "ocaml_signature",
 )
 
@@ -15,21 +13,26 @@ DEPS_OPAM = []
 COQPP = "//coqpp:coqpp_main"
 
 ################################################################
-## Resolver module, instead of nsatz_plugin.mlpack
-ocaml_module(
-    name   = "nsatz_plugin",
-    struct = "nsatz_plugin.ml",
-    opts   = [
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-        "-rectypes"
-    ],
-    deps = [
+ocaml_archive(
+    name   = "nsatz",
+    modules = [
         ":_Ideal",
         ":_Nsatz",
         ":_Polynom",
-        ":_Utile"
+        ":_Utile",
+        ":_Nsatz_plugin"
     ]
+)
+
+#############
+ocaml_module(
+    name   = "_Nsatz_plugin",
+    struct = "nsatz_plugin.ml",
+    opts   = [
+        # "-rectypes",
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
 )
 
 SUBMODS = [
@@ -63,6 +66,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
+        "//clib:_Heap"
     ],
 )
 
@@ -105,12 +109,17 @@ ocaml_signature(
 )
 
 #############
+    ## FIXME: micromega.numCompat defines module Q.
+    ## we would have to open it to use it.
+    # here we want to use Zarith?
+
 ocaml_module(
     name    = "_Polynom",
     struct  = "polynom.ml",
     sig     = "_Polynom.cmi",
     opts    = [
-        "-w", "-27" # unused variable
+        "-w", "-27", # unused variable
+        # "-open", "Micromega_plugin.NumCompat"
     ],
     deps = [
         ":_Utile"
@@ -121,14 +130,13 @@ ocaml_module(
 ocaml_signature(
     name = "_Polynom.cmi",
     src  = "polynom.mli",
-    opts = [],
-
-    ## FIXME: all three of these resolve module Q; which to use?
-    deps = [
-        "//plugins/ltac:Ltac_plugin"
-        # "//plugins/micromega:micromega_plugin"
+    opts = [
+        # "-open", "Micromega_plugin.NumCompat"
     ],
-    # deps_opam = ["zarith"]
+    deps = [
+        # "//plugins/micromega"
+    ],
+    deps_opam = ["zarith"]
 )
 
 #############

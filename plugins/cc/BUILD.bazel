@@ -14,13 +14,46 @@ COQPP = "//coqpp:coqpp_main"
 
 ################################################################
 ocaml_archive(
-    name = "cc_plugin",
+    name = "cc",
     modules = [
         ":_Ccalgo",
         ":_Ccproof",
         ":_Cctac",
-        ":_G_congruence"
+        ":_G_congruence",
+        ":_Cc_plugin"
     ]
+)
+
+#############
+ocaml_module(
+    name   = "_Cc_plugin",
+    struct = "cc_plugin.ml",
+    opts   = [
+        "-rectypes",
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
+)
+
+SUBMODS = [
+    "Ccalgo",
+    "Ccproof",
+    "Cctac",
+    "G_congruence"
+]
+
+SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in SUBMODS
+]
+
+########
+genrule(
+    name = "gen_plugin_resolver",
+    outs = [
+        "cc_plugin.ml"
+    ],
+    cmd = "\n".join(SUBMODULES),
 )
 
 #############
@@ -110,7 +143,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac:Ltac_plugin",
+        "//plugins/ltac",
         ":_Cctac"
     ],
 )

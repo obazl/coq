@@ -1,31 +1,64 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
-    "ocaml_signature",
+    "ocaml_archive",
     "ocaml_module",
-    "ocaml_ns_archive",
-    "ocaml_submodule",
+    "ocaml_signature",
+    # "ocaml_submodule",
+    # "ocaml_subsignature",
 )
+
+package(default_visibility = ["//visibility:public"])
 
 DEPS = []
 
 DEPS_OPAM = []
 
-#################
-ocaml_ns_archive(
-    name = "gramlib",
-    submodules = [
+#############
+ocaml_archive(
+    name   = "gramlib",
+    modules = [
         ":_Gramext",
         ":_Grammar",
         ":_Plexing",
-        ":_Ploc"
+        ":_Ploc",
+        ":_Gramlib"
     ],
-    visibility = [
-        "//visibility:public",
-    ]
 )
 
 #############
-ocaml_submodule(
+ocaml_module(
+    name   = "_Gramlib",
+    struct = "gramlib.ml",
+    opts   = [
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
+)
+
+FLOAT_SUBMODS = [
+    "Gramext",
+    "Grammar",
+    "Plexing",
+    "Ploc"
+]
+
+FLOAT_SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in FLOAT_SUBMODS
+]
+
+########
+genrule(
+    name = "gen_plugin_resolver",
+    outs = [
+        "gramlib.ml"
+    ],
+    cmd = "\n".join(FLOAT_SUBMODULES),
+)
+
+################################################################
+#############
+ocaml_module(
     name   = "_Gramext",
     struct = "gramext.ml",
     sig    = "_Gramext.cmi",
@@ -42,7 +75,7 @@ ocaml_signature(
 )
 
 #############
-ocaml_submodule(
+ocaml_module(
     name   = "_Grammar",
     struct = "grammar.ml",
     sig    = "_Grammar.cmi",
@@ -61,7 +94,7 @@ ocaml_signature(
     name = "_Grammar.cmi",
     src = "grammar.mli",
     deps = DEPS + [
-        "//lib:_Loc",
+        # "//lib:_Loc",
         ":_Gramext",
         ":_Plexing"
     ],
@@ -69,7 +102,7 @@ ocaml_signature(
 )
 
 #############
-ocaml_submodule(
+ocaml_module(
     name   = "_Plexing",
     struct = "plexing.ml",
     sig    = "_Plexing.cmi",
@@ -85,7 +118,8 @@ ocaml_signature(
     src  = "plexing.mli",
     deps = DEPS + [
         "//lib:_Loc",
-        "//lib:_Util",
+        # "//lib:_Util",
+        "//lib:_Util.cmi",
         # ":_Util"
     ],
     deps_opam = DEPS_OPAM + [
@@ -95,7 +129,7 @@ ocaml_signature(
 )
 
 #############
-ocaml_submodule(
+ocaml_module(
     name   = "_Ploc",
     struct = "ploc.ml",
     sig    = "_Ploc.cmi",

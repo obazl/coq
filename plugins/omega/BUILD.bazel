@@ -1,9 +1,7 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
-    "ocaml_executable",
-    "ocaml_library",
+    "ocaml_archive",
     "ocaml_module",
-    "ocaml_ns_archive",
     "ocaml_signature",
 )
 
@@ -15,20 +13,25 @@ DEPS_OPAM = []
 COQPP = "//coqpp:coqpp_main"
 
 ################################################################
-## Resolver module, instead of omega_plugin.mlpack
-ocaml_module(
-    name   = "omega_plugin",
-    struct = "omega_plugin.ml",
-    opts   = [
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-        "-rectypes"
-    ],
-    deps = [
+ocaml_archive(
+    name   = "omega",
+    modules = [
         ":_Omega",
         ":_Coq_omega",
         ":_G_omega",
+        ":_Omega_plugin"
     ]
+)
+
+#############
+ocaml_module(
+    name   = "_Omega_plugin",
+    struct = "omega_plugin.ml",
+    opts   = [
+        # "-rectypes",
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
 )
 
 SUBMODS = [
@@ -105,7 +108,7 @@ ocaml_module(
     ],
     deps = [
         "//vernac:_Mltop",
-        "//plugins/ltac:Ltac_plugin",
+        "//plugins/ltac",
         ":_Coq_omega"
     ],
 )

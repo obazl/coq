@@ -67,7 +67,7 @@ ocaml_module(
 
 ################################################################
 ocaml_archive(
-    name   = "Number_string_notation",
+    name   = "number_string_notation",
     modules = [
         ":_Number",
         ":_String_notation",

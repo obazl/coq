@@ -1,9 +1,7 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
-    "ocaml_executable",
-    "ocaml_library",
+    "ocaml_archive",
     "ocaml_module",
-    "ocaml_ns_archive",
     "ocaml_signature",
 )
 
@@ -15,19 +13,24 @@ DEPS_OPAM = []
 COQPP = "//coqpp:coqpp_main"
 
 ################################################################
-## Resolver module, instead of ring_plugin.mlpack
-ocaml_module(
-    name   = "ring_plugin",
-    struct = "ring_plugin.ml",
-    opts   = [
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-        "-rectypes"
-    ],
-    deps = [
+ocaml_archive(
+    name   = "ring",
+    modules = [
         ":_Ring",
         ":_Ring_ast",
+        ":_Ring_plugin"
     ]
+)
+
+#############
+ocaml_module(
+    name   = "_Ring_plugin",
+    struct = "ring_plugin.ml",
+    opts   = [
+        # "-rectypes",
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
 )
 
 SUBMODS = [
@@ -95,7 +98,7 @@ ocaml_signature(
         "//interp:_Constrexpr",
         "//kernel:_Constr",
         "//library:_Libnames",
-        "//plugins/ltac:Ltac_plugin"
+        "//plugins/ltac"
     ],
 )
 
@@ -108,7 +111,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac:Ltac_plugin",
+        "//plugins/ltac",
         ":_Ring",
         ":_Ring_ast"
     ],
