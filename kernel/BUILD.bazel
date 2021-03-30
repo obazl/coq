@@ -1,7 +1,7 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
     "ocaml_executable",
-    "ocaml_library",
+    "ocaml_archive",
     "ocaml_module",
     "ocaml_signature",
 )
@@ -14,60 +14,70 @@ OPTS = [
 
 package(default_visibility = ["//visibility:public"])
 
-ocaml_library(
+## NOTE: all modules that depend on libcoqrun also depend on
+## Float64_common, so that is the only module that needs to directly
+## depend on //kernel/byterun:coqrun.
+
+##############
+ocaml_archive(
     name = "kernel",
     modules = [
-        ":_CClosure",
-        ":_CPrimitives",
-        ":_Constr",
-        ":_Context",
-        ":_Conv_oracle",
-        ":_Cooking",
-        ":_Declareops",
-        ":_Environ",
-        ":_Esubst",
-        ":_Evar",
+        ":_Names",
+        ":_TransparentState",
+        ":_Uint63",
+        ":_Parray",
         ":_Float64_common",
+        ":_Float64",
+        ":_Univ",
+        ":_UGraph",
+        ":_Esubst",
+        ":_Sorts",
+        ":_Evar",
+        ":_Context",
+        ":_Constr",
+        ":_Vars",
+        ":_Term",
+        ":_CPrimitives",
+        ":_Mod_subst",
+        ":_Vmvalues",
+        ":_Vmbytecodes",
+        ":_Vmopcodes",
+        ":_Vmemitcodes",
+        ":_Opaqueproof",
+        ":_Declarations",
+        ":_Entries",
+        ":_Nativevalues",
+        ":_Declareops",
+        ":_Retroknowledge",
+        ":_Conv_oracle",
+        ":_Environ",
+        ":_Primred",
+        ":_CClosure",
+        ":_Relevanceops",
+        ":_Reduction",
+        ":_Type_errors",
+        ":_Inductive",
+        ":_Vmlambda",
+        ":_Nativelambda",
+        ":_Vmbytegen",
+        ":_Nativecode",
+        ":_Nativelib",
+        ":_Vmsymtable",
+        ":_Vm",
+        ":_Vconv",
+        ":_Nativeconv",
+        ":_Modops",
+        ":_Typeops",
+        ":_InferCumulativity",
         ":_IndTyping",
         ":_Indtypes",
-        ":_Inductive",
-        ":_InferCumulativity",
-        ":_Mod_subst",
-        ":_Mod_typing",
-        ":_Modops",
-        ":_Names",
-        ":_Nativecode",
-        ":_Nativeconv",
-        ":_Nativelambda",
-        ":_Nativelib",
-        ":_Nativelibrary",
-        ":_Nativevalues",
-        ":_Opaqueproof",
-        ":_Parray",
-        ":_Primred",
-        ":_Reduction",
-        ":_Relevanceops",
-        ":_Retroknowledge",
-        ":_Safe_typing",
-        ":_Section",
-        ":_Sorts",
-        ":_Subtyping",
-        ":_Term",
+        ":_Cooking",
         ":_Term_typing",
-        ":_TransparentState",
-        ":_Type_errors",
-        ":_Typeops",
-        ":_UGraph",
-        ":_Univ",
-        ":_Vars",
-        ":_Vconv",
-        ":_Vm",
-        ":_Vmbytecodes",
-        ":_Vmbytegen",
-        ":_Vmemitcodes",
-        ":_Vmlambda",
-        ":_Vmsymtable",
-        ":_Vmvalues"
+        ":_Subtyping",
+        ":_Mod_typing",
+        ":_Nativelibrary",
+        ":_Section",
+        ":_Safe_typing",
     ]
 )
 
@@ -372,6 +382,9 @@ ocaml_module(
     sig     = "_Float64_common.cmi",
     deps = [
     ],
+    cc_deps = {
+        "//kernel/byterun:coqrun": "static"
+    },
 )
 
 ######
@@ -682,6 +695,9 @@ ocaml_module(
     deps = [
         "//lib:_Envars"
     ],
+    deps_opam = [
+        "dynlink"
+    ]
 )
 
 ######

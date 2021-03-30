@@ -1,6 +1,6 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
-    "ocaml_library",
+    "ocaml_archive",
     "ocaml_module",
     "ocaml_signature",
 )
@@ -16,7 +16,7 @@ DEPS_OPAM = [
 package(default_visibility = ["//visibility:public"])
 
 #################
-ocaml_library(
+ocaml_archive(
     name = "engine",
     modules = [
         ":_EConstr",

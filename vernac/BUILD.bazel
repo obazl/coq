@@ -1,14 +1,14 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
     "ocaml_executable",
-    "ocaml_library",
     "ocaml_module",
     "ocaml_signature",
 )
 
 package(default_visibility = ["//visibility:public"])
 
-ocaml_library(
+ocaml_archive(
     name = "vernac",
     modules = [
         ":_Assumptions",
@@ -33,6 +33,7 @@ ocaml_library(
         ":_Declaremods",
         ":_Egramcoq",
         ":_Egramml",
+        ":_G_vernac",
         ":_Himsg",
         ":_Indschemes",
         ":_Library",

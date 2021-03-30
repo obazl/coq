@@ -1,18 +1,17 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
-    "ocaml_signature",
-    "ocaml_library",
+    "ocaml_archive",
     "ocaml_module",
+    "ocaml_signature",
 )
 
-DEPS = [
-    # do not sort (buildifier)
-]
-DEPS_OPAM = [
-]
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
 
 #################
-ocaml_library(
+ocaml_archive(
     name = "toplevel",
     modules = [
         ":_Ccompile",
@@ -21,12 +20,10 @@ ocaml_library(
         ":_Coqloop",
         ":_Coqrc",
         ":_Coqtop",
+        ":_G_toplevel",
         ":_Vernac",
         ":_WorkerLoop",
     ],
-    visibility = [
-        "//visibility:public",
-    ]
 )
 
 #############

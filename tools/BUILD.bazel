@@ -23,8 +23,6 @@ ocaml_executable(
     ],
 )
 
-
-
 #############
 ocaml_module(
     name    = "_Coq_makefile",

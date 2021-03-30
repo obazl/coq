@@ -1,14 +1,21 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
     "ocaml_executable",
     "ocaml_module",
-    "ocaml_ns_library",
     "ocaml_signature",
 )
 
 package(default_visibility = ["//visibility:public"])
 
 exports_files(["coq_config.mli"])
+
+ocaml_archive(
+    name = "config",
+    modules = [
+        "//:_Coq_config"
+    ]
+)
 
 #################
 ocaml_executable(

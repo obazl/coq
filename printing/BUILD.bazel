@@ -1,8 +1,8 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
-    "ocaml_signature",
-    "ocaml_library",
+    "ocaml_archive",
     "ocaml_module",
+    "ocaml_signature",
 )
 
 DEPS = [
@@ -14,7 +14,7 @@ DEPS_OPAM = [
 package(default_visibility = ["//visibility:public"])
 
 #################
-ocaml_library(
+ocaml_archive(
     name = "printing",
     modules = [
         ":_Genprint",

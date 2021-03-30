@@ -1,6 +1,6 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
-    "ocaml_library",
+    "ocaml_archive",
     "ocaml_module",
     "ocaml_signature",
 )
@@ -8,7 +8,7 @@ load(
 package(default_visibility = ["//visibility:public"])
 
 ##############
-ocaml_library(
+ocaml_archive(
     name = "library",
     modules = [
         ":_Coqlib",
