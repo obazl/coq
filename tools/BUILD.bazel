@@ -77,12 +77,25 @@ ocaml_module(
     ],
 )
 
+#################
+ocaml_executable(
+    name = "coqdep_boot",
+    main = "_Coqdep_boot",
+    opts = [
+    ],
+    deps = [],
+)
+
 #############
 ocaml_module(
     name    = "_Coqdep_boot",
     struct  = "coqdep_boot.ml",
     deps = [
         ":_Coqdep_common"
+    ],
+    deps_opam = [
+        "str",
+        "unix"
     ],
 )
 
