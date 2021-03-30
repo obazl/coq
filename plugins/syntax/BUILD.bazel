@@ -1,0 +1,190 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+################################################################
+ocaml_archive(
+    name   = "float_syntax",
+    modules = [
+        ":_Float_syntax",
+        ":_Float_syntax_plugin"
+    ]
+)
+
+#############
+ocaml_module(
+    name   = "_Float_syntax_plugin",
+    struct = "float_syntax_plugin.ml",
+    opts   = [
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
+)
+
+FLOAT_SUBMODS = [
+    "Float_syntax",
+]
+
+FLOAT_SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in FLOAT_SUBMODS
+]
+
+########
+genrule(
+    name = "gen_plugin_resolver",
+    outs = [
+        "float_syntax_plugin.ml"
+    ],
+    cmd = "\n".join(FLOAT_SUBMODULES),
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Float_syntax",
+    struct  = "float_syntax.ml",
+    opts    = [
+        "-rectypes",
+        # "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//kernel:_Names",
+        "//pretyping:_Glob_term",
+        "//vernac:_Mltop"
+    ],
+)
+
+################################################################
+ocaml_archive(
+    name   = "Number_string_notation",
+    modules = [
+        ":_Number",
+        ":_String_notation",
+        ":_G_number_string",
+        ":_Number_string_notation_plugin"
+    ]
+)
+
+#############
+ocaml_module(
+    name   = "_Number_string_notation_plugin",
+    struct = "number_string_notation_plugin.ml",
+    opts   = [
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
+)
+
+STR_SUBMODS = [
+    "Number",
+    "String_notation",
+    "G_number_string",
+]
+
+STR_SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in STR_SUBMODS
+]
+
+########
+genrule(
+    name = "gen_number_string_notation_plugin_resolver",
+    outs = [
+        "number_string_notation_plugin.ml"
+    ],
+    cmd = "\n".join(STR_SUBMODULES),
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Number",
+    struct  = "number.ml",
+    sig     = "_Number.cmi",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Number.cmi",
+    src  = "number.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//library:_Libnames",
+        "//vernac:_Vernacexpr"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_String_notation",
+    struct  = "string_notation.ml",
+    sig     = "_String_notation.cmi",
+    opts = ["-rectypes"],
+    deps = [
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_String_notation.cmi",
+    src  = "string_notation.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//library:_Libnames",
+        "//vernac:_Vernacexpr",
+        ":_Number"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_number_string",
+    struct  = "g_number_string.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//interp:_Stdarg",
+        "//parsing:_Pcoq",
+        "//vernac:_Vernacextend",
+        "//vernac:_Mltop",
+        ":_Number",
+        ":_String_notation",
+    ],
+)
+
+########
+genrule(
+    name = "gen_g_number_string",
+    tools = [COQPP],
+    srcs = [
+        "g_number_string.mlg"
+    ],
+    outs = [
+        "g_number_string.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_number_string.mlg)".format( tool = COQPP ),
+        "cp plugins/syntax/g_number_string.ml $(location g_number_string.ml);"
+    ]),
+)
+
+
