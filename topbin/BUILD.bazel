@@ -1,0 +1,128 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_executable",
+    "ocaml_module",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+################################################################
+
+#################
+ocaml_executable(
+    name = "coqc_bin",
+    main = "_Coqc_bin",
+    opts = select({
+        "//bzl/host:linux": ["-ccopt", "-flto"],
+        "//bzl/host:macos": ["-ccopt", "-flto"],
+        "//conditions:default": []
+    }) + ["-linkall"]
+)
+
+#############
+ocaml_module(
+    name    = "_Coqc_bin",
+    struct  = "coqc_bin.ml",
+    deps = [
+        "//toplevel" # depend on entire archive, not :_Coqc
+    ],
+)
+
+#################
+ocaml_executable(
+    name = "coqtop_bin",
+    main = "_Coqtop_bin",
+    opts = ["-linkall"]
+)
+
+#############
+ocaml_module(
+    name    = "_Coqtop_bin",
+    struct  = "coqtop_bin.ml",
+    opts = [
+        "-linkall",
+        "-rectypes"
+    ],
+    deps = [
+        "//toplevel:_Coqtop",
+        "//vernac:_Mltop"
+    ],
+    deps_opam = [ "dynlink" ]
+)
+
+#################
+## to be compiled with --@ocaml//mode=bytecode
+ocaml_executable(
+    name = "coqtop_byte_bin",
+    main = "_Coqtop_byte_bin",
+    # mode = "@ocaml//mode:bytecode",
+    opts = ["-linkall"]
+)
+
+#############
+ocaml_module(
+    name    = "_Coqtop_byte_bin",
+    struct  = "coqtop_byte_bin.ml",
+    opts = [
+        "-rectypes",
+        "-linkall"
+    ],
+    deps = [
+        "//clib:_Exninfo",
+        "//lib:_CErrors",
+        "//vernac:_Mltop",
+        "//toplevel:_Coqtop"
+    ],
+    deps_opam = [ "compiler-libs.toplevel", "dynlink" ]
+)
+
+#################
+ocaml_executable(
+    name = "coqproofworker_bin",
+    main = "_Coqproofworker_bin",
+    opts = ["-linkall"]
+)
+
+#############
+ocaml_module(
+    name    = "_Coqproofworker_bin",
+    struct  = "coqproofworker_bin.ml",
+    opts = [
+        "-linkall",
+        "-rectypes"
+    ],
+    deps = [
+        # "//dev:_Dynlink",
+        "//stm:_Stm",
+        "//toplevel:_WorkerLoop",
+        "//vernac:_Mltop"
+    ],
+    deps_opam = [ "dynlink" ]
+)
+
+#############
+ocaml_module(
+    name   = "_Coqqueryworker_bin",
+    struct = "coqqueryworker_bin.ml",
+    opts = ["-rectypes"],
+    deps = [
+        "//stm:_Stm",
+        "//toplevel:_WorkerLoop"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Coqtacticworker_bin",
+    struct  = "coqtacticworker_bin.ml",
+    opts = ["-rectypes"],
+    deps = [
+        "//stm:_Partac",
+        "//toplevel:_WorkerLoop"
+    ],
+)
+
+
