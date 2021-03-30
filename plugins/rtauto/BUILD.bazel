@@ -1,0 +1,140 @@
+load(
+    "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
+    "ocaml_module",
+    "ocaml_signature",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+DEPS = []
+DEPS_OPAM = []
+
+COQPP = "//coqpp:coqpp_main"
+
+################################################################
+ocaml_archive(
+    name   = "rtauto",
+    modules = [
+        ":_Proof_search",
+        ":_Refl_tauto",
+        ":_G_rtauto",
+        ":_Rtauto_plugin"
+    ]
+)
+
+#############
+ocaml_module(
+    name   = "_Rtauto_plugin",
+    struct = "rtauto_plugin.ml",
+    opts   = [
+        # "-rectypes",
+        "-no-alias-deps",
+        "-w", "-49", # no cmi file was found in path for module
+    ],
+)
+
+SUBMODS = [
+    "Proof_search",
+    "Refl_tauto",
+    "G_rtauto",
+]
+
+SUBMODULES = [
+    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+    for SUBMOD in SUBMODS
+]
+
+########
+genrule(
+    name = "gen_plugin_resolver",
+    outs = [
+        "rtauto_plugin.ml"
+    ],
+    cmd = "\n".join(SUBMODULES),
+)
+
+################################################################
+#############
+ocaml_module(
+    name    = "_Proof_search",
+    struct  = "proof_search.ml",
+    sig     = "_Proof_search.cmi",
+    opts    = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//lib:_CErrors",
+        "//library:_Goptions",
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Proof_search.cmi",
+    src  = "proof_search.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//lib:_Pp",
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_Refl_tauto",
+    struct  = "refl_tauto.ml",
+    sig     = "_Refl_tauto.cmi",
+    opts = ["-rectypes"],
+    deps = [
+        "//lib:_Explore",
+        "//plugins/ltac"
+    ],
+)
+
+######
+ocaml_signature(
+    name = "_Refl_tauto.cmi",
+    src  = "refl_tauto.mli",
+    opts = ["-rectypes"],
+    deps = [
+        "//engine:_Evd",
+        "//engine:_EConstr",
+        "//engine:_Proofview",
+        "//kernel:_Constr",
+        "//kernel:_Environ",
+        ":_Proof_search"
+    ],
+)
+
+#############
+ocaml_module(
+    name    = "_G_rtauto",
+    struct  = "g_rtauto.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//kernel:_Constr",
+        "//plugins/ltac",
+        ":_Refl_tauto"
+    ],
+)
+
+########
+genrule(
+    name = "gen_g_rtauto",
+    tools = [COQPP],
+    srcs = [
+        "g_rtauto.mlg"
+    ],
+    outs = [
+        "g_rtauto.ml"
+    ],
+    cmd = "\n".join([
+        "$(location {tool}) $(location g_rtauto.mlg)".format( tool = COQPP ),
+        "cp plugins/rtauto/g_rtauto.ml $(location g_rtauto.ml);"
+    ]),
+)
+
