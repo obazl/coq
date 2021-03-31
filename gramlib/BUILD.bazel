@@ -3,8 +3,6 @@ load(
     "ocaml_archive",
     "ocaml_module",
     "ocaml_signature",
-    # "ocaml_submodule",
-    # "ocaml_subsignature",
 )
 
 package(default_visibility = ["//visibility:public"])
@@ -17,10 +15,10 @@ DEPS_OPAM = []
 ocaml_archive(
     name   = "gramlib",
     modules = [
+        ":_Ploc",
+        ":_Plexing",
         ":_Gramext",
         ":_Grammar",
-        ":_Plexing",
-        ":_Ploc",
         ":_Gramlib"
     ],
 )
@@ -84,7 +82,6 @@ ocaml_module(
     ],
     deps = DEPS + [
         "//lib:_Feedback",
-        ":_Ploc"
     ],
     deps_opam = DEPS_OPAM
 )
@@ -94,9 +91,9 @@ ocaml_signature(
     name = "_Grammar.cmi",
     src = "grammar.mli",
     deps = DEPS + [
-        # "//lib:_Loc",
         ":_Gramext",
-        ":_Plexing"
+        ":_Plexing",
+        ":_Ploc"
     ],
     deps_opam = DEPS_OPAM
 )
