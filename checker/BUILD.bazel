@@ -1,6 +1,7 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
     "ocaml_archive",
+    "ocaml_executable",
     "ocaml_module",
     "ocaml_signature",
 )
@@ -24,13 +25,25 @@ ocaml_archive(
         ":_CheckTypes",
         ":_Check_stat",
         ":_Checker",
-        ":_Coqchk",
+        # ":_Coqchk",
         ":_Mod_checking",
         ":_Safe_checking",
         ":_Validate",
         ":_Values",
-        ":_Votour",
+        # ":_Votour",
     ]
+)
+
+#################
+ocaml_executable(
+    name = "coqchk",
+    main = "_Coqchk"
+)
+
+#################
+ocaml_executable(
+    name = "votour",
+    main = "_Votour"
 )
 
 ################################################################
