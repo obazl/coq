@@ -1,32 +1,30 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
     "ocaml_executable",
     "ocaml_lex",
     "ocaml_module",
-    "ocaml_library",
     "ocaml_signature",
     "ocaml_yacc",
 )
 
 package(default_visibility = ["//visibility:public"])
 
+##############
+ocaml_archive(
+    name = "coqpp",
+    modules = [
+        ":_Coqpp_lex",
+        ":_Coqpp_parse",
+        ":_Coqpp_parser"
+    ]
+)
+
 #################
 ocaml_executable(
     name = "coqpp_main",
     main = "_Coqpp_main",
 )
-
-
-## No need to aggregate lib coqpp
-# ##############
-# ocaml_library(
-#     name = "_Coqpp",
-#     modules = [
-#         ":_Coqpp_lex",
-#         ":_Coqpp_parse",
-#         ":_Coqpp_parser",
-#     ],
-# )
 
 ################
 ocaml_signature(
