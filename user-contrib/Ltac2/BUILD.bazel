@@ -442,7 +442,7 @@ ocaml_signature(
     ],
 )
 
-COQPP = "//coqpp:coqpp_main"
+COQPP = "//coqpp"
 ########
 genrule(
     name = "gen_g_ltac2.mlg",

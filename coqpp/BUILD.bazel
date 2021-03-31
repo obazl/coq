@@ -10,21 +10,22 @@ load(
 
 package(default_visibility = ["//visibility:public"])
 
-##############
-ocaml_archive(
-    name = "coqpp",
-    modules = [
-        ":_Coqpp_lex",
-        ":_Coqpp_parse",
-        ":_Coqpp_parser"
-    ]
-)
-
 #################
 ocaml_executable(
-    name = "coqpp_main",
+    name = "coqpp",
     main = "_Coqpp_main",
+    opts = ["-linkall"]
 )
+
+##############
+# ocaml_archive(
+#     name = "coqpp",
+#     modules = [
+#         ":_Coqpp_lex",
+#         ":_Coqpp_parse",
+#         ":_Coqpp_parser"
+#     ]
+# )
 
 ################
 ocaml_signature(

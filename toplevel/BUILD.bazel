@@ -189,7 +189,7 @@ ocaml_module(
 )
 
 ###########################
-TOOL = "//coqpp:coqpp_main"
+TOOL = "//coqpp:coqpp"
 
 ########
 genrule(

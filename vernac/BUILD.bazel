@@ -1,7 +1,6 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
     "ocaml_archive",
-    "ocaml_executable",
     "ocaml_module",
     "ocaml_signature",
 )
@@ -702,7 +701,7 @@ ocaml_module(
 )
 
 ###########################
-TOOL = "//coqpp:coqpp_main"
+TOOL = "//coqpp"
 
 ########
 genrule(

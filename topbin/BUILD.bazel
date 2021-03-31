@@ -13,13 +13,13 @@ DEPS_OPAM = []
 
 #################
 ocaml_executable(
-    name = "coqc_bin",
+    name = "coqc",
     main = "_Coqc_bin",
     opts = select({
         "//bzl/host:linux": ["-ccopt", "-flto"],
         "//bzl/host:macos": ["-ccopt", "-flto"],
         "//conditions:default": []
-    }),
+    }) + ["-linkall"]
 )
 
 #############
@@ -31,9 +31,14 @@ ocaml_module(
     ],
 )
 
+################################################################
+alias(
+    name   = "coqtop",
+    actual = "coqtop.opt"
+)
 #################
 ocaml_executable(
-    name = "coqtop_bin",
+    name = "coqtop.opt",
     main = "_Coqtop_bin",
     opts = ["-linkall"]
 )
@@ -56,7 +61,7 @@ ocaml_module(
 #################
 ## to be compiled with --@ocaml//mode=bytecode
 ocaml_executable(
-    name = "coqtop_byte_bin",
+    name = "coqtop.byte",
     main = "_Coqtop_byte_bin",
     # mode = "@ocaml//mode:bytecode",
     opts = ["-linkall"]
@@ -81,7 +86,7 @@ ocaml_module(
 
 #################
 ocaml_executable(
-    name = "coqproofworker_bin",
+    name = "coqproofworker",
     main = "_Coqproofworker_bin",
 )
 
@@ -104,7 +109,7 @@ ocaml_module(
 
 #################
 ocaml_executable(
-    name = "coqqueryworker_bin",
+    name = "coqqueryworker",
     main = "_Coqqueryworker_bin",
 )
 
@@ -121,7 +126,7 @@ ocaml_module(
 
 #################
 ocaml_executable(
-    name = "coqtacticworker_bin",
+    name = "coqtacticworker",
     main = "_Coqtacticworker_bin"
 )
 

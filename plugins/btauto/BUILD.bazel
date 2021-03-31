@@ -13,45 +13,12 @@ DEPS_OPAM = []
 ################################################################
 ocaml_archive(
     name   = "btauto",
-    opts   = [
-        "-rectypes",
-        # "-linkall",
-    ],
+    resolver = "_Btauto_plugin",
     modules = [
         ":_Refl_btauto",
         ":_G_btauto",
-        ":_Btauto_plugin"
+        # ":_Btauto_plugin"
     ]
-)
-
-#############
-ocaml_module(
-    name   = "_Btauto_plugin",
-    struct = "btauto_plugin.ml",
-    opts   = [
-        "-rectypes",
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-    ],
-)
-
-SUBMODS = [
-        "Refl_btauto",
-        "G_btauto",
-]
-
-SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in SUBMODS
-]
-
-########
-genrule(
-    name = "gen_plugin_resolver",
-    outs = [
-        "btauto_plugin.ml"
-    ],
-    cmd = "\n".join(SUBMODULES),
 )
 
 #############
@@ -69,7 +36,7 @@ ocaml_module(
 )
 
 ###########################
-COQPP = "//coqpp:coqpp_main"
+COQPP = "//coqpp"
 
 ########
 genrule(

@@ -72,6 +72,8 @@ You can also build any particular target:
 $ bazel build vernac:_ComFixpoint
 ```
 
+## queries
+
 You can use Bazel's [query
 facility](https://docs.bazel.build/versions/master/query-how-to.html)
 to inspect dependency structures. For example, to list all
@@ -98,6 +100,44 @@ Restrict the output to show only packages:
 
 ```
 $ bazel query 'rdeps(..., //vernac:_ComFixpoint)' --output package
+```
+
+List the `ocaml_executable` targets in a package:
+
+```
+$ bazel query 'kind(ocaml_executable, topbin/...)'
+//topbin:coqtop_byte_bin
+//topbin:coqtop_bin
+//topbin:coqtacticworker_bin
+//topbin:coqqueryworker_bin
+//topbin:coqproofworker_bin
+//topbin:coqc_bin
+```
+
+List all `ocaml_executable` targets:
+
+```
+$ bazel query 'kind(ocaml_executable, //...)'
+//topbin:coqtop_byte_bin
+//topbin:coqtop_bin
+//topbin:coqtacticworker_bin
+//topbin:coqqueryworker_bin
+//topbin:coqproofworker_bin
+//topbin:coqc_bin
+//tools/coqdoc:main
+//tools:ocamllibdep
+//tools:coqworkmgr
+//tools:coqwc
+//tools:coqdep_boot
+//tools:coqdep
+//tools:coq_makefile
+//kernel:genOpcodeFiles
+//coqpp:coqpp_main
+//config:list_plugins
+//config:genOpcodeFiles
+//checker:votour
+//checker:coqchk
+//bin:coqc
 ```
 
 You can also ask Bazel to print the build command for a target without

@@ -8,7 +8,7 @@ load(
 package(default_visibility = ["//visibility:public"])
 
 DEPS_OPAM = [
-    # "str",
+    "str",
     "threads",
     "unix"
 ]

@@ -2,10 +2,8 @@ load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
     "ocaml_archive",
     "ocaml_module",
-    "ocaml_submodule",
     "ocaml_ns_archive",
     "ocaml_signature",
-    "ocaml_subsignature",
 )
 
 package(default_visibility = ["//visibility:public"])
@@ -648,7 +646,7 @@ ocaml_module(
 )
 
 ######
-ocaml_subsignature(
+ocaml_signature(
     name = "_Util.cmi",
     src  = "util.mli",
     opts = [],

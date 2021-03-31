@@ -40,12 +40,17 @@ ocaml_module(
     ],
 )
 
+#################
+ocaml_executable(
+    name = "coq-tex",
+    main = "_Coq_tex",
+)
+
 #############
 ocaml_module(
     name    = "_Coq_tex",
     struct  = "coq_tex.ml",
-    deps = [
-    ],
+    deps_opam = ["str"]
 )
 
 #################
@@ -194,6 +199,11 @@ ocaml_module(
     struct  = "md5sum.ml",
 )
 
+
+# Makefile.build
+# COQDEPBOOTSRC := \
+#  clib/segmenttree.cmo clib/unicodetable.cmo clib/unicode.cmo clib/minisys.cmo \
+#  tools/coqdep_lexer.cmo tools/coqdep_common.cmo tools/coqdep_boot.cmo
 
 #################
 ocaml_executable(

@@ -1,6 +1,7 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
     "ocaml_archive",
+    "ocaml_executable",
     "ocaml_module",
     "ocaml_signature",
 )
@@ -10,9 +11,14 @@ package(default_visibility = ["//visibility:public"])
 DEPS = []
 DEPS_OPAM = []
 
-COQPP = "//coqpp:coqpp_main"
+COQPP = "//coqpp"
 
-## FIXME: archive/library?
+#################
+ocaml_executable(
+    name = "csdpcert",
+    main = "_Csdpcert",
+)
+
 ################################################################
 ocaml_archive(
     name   = "micromega",
@@ -503,6 +509,7 @@ ocaml_module(
         ":_NumCompat",
         ":_Sos"
     ],
+    deps_opam = ["unix"]
 )
 
 ######

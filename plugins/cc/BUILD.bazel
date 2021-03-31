@@ -10,50 +10,19 @@ package(default_visibility = ["//visibility:public"])
 DEPS = []
 DEPS_OPAM = []
 
-COQPP = "//coqpp:coqpp_main"
+COQPP = "//coqpp"
 
 ################################################################
 ocaml_archive(
-    name = "cc",
-    modules = [
+    name     = "cc",
+    resolver = "Cc_plugin",
+    modules  = [
         ":_Ccalgo",
         ":_Ccproof",
         ":_Cctac",
         ":_G_congruence",
-        ":_Cc_plugin"
+        # ":_Cc_plugin"
     ]
-)
-
-#############
-ocaml_module(
-    name   = "_Cc_plugin",
-    struct = "cc_plugin.ml",
-    opts   = [
-        "-rectypes",
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-    ],
-)
-
-SUBMODS = [
-    "Ccalgo",
-    "Ccproof",
-    "Cctac",
-    "G_congruence"
-]
-
-SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in SUBMODS
-]
-
-########
-genrule(
-    name = "gen_plugin_resolver",
-    outs = [
-        "cc_plugin.ml"
-    ],
-    cmd = "\n".join(SUBMODULES),
 )
 
 #############

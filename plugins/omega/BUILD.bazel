@@ -10,7 +10,7 @@ package(default_visibility = ["//visibility:public"])
 DEPS = []
 DEPS_OPAM = []
 
-COQPP = "//coqpp:coqpp_main"
+COQPP = "//coqpp"
 
 ################################################################
 ocaml_archive(

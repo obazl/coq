@@ -12,7 +12,7 @@ package(default_visibility = ["//visibility:public"])
 
 #################
 ocaml_executable(
-    name = "main",
+    name = "coqdoc",
     main = "_Main",
     opts = [],
     deps = [
