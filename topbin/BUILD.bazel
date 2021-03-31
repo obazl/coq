@@ -19,7 +19,7 @@ ocaml_executable(
         "//bzl/host:linux": ["-ccopt", "-flto"],
         "//bzl/host:macos": ["-ccopt", "-flto"],
         "//conditions:default": []
-    }) + ["-linkall"]
+    }),
 )
 
 #############
@@ -27,7 +27,7 @@ ocaml_module(
     name    = "_Coqc_bin",
     struct  = "coqc_bin.ml",
     deps = [
-        "//toplevel" # depend on entire archive, not :_Coqc
+        "//toplevel:_Coqc"
     ],
 )
 
@@ -83,7 +83,6 @@ ocaml_module(
 ocaml_executable(
     name = "coqproofworker_bin",
     main = "_Coqproofworker_bin",
-    opts = ["-linkall"]
 )
 
 #############
@@ -103,6 +102,12 @@ ocaml_module(
     deps_opam = [ "dynlink" ]
 )
 
+#################
+ocaml_executable(
+    name = "coqqueryworker_bin",
+    main = "_Coqqueryworker_bin",
+)
+
 #############
 ocaml_module(
     name   = "_Coqqueryworker_bin",
@@ -112,6 +117,12 @@ ocaml_module(
         "//stm:_Stm",
         "//toplevel:_WorkerLoop"
     ],
+)
+
+#################
+ocaml_executable(
+    name = "coqtacticworker_bin",
+    main = "_Coqtacticworker_bin"
 )
 
 #############
