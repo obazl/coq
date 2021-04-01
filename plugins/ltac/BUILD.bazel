@@ -15,6 +15,42 @@ DEPS_OPAM = []
 
 COQPP = "//coqpp"
 
+################################################################
+ocaml_archive(
+    name     = "ltac",
+    resolver = "_Ltac_plugin",
+    modules = [
+        ":_Tacexpr",
+        ":_Tacarg",
+        ":_Tacsubst",
+        ":_Tacenv",
+        ":_Pptactic",
+        ":_Pltac",
+        ":_Taccoerce",
+        ":_Tactic_debug",
+        ":_Tacintern",
+        ":_Profile_ltac",
+        ":_Tactic_matching",
+        ":_Leminv",
+        ":_Tacinterp",
+        ":_Tacentries",
+        ":_Evar_tactics",
+        ":_Tactic_option",
+        ":_Extraargs",
+        ":_G_obligations",
+        ":_Coretactics",
+        ":_Extratactics",
+        ":_Profile_ltac_tactics",
+        ":_G_auto",
+        ":_G_class",
+        ":_Rewrite",
+        ":_G_rewrite",
+        ":_G_eqdecide",
+        ":_G_tactic",
+        ":_G_ltac",
+    ]
+)
+
 # Currently ocaml_pack_library does not build; use the ocaml_archive below.
 
 PACK = []
@@ -70,102 +106,60 @@ PACK = []
 #     ]
 # )
 
-################################################################
-ocaml_archive(
-    name   = "ltac",
-    opts   = [
-        "-verbose",
-        "-rectypes",
-        "-linkall",
-        # "-absname"
-    ],
-    modules = [
-        ":_Tacexpr",
-        ":_Tacarg",
-        ":_Tacsubst",
-        ":_Tacenv",
-        ":_Pptactic",
-        ":_Pltac",
-        ":_Taccoerce",
-        ":_Tactic_debug",
-        ":_Tacintern",
-        ":_Profile_ltac",
-        ":_Tactic_matching",
-        ":_Leminv",
-        ":_Tacinterp",
-        ":_Tacentries",
-        ":_Evar_tactics",
-        ":_Tactic_option",
-        ":_Extraargs",
-        ":_G_obligations",
-        ":_Coretactics",
-        ":_Extratactics",
-        ":_Profile_ltac_tactics",
-        ":_G_auto",
-        ":_G_class",
-        ":_Rewrite",
-        ":_G_rewrite",
-        ":_G_eqdecide",
-        ":_G_tactic",
-        ":_G_ltac",
-        ":_Ltac_plugin",
-    ]
-)
+# #############
+# ocaml_module(
+#     name   = "_Ltac_plugin",
+#     struct = "ltac_plugin.ml",
+#     opts   = [
+#         "-no-alias-deps",
+#         "-w", "-49", # no cmi file was found in path for module
+#     ],
+# )
 
-#############
-ocaml_module(
-    name   = "_Ltac_plugin",
-    struct = "ltac_plugin.ml",
-    opts   = [
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-    ],
-)
+# SUBMODS = [
+#     "Tacexpr",
+#     "Tacarg",
+#     "Tacsubst",
+#     "Tacenv",
+#     "Pptactic",
+#     "Pltac",
+#     "Taccoerce",
+#     "Tactic_debug",
+#     "Tacintern",
+#     "Profile_ltac",
+#     "Tactic_matching",
+#     "Leminv",
+#     "Tacinterp",
+#     "Tacentries",
+#     "Evar_tactics",
+#     "Tactic_option",
+#     "Extraargs",
+#     "G_obligations",
+#     "Coretactics",
+#     "Extratactics",
+#     "Profile_ltac_tactics",
+#     "G_auto",
+#     "G_class",
+#     "Rewrite",
+#     "G_rewrite",
+#     "G_eqdecide",
+#     "G_tactic",
+#     "G_ltac",
+# ]
 
-SUBMODS = [
-    "Tacexpr",
-    "Tacarg",
-    "Tacsubst",
-    "Tacenv",
-    "Pptactic",
-    "Pltac",
-    "Taccoerce",
-    "Tactic_debug",
-    "Tacintern",
-    "Profile_ltac",
-    "Tactic_matching",
-    "Leminv",
-    "Tacinterp",
-    "Tacentries",
-    "Evar_tactics",
-    "Tactic_option",
-    "Extraargs",
-    "G_obligations",
-    "Coretactics",
-    "Extratactics",
-    "Profile_ltac_tactics",
-    "G_auto",
-    "G_class",
-    "Rewrite",
-    "G_rewrite",
-    "G_eqdecide",
-    "G_tactic",
-    "G_ltac",
-]
+# SUBMODULES = [
+#     'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+#     for SUBMOD in SUBMODS
+# ]
 
-SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in SUBMODS
-]
-
-########
-genrule(
-    name = "gen_plugin_resolver",
-    outs = [
-        "ltac_plugin.ml"
-    ],
-    cmd = "\n".join(SUBMODULES),
-)
+# ########
+# genrule(
+#     name = "gen_plugin_resolver",
+#     outs = [
+#         "ltac_plugin.ml"
+#     ],
+#     cmd = "\n".join(SUBMODULES),
+# )
 
 ################################################################
 
@@ -1103,9 +1097,10 @@ ocaml_signature(
 # Tauto
 
 #################
-ocaml_ns_archive(
-    name = "tauto_plugin",
-    submodules = [
+ocaml_archive(
+    name     = "tauto",
+    resolver = "_Tauto_plugin",
+    modules = [
         ":_Tauto"
     ]
 )
@@ -1117,10 +1112,11 @@ ocaml_module(
     sig     = "_Tauto.cmi",
     opts = [
         "-rectypes",
-        "-w", "-27" # unused variable
+        "-w", "-27", # unused variable
     ],
     deps = [
-        "//tactics:_Hipattern"
+        "//tactics:_Hipattern",
+        "//plugins/ltac"
     ],
 )
 
@@ -1132,6 +1128,5 @@ ocaml_signature(
     deps = [
         "//engine:_EConstr",
         "//kernel:_Constr",
-        ":Ltac_plugin"
     ],
 )

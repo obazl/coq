@@ -21,7 +21,8 @@ ocaml_executable(
 
 ################################################################
 ocaml_archive(
-    name   = "micromega",
+    name     = "micromega",
+    resolver = ":_Micromega_plugin",
     modules = [
         ":_Micromega",
         ":_NumCompat",
@@ -36,78 +37,75 @@ ocaml_archive(
         ":_Persistent_cache",
         ":_Coq_micromega",
         ":_G_micromega",
-        ":_Micromega_plugin"
     ]
 )
 
-#############
-ocaml_module(
-    name   = "_Micromega_plugin",
-    struct = "micromega_plugin.ml",
-    opts   = [
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-    ],
-)
+# #############
+# ocaml_module(
+#     name   = "_Micromega_plugin",
+#     struct = "micromega_plugin.ml",
+#     opts   = [
+#         "-no-alias-deps",
+#         "-w", "-49", # no cmi file was found in path for module
+#     ],
+# )
 
-MICROMEGA_SUBMODS = [
-    "Micromega",
-    "NumCompat",
-    "Mutils",
-    "Itv",
-    "Vect",
-    "Sos_types",
-    "Polynomial",
-    "Mfourier",
-    "Simplex",
-    "Certificate",
-    "Persistent_cache",
-    "Coq_micromega",
-    "G_micromega",
-]
+# MICROMEGA_SUBMODS = [
+#     "Micromega",
+#     "NumCompat",
+#     "Mutils",
+#     "Itv",
+#     "Vect",
+#     "Sos_types",
+#     "Polynomial",
+#     "Mfourier",
+#     "Simplex",
+#     "Certificate",
+#     "Persistent_cache",
+#     "Coq_micromega",
+#     "G_micromega",
+# ]
 
-MICROMEGA_SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in MICROMEGA_SUBMODS
-]
+# MICROMEGA_SUBMODULES = [
+#     'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+#     for SUBMOD in MICROMEGA_SUBMODS
+# ]
 
-########
-genrule(
-    name = "gen_micromega_resolver",
-    outs = [
-        "micromega_plugin.ml"
-    ],
-    cmd = "\n".join(MICROMEGA_SUBMODULES),
-)
+# ########
+# genrule(
+#     name = "gen_micromega_resolver",
+#     outs = [
+#         "micromega_plugin.ml"
+#     ],
+#     cmd = "\n".join(MICROMEGA_SUBMODULES),
+# )
 
 ################################################################
 # zify_plugin.mlpack
-ocaml_module( ## Resolver module, instead of pack
-    name   = "zify_plugin",
-    struct = "zify_plugin.ml",
-    opts   = [
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-        # "-rectypes"
-    ],
-    deps = [":_Zify", ":_G_zify"]
+ocaml_archive(
+    name     = "zify",
+    resolver = "Zify_plugin",
+    modules = [
+        ":_Zify",
+        ":_G_zify"
+    ]
 )
 
-ZIFY_SUBMODS = ["Zify", "G_zify"]
+# ZIFY_SUBMODS = ["Zify", "G_zify"]
 
-ZIFY_SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in ZIFY_SUBMODS
-]
+# ZIFY_SUBMODULES = [
+#     'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+#     for SUBMOD in ZIFY_SUBMODS
+# ]
 
-########
-genrule(
-    name = "gen_zify_resolver",
-    outs = [
-        "zify_plugin.ml"
-    ],
-    cmd = "\n".join(ZIFY_SUBMODULES),
-)
+# ########
+# genrule(
+#     name = "gen_zify_resolver",
+#     outs = [
+#         "zify_plugin.ml"
+#     ],
+#     cmd = "\n".join(ZIFY_SUBMODULES),
+# )
 
 
 ################################################################
