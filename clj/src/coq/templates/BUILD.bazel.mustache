@@ -1,0 +1,37 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+{{#modules}}
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "{{target}}",
+    src  = "{{src}}",
+    plugins = [
+    {{#ocamldeps}}
+      "{{ocamldep}}",
+    {{/ocamldeps}}
+    ],
+    deps = [
+    {{#vdeps}}
+      "{{dep}}",
+    {{/vdeps}}
+    ],
+    deps_vio = [
+    {{#viodeps}}
+      "{{dep}}",
+    {{/viodeps}}
+    ]
+)
+
+{{/modules}}
