@@ -1,0 +1,13 @@
+load("@obazl_rules_coq//coq:rules.bzl", "coq_library")
+
+coq_library(
+    name = "LibNatural",
+    sublibraries = [
+        "//theories/Numbers/Natural/Abstract:LibAbstract",
+        "//theories/Numbers/Natural/Binary:NBinary",
+        "//theories/Numbers/Natural/Peano:NPeano"
+    ],
+    visibility = ["//theories/Numbers:__pkg__"]
+)
+
+

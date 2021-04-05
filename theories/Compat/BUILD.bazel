@@ -1,0 +1,97 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibCompat",
+    sublibraries = [
+        ":AdmitAxiom",
+        ":Coq811",
+        ":Coq812",
+        ":Coq813",
+        ":Coq814",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "AdmitAxiom",
+    src  = "AdmitAxiom.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Coq811",
+    src  = "Coq811.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Coq812",
+    ],
+    deps_vio = [
+      ":Coq812",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Coq812",
+    src  = "Coq812.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Coq813",
+    ],
+    deps_vio = [
+      ":Coq813",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Coq813",
+    src  = "Coq813.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Coq814",
+    ],
+    deps_vio = [
+      ":Coq814",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Coq814",
+    src  = "Coq814.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+

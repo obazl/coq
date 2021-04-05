@@ -1,0 +1,477 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibArith",
+    sublibraries = [
+        ":Arith",
+        "Arith_base",
+        "Between",
+        "Bool_nat",
+        "Compare",
+        "Compare_dec",
+        "Div2",
+        "EqNat",
+        "Euclid",
+        "Even",
+        "Factorial",
+        "Gt",
+        "Le",
+        "Lt",
+        "Max",
+        "Min",
+        "Minus",
+        "Mult",
+        "PeanoNat",
+        "Peano_dec",
+        "Plus",
+        "Wf_nat"
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Arith",
+    src  = "Arith.v",
+    plugins = [
+    ],
+    deps = [
+      ":Arith_base",
+      "//theories/setoid_ring:ArithRing",
+    ],
+    deps_vio = [
+      ":Arith_base",
+      "//theories/setoid_ring:ArithRing",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Arith_base",
+    src  = "Arith_base.v",
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+      ":Le",
+      ":Lt",
+      ":Plus",
+      ":Gt",
+      ":Minus",
+      ":Mult",
+      ":Between",
+      ":Peano_dec",
+      ":Compare_dec",
+      ":Factorial",
+      ":EqNat",
+      ":Wf_nat",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+      ":Le",
+      ":Lt",
+      ":Plus",
+      ":Gt",
+      ":Minus",
+      ":Mult",
+      ":Between",
+      ":Peano_dec",
+      ":Compare_dec",
+      ":Factorial",
+      ":EqNat",
+      ":Wf_nat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Between",
+    src  = "Between.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Le",
+      ":Lt",
+    ],
+    deps_vio = [
+      ":Le",
+      ":Lt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Bool_nat",
+    src  = "Bool_nat.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Compare_dec",
+      ":Peano_dec",
+      "//theories/Bool:Sumbool",
+    ],
+    deps_vio = [
+      ":Compare_dec",
+      ":Peano_dec",
+      "//theories/Bool:Sumbool",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Compare",
+    src  = "Compare.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Arith_base",
+      ":Peano_dec",
+      ":Compare_dec",
+      ":Wf_nat",
+      ":Min",
+      ":Max",
+    ],
+    deps_vio = [
+      ":Arith_base",
+      ":Peano_dec",
+      ":Compare_dec",
+      ":Wf_nat",
+      ":Min",
+      ":Max",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Compare_dec",
+    src  = "Compare_dec.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Le",
+      ":Lt",
+      ":Gt",
+      "//theories/Logic:Decidable",
+      ":PeanoNat",
+    ],
+    deps_vio = [
+      ":Le",
+      ":Lt",
+      ":Gt",
+      "//theories/Logic:Decidable",
+      ":PeanoNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Div2",
+    src  = "Div2.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+      ":Even",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+      ":Even",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "EqNat",
+    src  = "EqNat.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Euclid",
+    src  = "Euclid.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Mult",
+      ":Compare_dec",
+      ":Wf_nat",
+    ],
+    deps_vio = [
+      ":Mult",
+      ":Compare_dec",
+      ":Wf_nat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Even",
+    src  = "Even.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Factorial",
+    src  = "Factorial.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+      ":Plus",
+      ":Mult",
+      ":Lt",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+      ":Plus",
+      ":Mult",
+      ":Lt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Gt",
+    src  = "Gt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+      ":Le",
+      ":Lt",
+      ":Plus",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+      ":Le",
+      ":Lt",
+      ":Plus",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Le",
+    src  = "Le.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Lt",
+    src  = "Lt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+      ":Le",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+      ":Le",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Max",
+    src  = "Max.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Min",
+    src  = "Min.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Minus",
+    src  = "Minus.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+      ":Lt",
+      ":Le",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+      ":Lt",
+      ":Le",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Mult",
+    src  = "Mult.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+      ":Plus",
+      ":Minus",
+      ":Le",
+      ":Lt",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+      ":Plus",
+      ":Minus",
+      ":Le",
+      ":Lt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "PeanoNat",
+    src  = "PeanoNat.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers/Natural/Abstract:NAxioms",
+      "//theories/Numbers/Natural/Abstract:NProperties",
+      "//theories/Structures:OrdersFacts",
+    ],
+    deps_vio = [
+      "//theories/Numbers/Natural/Abstract:NAxioms",
+      "//theories/Numbers/Natural/Abstract:NProperties",
+      "//theories/Structures:OrdersFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Peano_dec",
+    src  = "Peano_dec.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Logic:Decidable",
+      ":PeanoNat",
+      "//theories/Logic:Eqdep_dec",
+      ":Le",
+      ":Lt",
+    ],
+    deps_vio = [
+      "//theories/Logic:Decidable",
+      ":PeanoNat",
+      "//theories/Logic:Eqdep_dec",
+      ":Le",
+      ":Lt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Plus",
+    src  = "Plus.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+      ":Le",
+      ":Lt",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+      ":Le",
+      ":Lt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Wf_nat",
+    src  = "Wf_nat.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PeanoNat",
+      ":Lt",
+      ":Le",
+      ":Compare_dec",
+      "//theories/Logic:Decidable",
+    ],
+    deps_vio = [
+      ":PeanoNat",
+      ":Lt",
+      ":Le",
+      ":Compare_dec",
+      "//theories/Logic:Decidable",
+    ]
+)
+

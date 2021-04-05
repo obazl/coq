@@ -1,0 +1,528 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibSets",
+    sublibraries = [
+        ":Classical_sets",
+        ":Constructive_sets",
+        ":Cpo",
+        ":Ensembles",
+        ":Finite_sets",
+        ":Finite_sets_facts",
+        ":Image",
+        ":Infinite_sets",
+        ":Integers",
+        ":Multiset",
+        ":Partial_Order",
+        ":Permut",
+        ":Powerset",
+        ":Powerset_Classical_facts",
+        ":Powerset_facts",
+        ":Relations_1",
+        ":Relations_1_facts",
+        ":Relations_2",
+        ":Relations_2_facts",
+        ":Relations_3",
+        ":Relations_3_facts",
+        ":Uniset",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Classical_sets",
+    src  = "Classical_sets.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ensembles",
+      ":Constructive_sets",
+      "//theories/Logic:Classical",
+    ],
+    deps_vio = [
+      ":Ensembles",
+      ":Constructive_sets",
+      "//theories/Logic:Classical",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Constructive_sets",
+    src  = "Constructive_sets.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ensembles",
+    ],
+    deps_vio = [
+      ":Ensembles",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Cpo",
+    src  = "Cpo.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ensembles",
+      ":Relations_1",
+      ":Partial_Order",
+    ],
+    deps_vio = [
+      ":Ensembles",
+      ":Relations_1",
+      ":Partial_Order",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ensembles",
+    src  = "Ensembles.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Finite_sets",
+    src  = "Finite_sets.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ensembles",
+      ":Constructive_sets",
+    ],
+    deps_vio = [
+      ":Ensembles",
+      ":Constructive_sets",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Finite_sets_facts",
+    src  = "Finite_sets_facts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Finite_sets",
+      ":Constructive_sets",
+      "//theories/Logic:Classical",
+      ":Classical_sets",
+      ":Powerset",
+      ":Powerset_facts",
+      ":Powerset_Classical_facts",
+      "//theories/Arith:Gt",
+      "//theories/Arith:Lt",
+    ],
+    deps_vio = [
+      ":Finite_sets",
+      ":Constructive_sets",
+      "//theories/Logic:Classical",
+      ":Classical_sets",
+      ":Powerset",
+      ":Powerset_facts",
+      ":Powerset_Classical_facts",
+      "//theories/Arith:Gt",
+      "//theories/Arith:Lt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Image",
+    src  = "Image.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Finite_sets",
+      ":Constructive_sets",
+      "//theories/Logic:Classical",
+      ":Classical_sets",
+      ":Powerset",
+      ":Powerset_facts",
+      ":Powerset_Classical_facts",
+      "//theories/Arith:Gt",
+      "//theories/Arith:Lt",
+      "//theories/Arith:Le",
+      ":Finite_sets_facts",
+    ],
+    deps_vio = [
+      ":Finite_sets",
+      ":Constructive_sets",
+      "//theories/Logic:Classical",
+      ":Classical_sets",
+      ":Powerset",
+      ":Powerset_facts",
+      ":Powerset_Classical_facts",
+      "//theories/Arith:Gt",
+      "//theories/Arith:Lt",
+      "//theories/Arith:Le",
+      ":Finite_sets_facts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Infinite_sets",
+    src  = "Infinite_sets.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Finite_sets",
+      ":Constructive_sets",
+      "//theories/Logic:Classical",
+      ":Classical_sets",
+      ":Powerset",
+      ":Powerset_facts",
+      ":Powerset_Classical_facts",
+      "//theories/Arith:Gt",
+      "//theories/Arith:Lt",
+      "//theories/Arith:Le",
+      ":Finite_sets_facts",
+      ":Image",
+    ],
+    deps_vio = [
+      ":Finite_sets",
+      ":Constructive_sets",
+      "//theories/Logic:Classical",
+      ":Classical_sets",
+      ":Powerset",
+      ":Powerset_facts",
+      ":Powerset_Classical_facts",
+      "//theories/Arith:Gt",
+      "//theories/Arith:Lt",
+      "//theories/Arith:Le",
+      ":Finite_sets_facts",
+      ":Image",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Integers",
+    src  = "Integers.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Finite_sets",
+      ":Constructive_sets",
+      "//theories/Logic:Classical",
+      ":Classical_sets",
+      ":Powerset",
+      ":Powerset_facts",
+      ":Powerset_Classical_facts",
+      "//theories/Arith:Gt",
+      "//theories/Arith:Lt",
+      "//theories/Arith:Le",
+      ":Finite_sets_facts",
+      ":Image",
+      ":Infinite_sets",
+      "//theories/Arith:Compare_dec",
+      ":Relations_1",
+      ":Partial_Order",
+      ":Cpo",
+    ],
+    deps_vio = [
+      ":Finite_sets",
+      ":Constructive_sets",
+      "//theories/Logic:Classical",
+      ":Classical_sets",
+      ":Powerset",
+      ":Powerset_facts",
+      ":Powerset_Classical_facts",
+      "//theories/Arith:Gt",
+      "//theories/Arith:Lt",
+      "//theories/Arith:Le",
+      ":Finite_sets_facts",
+      ":Image",
+      ":Infinite_sets",
+      "//theories/Arith:Compare_dec",
+      ":Relations_1",
+      ":Partial_Order",
+      ":Cpo",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Multiset",
+    src  = "Multiset.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Permut",
+      "//theories/Setoids:Setoid",
+      "//theories/Arith:Plus",
+    ],
+    deps_vio = [
+      ":Permut",
+      "//theories/Setoids:Setoid",
+      "//theories/Arith:Plus",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Partial_Order",
+    src  = "Partial_Order.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ensembles",
+      ":Relations_1",
+    ],
+    deps_vio = [
+      ":Ensembles",
+      ":Relations_1",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Permut",
+    src  = "Permut.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Powerset",
+    src  = "Powerset.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ensembles",
+      ":Relations_1",
+      ":Relations_1_facts",
+      ":Partial_Order",
+      ":Cpo",
+    ],
+    deps_vio = [
+      ":Ensembles",
+      ":Relations_1",
+      ":Relations_1_facts",
+      ":Partial_Order",
+      ":Cpo",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Powerset_Classical_facts",
+    src  = "Powerset_Classical_facts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ensembles",
+      ":Constructive_sets",
+      ":Relations_1",
+      ":Relations_1_facts",
+      ":Partial_Order",
+      ":Cpo",
+      ":Powerset",
+      ":Powerset_facts",
+      "//theories/Logic:Classical",
+      ":Classical_sets",
+    ],
+    deps_vio = [
+      ":Ensembles",
+      ":Constructive_sets",
+      ":Relations_1",
+      ":Relations_1_facts",
+      ":Partial_Order",
+      ":Cpo",
+      ":Powerset",
+      ":Powerset_facts",
+      "//theories/Logic:Classical",
+      ":Classical_sets",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Powerset_facts",
+    src  = "Powerset_facts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ensembles",
+      ":Constructive_sets",
+      ":Relations_1",
+      ":Relations_1_facts",
+      ":Partial_Order",
+      ":Cpo",
+      ":Powerset",
+    ],
+    deps_vio = [
+      ":Ensembles",
+      ":Constructive_sets",
+      ":Relations_1",
+      ":Relations_1_facts",
+      ":Partial_Order",
+      ":Cpo",
+      ":Powerset",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Relations_1",
+    src  = "Relations_1.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Relations_1_facts",
+    src  = "Relations_1_facts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Relations_1",
+    ],
+    deps_vio = [
+      ":Relations_1",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Relations_2",
+    src  = "Relations_2.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Relations_1",
+    ],
+    deps_vio = [
+      ":Relations_1",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Relations_2_facts",
+    src  = "Relations_2_facts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Relations_1",
+      ":Relations_1_facts",
+      ":Relations_2",
+    ],
+    deps_vio = [
+      ":Relations_1",
+      ":Relations_1_facts",
+      ":Relations_2",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Relations_3",
+    src  = "Relations_3.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Relations_1",
+      ":Relations_2",
+    ],
+    deps_vio = [
+      ":Relations_1",
+      ":Relations_2",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Relations_3_facts",
+    src  = "Relations_3_facts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Relations_1",
+      ":Relations_1_facts",
+      ":Relations_2",
+      ":Relations_2_facts",
+      ":Relations_3",
+    ],
+    deps_vio = [
+      ":Relations_1",
+      ":Relations_1_facts",
+      ":Relations_2",
+      ":Relations_2_facts",
+      ":Relations_3",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Uniset",
+    src  = "Uniset.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      ":Permut",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      ":Permut",
+    ]
+)
+

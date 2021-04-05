@@ -1,0 +1,528 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibFSets",
+    sublibraries = [
+        ":FMapAVL",
+        ":FMapFacts",
+        ":FMapFullAVL",
+        ":FMapInterface",
+        ":FMapList",
+        ":FMapPositive",
+        ":FMapWeakList",
+        ":FMaps",
+        ":FSetAVL",
+        ":FSetBridge",
+        ":FSetCompat",
+        ":FSetDecide",
+        ":FSetEqProperties",
+        ":FSetFacts",
+        ":FSetInterface",
+        ":FSetList",
+        ":FSetPositive",
+        ":FSetProperties",
+        ":FSetToFiniteSet",
+        ":FSetWeakList",
+        ":FSets",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FMapAVL",
+    src  = "FMapAVL.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/funind:FunInd",
+      ":FMapInterface",
+      ":FMapList",
+      "//theories/ZArith:ZArith",
+      "//theories/ZArith:Int",
+    ],
+    deps_vio = [
+      "//theories/funind:FunInd",
+      ":FMapInterface",
+      ":FMapList",
+      "//theories/ZArith:ZArith",
+      "//theories/ZArith:Int",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FMapFacts",
+    src  = "FMapFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/Structures:DecidableType",
+      "//theories/Structures:DecidableTypeEx",
+      "//theories/Structures:OrderedType",
+      "//theories/Classes:Morphisms",
+      ":FMapInterface",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/Structures:DecidableType",
+      "//theories/Structures:DecidableTypeEx",
+      "//theories/Structures:OrderedType",
+      "//theories/Classes:Morphisms",
+      ":FMapInterface",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FMapFullAVL",
+    src  = "FMapFullAVL.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/funind:FunInd",
+      "//theories/funind:Recdef",
+      ":FMapInterface",
+      ":FMapList",
+      "//theories/ZArith:ZArith",
+      "//theories/ZArith:Int",
+      ":FMapAVL",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      "//theories/funind:FunInd",
+      "//theories/funind:Recdef",
+      ":FMapInterface",
+      ":FMapList",
+      "//theories/ZArith:ZArith",
+      "//theories/ZArith:Int",
+      ":FMapAVL",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FMapInterface",
+    src  = "FMapInterface.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/Structures:DecidableType",
+      "//theories/Structures:OrderedType",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/Structures:DecidableType",
+      "//theories/Structures:OrderedType",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FMapList",
+    src  = "FMapList.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/funind:FunInd",
+      ":FMapInterface",
+    ],
+    deps_vio = [
+      "//theories/funind:FunInd",
+      ":FMapInterface",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FMapPositive",
+    src  = "FMapPositive.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/Structures:OrderedType",
+      "//theories/ZArith:ZArith",
+      "//theories/Structures:OrderedTypeEx",
+      ":FMapInterface",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/Structures:OrderedType",
+      "//theories/ZArith:ZArith",
+      "//theories/Structures:OrderedTypeEx",
+      ":FMapInterface",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FMapWeakList",
+    src  = "FMapWeakList.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/funind:FunInd",
+      ":FMapInterface",
+    ],
+    deps_vio = [
+      "//theories/funind:FunInd",
+      ":FMapInterface",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FMaps",
+    src  = "FMaps.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Structures:OrderedType",
+      "//theories/Structures:OrderedTypeEx",
+      "//theories/Structures:OrderedTypeAlt",
+      "//theories/Structures:DecidableType",
+      "//theories/Structures:DecidableTypeEx",
+      ":FMapInterface",
+      ":FMapPositive",
+      ":FMapFacts",
+      ":FMapWeakList",
+      ":FMapList",
+    ],
+    deps_vio = [
+      "//theories/Structures:OrderedType",
+      "//theories/Structures:OrderedTypeEx",
+      "//theories/Structures:OrderedTypeAlt",
+      "//theories/Structures:DecidableType",
+      "//theories/Structures:DecidableTypeEx",
+      ":FMapInterface",
+      ":FMapPositive",
+      ":FMapFacts",
+      ":FMapWeakList",
+      ":FMapList",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FSetAVL",
+    src  = "FSetAVL.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":FSetInterface",
+      "//theories/ZArith:ZArith",
+      "//theories/ZArith:Int",
+      ":FSetCompat",
+      "//theories/MSets:MSetAVL",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersAlt",
+    ],
+    deps_vio = [
+      ":FSetInterface",
+      "//theories/ZArith:ZArith",
+      "//theories/ZArith:Int",
+      ":FSetCompat",
+      "//theories/MSets:MSetAVL",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersAlt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FSetBridge",
+    src  = "FSetBridge.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":FSetInterface",
+    ],
+    deps_vio = [
+      ":FSetInterface",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FSetCompat",
+    src  = "FSetCompat.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":FSetInterface",
+      ":FSetFacts",
+      "//theories/MSets:MSetInterface",
+      "//theories/MSets:MSetFacts",
+    ],
+    deps_vio = [
+      ":FSetInterface",
+      ":FSetFacts",
+      "//theories/MSets:MSetInterface",
+      "//theories/MSets:MSetFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FSetDecide",
+    src  = "FSetDecide.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Logic:Decidable",
+      "//theories/Setoids:Setoid",
+      "//theories/Structures:DecidableTypeEx",
+      ":FSetFacts",
+      ":FSetInterface",
+    ],
+    deps_vio = [
+      "//theories/Logic:Decidable",
+      "//theories/Setoids:Setoid",
+      "//theories/Structures:DecidableTypeEx",
+      ":FSetFacts",
+      ":FSetInterface",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FSetEqProperties",
+    src  = "FSetEqProperties.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":FSetProperties",
+      "//theories/Bool:Zerob",
+      "//theories/Bool:Sumbool",
+      "//theories/Structures:DecidableTypeEx",
+    ],
+    deps_vio = [
+      ":FSetProperties",
+      "//theories/Bool:Zerob",
+      "//theories/Bool:Sumbool",
+      "//theories/Structures:DecidableTypeEx",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FSetFacts",
+    src  = "FSetFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Structures:DecidableTypeEx",
+      ":FSetInterface",
+    ],
+    deps_vio = [
+      "//theories/Structures:DecidableTypeEx",
+      ":FSetInterface",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FSetInterface",
+    src  = "FSetInterface.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/Structures:OrderedType",
+      "//theories/Structures:DecidableType",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/Structures:OrderedType",
+      "//theories/Structures:DecidableType",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FSetList",
+    src  = "FSetList.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":FSetInterface",
+      ":FSetCompat",
+      "//theories/MSets:MSetList",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersAlt",
+    ],
+    deps_vio = [
+      ":FSetInterface",
+      ":FSetCompat",
+      "//theories/MSets:MSetList",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersAlt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FSetPositive",
+    src  = "FSetPositive.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/PArith:BinPos",
+      "//theories/Structures:OrderedType",
+      "//theories/Structures:OrderedTypeEx",
+      ":FSetInterface",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/PArith:BinPos",
+      "//theories/Structures:OrderedType",
+      "//theories/Structures:OrderedTypeEx",
+      ":FSetInterface",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FSetProperties",
+    src  = "FSetProperties.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":FSetInterface",
+      "//theories/Structures:DecidableTypeEx",
+      ":FSetFacts",
+      ":FSetDecide",
+    ],
+    deps_vio = [
+      ":FSetInterface",
+      "//theories/Structures:DecidableTypeEx",
+      ":FSetFacts",
+      ":FSetDecide",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FSetToFiniteSet",
+    src  = "FSetToFiniteSet.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Sets:Ensembles",
+      "//theories/Sets:Finite_sets",
+      ":FSetInterface",
+      ":FSetProperties",
+      "//theories/Structures:OrderedTypeEx",
+      "//theories/Structures:DecidableTypeEx",
+    ],
+    deps_vio = [
+      "//theories/Sets:Ensembles",
+      "//theories/Sets:Finite_sets",
+      ":FSetInterface",
+      ":FSetProperties",
+      "//theories/Structures:OrderedTypeEx",
+      "//theories/Structures:DecidableTypeEx",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FSetWeakList",
+    src  = "FSetWeakList.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":FSetInterface",
+      "//theories/Structures:Equalities",
+      ":FSetCompat",
+      "//theories/MSets:MSetWeakList",
+    ],
+    deps_vio = [
+      ":FSetInterface",
+      "//theories/Structures:Equalities",
+      ":FSetCompat",
+      "//theories/MSets:MSetWeakList",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FSets",
+    src  = "FSets.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Structures:OrderedType",
+      "//theories/Structures:OrderedTypeEx",
+      "//theories/Structures:OrderedTypeAlt",
+      "//theories/Structures:DecidableType",
+      "//theories/Structures:DecidableTypeEx",
+      ":FSetInterface",
+      ":FSetBridge",
+      ":FSetFacts",
+      ":FSetDecide",
+      ":FSetProperties",
+      ":FSetEqProperties",
+      ":FSetWeakList",
+      ":FSetList",
+      ":FSetPositive",
+      ":FSetAVL",
+    ],
+    deps_vio = [
+      "//theories/Structures:OrderedType",
+      "//theories/Structures:OrderedTypeEx",
+      "//theories/Structures:OrderedTypeAlt",
+      "//theories/Structures:DecidableType",
+      "//theories/Structures:DecidableTypeEx",
+      ":FSetInterface",
+      ":FSetBridge",
+      ":FSetFacts",
+      ":FSetDecide",
+      ":FSetProperties",
+      ":FSetEqProperties",
+      ":FSetWeakList",
+      ":FSetList",
+      ":FSetPositive",
+      ":FSetAVL",
+    ]
+)
+

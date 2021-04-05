@@ -1,0 +1,104 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibAbstract",
+    sublibraries = [
+        ":CarryType",
+        ":CyclicAxioms",
+        ":DoubleType",
+        ":NZCyclic",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "CarryType",
+    src  = "CarryType.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "CyclicAxioms",
+    src  = "CyclicAxioms.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:ZArith",
+      "//theories/micromega:Lia",
+      "//theories/ZArith:Znumtheory",
+      "//theories/ZArith:Zpow_facts",
+      ":DoubleType",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith",
+      "//theories/micromega:Lia",
+      "//theories/ZArith:Znumtheory",
+      "//theories/ZArith:Zpow_facts",
+      ":DoubleType",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DoubleType",
+    src  = "DoubleType.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:BinInt",
+      ":CarryType",
+    ],
+    deps_vio = [
+      "//theories/ZArith:BinInt",
+      ":CarryType",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZCyclic",
+    src  = "NZCyclic.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers/NatInt:NZAxioms",
+      "//theories/ZArith:ZArith",
+      "//theories/ZArith:Zpow_facts",
+      ":DoubleType",
+      ":CyclicAxioms",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      "//theories/Numbers/NatInt:NZAxioms",
+      "//theories/ZArith:ZArith",
+      "//theories/ZArith:Zpow_facts",
+      ":DoubleType",
+      ":CyclicAxioms",
+      "//theories/micromega:Lia",
+    ]
+)
+

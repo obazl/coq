@@ -1,0 +1,280 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibQArith",
+    sublibraries = [
+        ":QArith",
+        ":QArith_base",
+        ":QOrderedType",
+        ":Qabs",
+        ":Qcabs",
+        ":Qcanon",
+        ":Qfield",
+        ":Qminmax",
+        ":Qpower",
+        ":Qreals",
+        ":Qreduction",
+        ":Qring",
+        ":Qround",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "QArith",
+    src  = "QArith.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":QArith_base",
+      ":Qring",
+      ":Qreduction",
+    ],
+    deps_vio = [
+      ":QArith_base",
+      ":Qring",
+      ":Qreduction",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "QArith_base",
+    src  = "QArith_base.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:ZArith_base",
+      "//theories/setoid_ring:ZArithRing",
+      "//theories/Classes:Morphisms",
+      "//theories/Setoids:Setoid",
+      "//theories/Bool:Bool",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith_base",
+      "//theories/setoid_ring:ZArithRing",
+      "//theories/Classes:Morphisms",
+      "//theories/Setoids:Setoid",
+      "//theories/Bool:Bool",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "QOrderedType",
+    src  = "QOrderedType.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":QArith_base",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersTac",
+    ],
+    deps_vio = [
+      ":QArith_base",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersTac",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Qabs",
+    src  = "Qabs.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":QArith",
+      ":Qreduction",
+    ],
+    deps_vio = [
+      ":QArith",
+      ":Qreduction",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Qcabs",
+    src  = "Qcabs.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Qabs",
+      ":Qcanon",
+    ],
+    deps_vio = [
+      ":Qabs",
+      ":Qcanon",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Qcanon",
+    src  = "Qcanon.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/setoid_ring:Field",
+      ":QArith",
+      "//theories/ZArith:Znumtheory",
+      "//theories/Logic:Eqdep_dec",
+    ],
+    deps_vio = [
+      "//theories/setoid_ring:Field",
+      ":QArith",
+      "//theories/ZArith:Znumtheory",
+      "//theories/Logic:Eqdep_dec",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Qfield",
+    src  = "Qfield.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/setoid_ring:Field",
+      ":QArith_base",
+      "//theories/setoid_ring:NArithRing",
+    ],
+    deps_vio = [
+      "//theories/setoid_ring:Field",
+      ":QArith_base",
+      "//theories/setoid_ring:NArithRing",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Qminmax",
+    src  = "Qminmax.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":QArith_base",
+      "//theories/Structures:Orders",
+      ":QOrderedType",
+      "//theories/Structures:GenericMinMax",
+    ],
+    deps_vio = [
+      ":QArith_base",
+      "//theories/Structures:Orders",
+      ":QOrderedType",
+      "//theories/Structures:GenericMinMax",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Qpower",
+    src  = "Qpower.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:Zpow_facts",
+      ":Qfield",
+      ":Qreduction",
+    ],
+    deps_vio = [
+      "//theories/ZArith:Zpow_facts",
+      ":Qfield",
+      ":Qreduction",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Qreals",
+    src  = "Qreals.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Reals:Rdefinitions",
+      "//theories/Reals:Raxioms",
+      "//theories/Reals:RIneq",
+      ":QArith_base",
+    ],
+    deps_vio = [
+      "//theories/Reals:Rdefinitions",
+      "//theories/Reals:Raxioms",
+      "//theories/Reals:RIneq",
+      ":QArith_base",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Qreduction",
+    src  = "Qreduction.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":QArith_base",
+      "//theories/ZArith:Znumtheory",
+    ],
+    deps_vio = [
+      ":QArith_base",
+      "//theories/ZArith:Znumtheory",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Qring",
+    src  = "Qring.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Qfield",
+    ],
+    deps_vio = [
+      ":Qfield",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Qround",
+    src  = "Qround.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":QArith",
+    ],
+    deps_vio = [
+      ":QArith",
+    ]
+)
+

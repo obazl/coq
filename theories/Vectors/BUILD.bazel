@@ -1,0 +1,118 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibVectors",
+    sublibraries = [
+        ":Fin",
+        ":Vector",
+        ":VectorDef",
+        ":VectorEq",
+        ":VectorSpec",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Fin",
+    src  = "Fin.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Arith_base",
+    ],
+    deps_vio = [
+      "//theories/Arith:Arith_base",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Vector",
+    src  = "Vector.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Fin",
+      ":VectorDef",
+      ":VectorSpec",
+      ":VectorEq",
+    ],
+    deps_vio = [
+      ":Fin",
+      ":VectorDef",
+      ":VectorSpec",
+      ":VectorEq",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "VectorDef",
+    src  = "VectorDef.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Arith_base",
+      ":Fin",
+    ],
+    deps_vio = [
+      "//theories/Arith:Arith_base",
+      ":Fin",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "VectorEq",
+    src  = "VectorEq.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":VectorDef",
+      ":VectorSpec",
+    ],
+    deps_vio = [
+      ":VectorDef",
+      ":VectorSpec",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "VectorSpec",
+    src  = "VectorSpec.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Fin",
+      ":VectorDef",
+      "//theories/Arith:PeanoNat",
+      "//theories/Logic:Eqdep_dec",
+    ],
+    deps_vio = [
+      ":Fin",
+      ":VectorDef",
+      "//theories/Arith:PeanoNat",
+      "//theories/Logic:Eqdep_dec",
+    ]
+)
+

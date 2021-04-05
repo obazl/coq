@@ -1,0 +1,176 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibLists",
+    sublibraries = [
+        ":List",
+        ":ListDec",
+        ":ListSet",
+        ":ListTactics",
+        ":SetoidList",
+        ":SetoidPermutation",
+        ":StreamMemo",
+        ":Streams",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "List",
+    src  = "List.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Setoids:Setoid",
+      "//theories/Arith:PeanoNat",
+      "//theories/Arith:Le",
+      "//theories/Arith:Gt",
+      "//theories/Arith:Minus",
+      "//theories/Bool:Bool",
+      "//theories/Arith:Lt",
+    ],
+    deps_vio = [
+      "//theories/Setoids:Setoid",
+      "//theories/Arith:PeanoNat",
+      "//theories/Arith:Le",
+      "//theories/Arith:Gt",
+      "//theories/Arith:Minus",
+      "//theories/Bool:Bool",
+      "//theories/Arith:Lt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ListDec",
+    src  = "ListDec.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":List",
+      "//theories/Logic:Decidable",
+    ],
+    deps_vio = [
+      ":List",
+      "//theories/Logic:Decidable",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ListSet",
+    src  = "ListSet.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":List",
+    ],
+    deps_vio = [
+      ":List",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ListTactics",
+    src  = "ListTactics.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/PArith:BinPos",
+      ":List",
+    ],
+    deps_vio = [
+      "//theories/PArith:BinPos",
+      ":List",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "SetoidList",
+    src  = "SetoidList.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":List",
+      "//theories/Sorting:Sorted",
+      "//theories/Setoids:Setoid",
+      "//theories/Program:Basics",
+      "//theories/Classes:Morphisms",
+    ],
+    deps_vio = [
+      ":List",
+      "//theories/Sorting:Sorted",
+      "//theories/Setoids:Setoid",
+      "//theories/Program:Basics",
+      "//theories/Classes:Morphisms",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "SetoidPermutation",
+    src  = "SetoidPermutation.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Sorting:Permutation",
+      ":SetoidList",
+    ],
+    deps_vio = [
+      "//theories/Sorting:Permutation",
+      ":SetoidList",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "StreamMemo",
+    src  = "StreamMemo.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Logic:Eqdep_dec",
+      ":Streams",
+    ],
+    deps_vio = [
+      "//theories/Logic:Eqdep_dec",
+      ":Streams",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Streams",
+    src  = "Streams.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+

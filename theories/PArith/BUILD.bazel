@@ -1,0 +1,138 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibPArith",
+    sublibraries = [
+        ":BinPos",
+        ":BinPosDef",
+        ":PArith",
+        ":POrderedType",
+        ":Pnat",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "BinPos",
+    src  = "BinPos.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers:BinNums",
+      "//theories/Logic:Eqdep_dec",
+      "//theories/Logic:EqdepFacts",
+      "//theories/Classes:RelationClasses",
+      "//theories/Classes:Morphisms",
+      "//theories/Setoids:Setoid",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersFacts",
+      "//theories/Structures:GenericMinMax",
+      "//theories/Arith:Le",
+      "//theories/Arith:Plus",
+      ":BinPosDef",
+    ],
+    deps_vio = [
+      "//theories/Numbers:BinNums",
+      "//theories/Logic:Eqdep_dec",
+      "//theories/Logic:EqdepFacts",
+      "//theories/Classes:RelationClasses",
+      "//theories/Classes:Morphisms",
+      "//theories/Setoids:Setoid",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersFacts",
+      "//theories/Structures:GenericMinMax",
+      "//theories/Arith:Le",
+      "//theories/Arith:Plus",
+      ":BinPosDef",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "BinPosDef",
+    src  = "BinPosDef.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers:BinNums",
+    ],
+    deps_vio = [
+      "//theories/Numbers:BinNums",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "PArith",
+    src  = "PArith.v",
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers:BinNums",
+      ":BinPos",
+      ":Pnat",
+      ":POrderedType",
+    ],
+    deps_vio = [
+      "//theories/Numbers:BinNums",
+      ":BinPos",
+      ":Pnat",
+      ":POrderedType",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "POrderedType",
+    src  = "POrderedType.v",
+    plugins = [
+    ],
+    deps = [
+      ":BinPos",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersTac",
+    ],
+    deps_vio = [
+      ":BinPos",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersTac",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Pnat",
+    src  = "Pnat.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":BinPos",
+      "//theories/Arith:PeanoNat",
+    ],
+    deps_vio = [
+      ":BinPos",
+      "//theories/Arith:PeanoNat",
+    ]
+)
+

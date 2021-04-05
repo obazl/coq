@@ -1,0 +1,52 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    # "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+coq_library(
+    name = "theories",
+    sublibraries = [
+        "//theories/Arith:LibArith",
+        "//theories/Array:PArray",
+        "//theories/Bool:LibBool",
+        "//theories/Classes:LibClasses",
+        "//theories/Compat:LibCompat",
+        "//theories/FSets:LibFSets",
+        "//theories/Floats:LibFloats",
+        "//theories/Init:LibInit",
+        "//theories/Lists:LibLists",
+        "//theories/Logic:LibLogic",
+        "//theories/MSets:LibMSets",
+        "//theories/NArith:LibNArith",
+        "//theories/Numbers:LibNumbers",
+        "//theories/PArith:LibPArith",
+        "//theories/Program:LibProgram",
+        "//theories/QArith:LibQArith",
+        "//theories/Reals:LibReals",
+        "//theories/Relations:LibRelations",
+        "//theories/Setoids:Setoid",
+        "//theories/Sets:LibSets",
+        "//theories/Sorting:LibSorting",
+        "//theories/Strings:LibStrings",
+        "//theories/Structures:LibStructures",
+        "//theories/Unicode:LibUnicode",
+        "//theories/Vectors:LibVectors",
+        "//theories/Wellfounded:LibWellfounded",
+        "//theories/ZArith:LibZArith",
+        "//theories/btauto:Libbtauto",
+        "//theories/derive:Derive",
+        "//theories/extraction:Libextraction",
+        "//theories/funind:Libfunind",
+        "//theories/micromega:Libmicromega",
+        "//theories/nsatz:Libnsatz",
+        "//theories/omega:Libomega",
+        "//theories/rtauto:Librtauto",
+        "//theories/setoid_ring:Libsetoid_ring",
+        "//theories/ssr:Libssr",
+        "//theories/ssrmatching",
+        "//theories/ssrsearch",
+    ]
+)

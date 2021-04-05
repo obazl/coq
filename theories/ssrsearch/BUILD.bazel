@@ -1,0 +1,30 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ssrsearch",
+    src  = "ssrsearch.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/ssrsearch:ssrsearch_plugin",
+    ],
+    deps = [
+      "//theories/ssr:ssreflect",
+    ],
+    deps_vio = [
+      "//theories/ssr:ssreflect",
+    ]
+)
+

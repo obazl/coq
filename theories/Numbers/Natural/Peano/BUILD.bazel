@@ -1,0 +1,33 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NPeano",
+    src  = "NPeano.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:PeanoNat",
+      "//theories/Arith:Even",
+      "//theories/Numbers/Natural/Abstract:NAxioms",
+    ],
+    deps_vio = [
+      "//theories/Arith:PeanoNat",
+      "//theories/Arith:Even",
+      "//theories/Numbers/Natural/Abstract:NAxioms",
+    ]
+)
+

@@ -1,0 +1,669 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibLogic",
+    sublibraries = [
+        ":Berardi",
+        ":ChoiceFacts",
+        ":Classical",
+        ":ClassicalChoice",
+        ":ClassicalDescription",
+        ":ClassicalEpsilon",
+        ":ClassicalFacts",
+        ":ClassicalUniqueChoice",
+        ":Classical_Pred_Type",
+        ":Classical_Prop",
+        ":ConstructiveEpsilon",
+        ":Decidable",
+        ":Description",
+        ":Diaconescu",
+        ":Epsilon",
+        ":Eqdep",
+        ":EqdepFacts",
+        ":Eqdep_dec",
+        ":ExtensionalFunctionRepresentative",
+        ":ExtensionalityFacts",
+        ":FinFun",
+        ":FunctionalExtensionality",
+        ":HLevels",
+        ":Hurkens",
+        ":IndefiniteDescription",
+        ":JMeq",
+        ":ProofIrrelevance",
+        ":ProofIrrelevanceFacts",
+        ":PropExtensionality",
+        ":PropExtensionalityFacts",
+        ":PropFacts",
+        ":RelationalChoice",
+        ":SetIsType",
+        ":SetoidChoice",
+        ":StrictProp",
+        ":WKL",
+        ":WeakFan",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Berardi",
+    src  = "Berardi.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ChoiceFacts",
+    src  = "ChoiceFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Classes:RelationClasses",
+      "//theories/Init:Logic",
+      "//theories/Arith:Wf_nat",
+      ":Decidable",
+      "//theories/Setoids:Setoid",
+      "//theories/Arith:Arith",
+      ":ClassicalFacts",
+      ":PropExtensionalityFacts",
+    ],
+    deps_vio = [
+      "//theories/Classes:RelationClasses",
+      "//theories/Init:Logic",
+      "//theories/Arith:Wf_nat",
+      ":Decidable",
+      "//theories/Setoids:Setoid",
+      "//theories/Arith:Arith",
+      ":ClassicalFacts",
+      ":PropExtensionalityFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Classical",
+    src  = "Classical.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Classical_Prop",
+      ":Classical_Pred_Type",
+    ],
+    deps_vio = [
+      ":Classical_Prop",
+      ":Classical_Pred_Type",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ClassicalChoice",
+    src  = "ClassicalChoice.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ClassicalUniqueChoice",
+      ":RelationalChoice",
+      ":ChoiceFacts",
+    ],
+    deps_vio = [
+      ":ClassicalUniqueChoice",
+      ":RelationalChoice",
+      ":ChoiceFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ClassicalDescription",
+    src  = "ClassicalDescription.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Classical",
+      ":Description",
+      ":ChoiceFacts",
+    ],
+    deps_vio = [
+      ":Classical",
+      ":Description",
+      ":ChoiceFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ClassicalEpsilon",
+    src  = "ClassicalEpsilon.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Classical",
+      ":ChoiceFacts",
+    ],
+    deps_vio = [
+      ":Classical",
+      ":ChoiceFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ClassicalFacts",
+    src  = "ClassicalFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":PropExtensionalityFacts",
+      ":Hurkens",
+      "//theories/Arith:PeanoNat",
+      "//theories/Arith:Wf_nat",
+      "//theories/Classes:RelationClasses",
+    ],
+    deps_vio = [
+      ":PropExtensionalityFacts",
+      ":Hurkens",
+      "//theories/Arith:PeanoNat",
+      "//theories/Arith:Wf_nat",
+      "//theories/Classes:RelationClasses",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ClassicalUniqueChoice",
+    src  = "ClassicalUniqueChoice.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Classical",
+      "//theories/Setoids:Setoid",
+    ],
+    deps_vio = [
+      ":Classical",
+      "//theories/Setoids:Setoid",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Classical_Pred_Type",
+    src  = "Classical_Pred_Type.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Classical_Prop",
+    ],
+    deps_vio = [
+      ":Classical_Prop",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Classical_Prop",
+    src  = "Classical_Prop.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+        ":ClassicalFacts",
+        ":EqdepFacts",
+    ],
+    deps_vio = [
+      ":ClassicalFacts",
+      ":EqdepFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructiveEpsilon",
+    src  = "ConstructiveEpsilon.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Arith",
+    ],
+    deps_vio = [
+      "//theories/Arith:Arith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Decidable",
+    src  = "Decidable.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/cc:cc_plugin",
+      "//plugins/firstorder:ground_plugin",
+      "//plugins/ltac:ltac_plugin",
+      "//plugins/ltac:tauto_plugin",
+      "//plugins/syntax:number_string_notation_plugin",
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Description",
+    src  = "Description.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ChoiceFacts",
+    ],
+    deps_vio = [
+      ":ChoiceFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Diaconescu",
+    src  = "Diaconescu.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ClassicalFacts",
+      ":ChoiceFacts",
+    ],
+    deps_vio = [
+      ":ClassicalFacts",
+      ":ChoiceFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Epsilon",
+    src  = "Epsilon.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ChoiceFacts",
+    ],
+    deps_vio = [
+      ":ChoiceFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Eqdep",
+    src  = "Eqdep.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":EqdepFacts",
+    ],
+    deps_vio = [
+      ":EqdepFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "EqdepFacts",
+    src  = "EqdepFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+        "//theories/Init:Prelude",
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Eqdep_dec",
+    src  = "Eqdep_dec.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":EqdepFacts",
+    ],
+    deps_vio = [
+      ":EqdepFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtensionalFunctionRepresentative",
+    src  = "ExtensionalFunctionRepresentative.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtensionalityFacts",
+    src  = "ExtensionalityFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FinFun",
+    src  = "FinFun.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/Arith:Compare_dec",
+      "//theories/Arith:EqNat",
+      ":Decidable",
+      "//theories/Lists:ListDec",
+      "//theories/Vectors:Fin",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/Arith:Compare_dec",
+      "//theories/Arith:EqNat",
+      ":Decidable",
+      "//theories/Lists:ListDec",
+      "//theories/Vectors:Fin",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FunctionalExtensionality",
+    src  = "FunctionalExtensionality.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "HLevels",
+    src  = "HLevels.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":FunctionalExtensionality",
+    ],
+    deps_vio = [
+      ":FunctionalExtensionality",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Hurkens",
+    src  = "Hurkens.v",
+    opts = [
+        # "-boot",
+        "-I", "bazel-out/darwin-fastbuild/bin/plugins/ltac",
+        # "-R", "bazel-out/darwin-fastbuild/bin/theories", "Coq"
+    ],
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "IndefiniteDescription",
+    src  = "IndefiniteDescription.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ChoiceFacts",
+    ],
+    deps_vio = [
+      ":ChoiceFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "JMeq",
+    src  = "JMeq.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Eqdep",
+    ],
+    deps_vio = [
+      ":Eqdep",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ProofIrrelevance",
+    src  = "ProofIrrelevance.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ProofIrrelevanceFacts",
+    ],
+    deps_vio = [
+      ":ProofIrrelevanceFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ProofIrrelevanceFacts",
+    src  = "ProofIrrelevanceFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":EqdepFacts",
+    ],
+    deps_vio = [
+      ":EqdepFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "PropExtensionality",
+    src  = "PropExtensionality.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ClassicalFacts",
+    ],
+    deps_vio = [
+      ":ClassicalFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "PropExtensionalityFacts",
+    src  = "PropExtensionalityFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "PropFacts",
+    src  = "PropFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "RelationalChoice",
+    src  = "RelationalChoice.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "SetIsType",
+    src  = "SetIsType.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "SetoidChoice",
+    src  = "SetoidChoice.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ClassicalChoice",
+      ":ExtensionalFunctionRepresentative",
+      ":ChoiceFacts",
+      ":ClassicalFacts",
+      "//theories/Classes:RelationClasses",
+    ],
+    deps_vio = [
+      ":ClassicalChoice",
+      ":ExtensionalFunctionRepresentative",
+      ":ChoiceFacts",
+      ":ClassicalFacts",
+      "//theories/Classes:RelationClasses",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "StrictProp",
+    src  = "StrictProp.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "WKL",
+    src  = "WKL.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":WeakFan",
+      "//theories/Lists:List",
+      "//theories/Arith:Arith",
+      "//theories/Arith:Compare_dec",
+      "//theories/Arith:Le",
+      "//theories/Arith:Lt",
+    ],
+    deps_vio = [
+      ":WeakFan",
+      "//theories/Lists:List",
+      "//theories/Arith:Arith",
+      "//theories/Arith:Compare_dec",
+      "//theories/Arith:Le",
+      "//theories/Arith:Lt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "WeakFan",
+    src  = "WeakFan.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+    ]
+)
+

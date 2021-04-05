@@ -1,0 +1,61 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "Libfunind",
+    sublibraries = [
+        ":FunInd",
+        ":Recdef",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FunInd",
+    src  = "FunInd.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/funind:recdef_plugin",
+    ],
+    deps = [
+      "//theories/extraction:Extraction",
+    ],
+    deps_vio = [
+      "//theories/extraction:Extraction",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Recdef",
+    src  = "Recdef.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":FunInd",
+      "//theories/Arith:PeanoNat",
+      "//theories/Arith:Compare_dec",
+      "//theories/Arith:Wf_nat",
+    ],
+    deps_vio = [
+      ":FunInd",
+      "//theories/Arith:PeanoNat",
+      "//theories/Arith:Compare_dec",
+      "//theories/Arith:Wf_nat",
+    ]
+)
+

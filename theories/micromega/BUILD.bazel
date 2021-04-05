@@ -1,0 +1,726 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "Libmicromega",
+    sublibraries = [
+        ":DeclConstant",
+        ":Env",
+        ":EnvRing",
+        ":Fourier",
+        ":Fourier_util",
+        ":Lia",
+        ":Lqa",
+        ":Lra",
+        ":MExtraction",
+        ":OrderedRing",
+        ":Psatz",
+        ":QMicromega",
+        ":RMicromega",
+        ":Refl",
+        ":RingMicromega",
+        ":Tauto",
+        ":VarMap",
+        ":ZArith_hints",
+        ":ZCoeff",
+        ":ZMicromega",
+        ":Zify",
+        ":ZifyBool",
+        ":ZifyClasses",
+        ":ZifyComparison",
+        ":ZifyInst",
+        ":ZifyInt63",
+        ":ZifyPow",
+        ":Ztac",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DeclConstant",
+    src  = "DeclConstant.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/QArith:QArith_base",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/QArith:QArith_base",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Env",
+    src  = "Env.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:BinInt",
+      "//theories/Lists:List",
+    ],
+    deps_vio = [
+      "//theories/ZArith:BinInt",
+      "//theories/Lists:List",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "EnvRing",
+    src  = "EnvRing.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      ":Env",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      "//theories/ZArith:BinInt",
+      "//theories/setoid_ring:Ring_theory",
+    ],
+    deps_vio = [
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      ":Env",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      "//theories/ZArith:BinInt",
+      "//theories/setoid_ring:Ring_theory",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Fourier",
+    src  = "Fourier.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Lra",
+      ":Fourier_util",
+    ],
+    deps_vio = [
+      ":Lra",
+      ":Fourier_util",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Fourier_util",
+    src  = "Fourier_util.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Reals:Rbase",
+      ":Lra",
+    ],
+    deps_vio = [
+      "//theories/Reals:Rbase",
+      ":Lra",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Lia",
+    src  = "Lia.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/micromega:micromega_plugin",
+    ],
+    deps = [
+      ":ZMicromega",
+      ":RingMicromega",
+      ":VarMap",
+      ":DeclConstant",
+      "//theories/Numbers:BinNums",
+      ":Tauto",
+    ],
+    deps_vio = [
+      ":ZMicromega",
+      ":RingMicromega",
+      ":VarMap",
+      ":DeclConstant",
+      "//theories/Numbers:BinNums",
+      ":Tauto",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Lqa",
+    src  = "Lqa.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/micromega:micromega_plugin",
+    ],
+    deps = [
+      ":QMicromega",
+      "//theories/QArith:QArith",
+      ":RingMicromega",
+      ":VarMap",
+      ":DeclConstant",
+      ":Tauto",
+    ],
+    deps_vio = [
+      ":QMicromega",
+      "//theories/QArith:QArith",
+      ":RingMicromega",
+      ":VarMap",
+      ":DeclConstant",
+      ":Tauto",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Lra",
+    src  = "Lra.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/micromega:micromega_plugin",
+    ],
+    deps = [
+      ":RMicromega",
+      ":QMicromega",
+      "//theories/Reals:Rdefinitions",
+      ":RingMicromega",
+      ":VarMap",
+      ":Tauto",
+      "//theories/Reals:Rregisternames",
+    ],
+    deps_vio = [
+      ":RMicromega",
+      ":QMicromega",
+      "//theories/Reals:Rdefinitions",
+      ":RingMicromega",
+      ":VarMap",
+      ":Tauto",
+      "//theories/Reals:Rregisternames",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MExtraction",
+    src  = "MExtraction.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/extraction:Extraction",
+      ":ZMicromega",
+      ":QMicromega",
+      ":RMicromega",
+      ":VarMap",
+      ":RingMicromega",
+      "//theories/NArith:NArith",
+      "//theories/QArith:QArith",
+    ],
+    deps_vio = [
+      "//theories/extraction:Extraction",
+      ":ZMicromega",
+      ":QMicromega",
+      ":RMicromega",
+      ":VarMap",
+      ":RingMicromega",
+      "//theories/NArith:NArith",
+      "//theories/QArith:QArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "OrderedRing",
+    src  = "OrderedRing.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Setoids:Setoid",
+      "//theories/setoid_ring:Ring",
+    ],
+    deps_vio = [
+      "//theories/Setoids:Setoid",
+      "//theories/setoid_ring:Ring",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Psatz",
+    src  = "Psatz.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/micromega:micromega_plugin",
+    ],
+    deps = [
+      ":ZMicromega",
+      ":QMicromega",
+      ":RMicromega",
+      "//theories/QArith:QArith",
+      "//theories/ZArith:ZArith",
+      "//theories/Reals:Rdefinitions",
+      ":RingMicromega",
+      ":VarMap",
+      ":Tauto",
+      ":Lia",
+      ":Lra",
+      ":Lqa",
+    ],
+    deps_vio = [
+      ":ZMicromega",
+      ":QMicromega",
+      ":RMicromega",
+      "//theories/QArith:QArith",
+      "//theories/ZArith:ZArith",
+      "//theories/Reals:Rdefinitions",
+      ":RingMicromega",
+      ":VarMap",
+      ":Tauto",
+      ":Lia",
+      ":Lra",
+      ":Lqa",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "QMicromega",
+    src  = "QMicromega.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":OrderedRing",
+      ":RingMicromega",
+      ":Refl",
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qfield",
+      ":EnvRing",
+      "//theories/Lists:List",
+      ":Tauto",
+    ],
+    deps_vio = [
+      ":OrderedRing",
+      ":RingMicromega",
+      ":Refl",
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qfield",
+      ":EnvRing",
+      "//theories/Lists:List",
+      ":Tauto",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "RMicromega",
+    src  = "RMicromega.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":OrderedRing",
+      ":QMicromega",
+      ":RingMicromega",
+      ":Refl",
+      "//theories/Bool:Sumbool",
+      "//theories/Reals:Raxioms",
+      "//theories/Reals:Rfunctions",
+      "//theories/Reals:RIneq",
+      "//theories/Reals:Rpow_def",
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qfield",
+      "//theories/QArith:Qreals",
+      ":DeclConstant",
+      "//theories/Setoids:Setoid",
+      ":EnvRing",
+      "//theories/Lists:List",
+      ":Tauto",
+    ],
+    deps_vio = [
+      ":OrderedRing",
+      ":QMicromega",
+      ":RingMicromega",
+      ":Refl",
+      "//theories/Bool:Sumbool",
+      "//theories/Reals:Raxioms",
+      "//theories/Reals:Rfunctions",
+      "//theories/Reals:RIneq",
+      "//theories/Reals:Rpow_def",
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qfield",
+      "//theories/QArith:Qreals",
+      ":DeclConstant",
+      "//theories/Setoids:Setoid",
+      ":EnvRing",
+      "//theories/Lists:List",
+      ":Tauto",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Refl",
+    src  = "Refl.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/Setoids:Setoid",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/Setoids:Setoid",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "RingMicromega",
+    src  = "RingMicromega.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/NArith:NArith",
+      "//theories/Relations:Relation_Definitions",
+      "//theories/Setoids:Setoid",
+      ":Env",
+      ":EnvRing",
+      "//theories/Lists:List",
+      "//theories/Bool:Bool",
+      ":OrderedRing",
+      ":Refl",
+      ":Tauto",
+    ],
+    deps_vio = [
+      "//theories/NArith:NArith",
+      "//theories/Relations:Relation_Definitions",
+      "//theories/Setoids:Setoid",
+      ":Env",
+      ":EnvRing",
+      "//theories/Lists:List",
+      "//theories/Bool:Bool",
+      ":OrderedRing",
+      ":Refl",
+      ":Tauto",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Tauto",
+    src  = "Tauto.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      ":Refl",
+      "//theories/Bool:Bool",
+      "//theories/Relations:Relation_Definitions",
+      "//theories/Setoids:Setoid",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      ":Refl",
+      "//theories/Bool:Bool",
+      "//theories/Relations:Relation_Definitions",
+      "//theories/Setoids:Setoid",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "VarMap",
+    src  = "VarMap.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:ZArith_base",
+      "//theories/Arith:Max",
+      "//theories/Lists:List",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith_base",
+      "//theories/Arith:Max",
+      "//theories/Lists:List",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZArith_hints",
+    src  = "ZArith_hints.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Lia",
+      "//theories/ZArith:Zhints",
+    ],
+    deps_vio = [
+      ":Lia",
+      "//theories/ZArith:Zhints",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZCoeff",
+    src  = "ZCoeff.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":OrderedRing",
+      ":RingMicromega",
+      "//theories/ZArith:ZArith_base",
+      "//theories/setoid_ring:InitialRing",
+      "//theories/Setoids:Setoid",
+      "//theories/setoid_ring:ZArithRing",
+    ],
+    deps_vio = [
+      ":OrderedRing",
+      ":RingMicromega",
+      "//theories/ZArith:ZArith_base",
+      "//theories/setoid_ring:InitialRing",
+      "//theories/Setoids:Setoid",
+      "//theories/setoid_ring:ZArithRing",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZMicromega",
+    src  = "ZMicromega.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/Bool:Bool",
+      ":OrderedRing",
+      ":RingMicromega",
+      ":ZCoeff",
+      ":Refl",
+      "//theories/ZArith:ZArith_base",
+      "//theories/setoid_ring:ZArithRing",
+      ":Ztac",
+      "//theories/omega:PreOmega",
+      ":EnvRing",
+      ":Tauto",
+      "//theories/Numbers:BinNums",
+      "//theories/ZArith:Zdiv",
+      "//theories/ZArith:Znumtheory",
+      "//theories/QArith:QArith",
+      "//theories/Arith:Wf_nat",
+      ":VarMap",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/Bool:Bool",
+      ":OrderedRing",
+      ":RingMicromega",
+      ":ZCoeff",
+      ":Refl",
+      "//theories/ZArith:ZArith_base",
+      "//theories/setoid_ring:ZArithRing",
+      ":Ztac",
+      "//theories/omega:PreOmega",
+      ":EnvRing",
+      ":Tauto",
+      "//theories/Numbers:BinNums",
+      "//theories/ZArith:Zdiv",
+      "//theories/ZArith:Znumtheory",
+      "//theories/QArith:QArith",
+      "//theories/Arith:Wf_nat",
+      ":VarMap",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zify",
+    src  = "Zify.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/micromega:zify_plugin",
+    ],
+    deps = [
+      ":ZifyClasses",
+      ":ZifyInst",
+    ],
+    deps_vio = [
+      ":ZifyClasses",
+      ":ZifyInst",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZifyBool",
+    src  = "ZifyBool.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/ZArith:ZArith",
+      ":Zify",
+      ":ZifyClasses",
+      ":ZifyInst",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/ZArith:ZArith",
+      ":Zify",
+      ":ZifyClasses",
+      ":ZifyInst",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZifyClasses",
+    src  = "ZifyClasses.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZifyComparison",
+    src  = "ZifyComparison.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/ZArith:ZArith",
+      ":Zify",
+      ":ZifyClasses",
+      ":Lia",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/ZArith:ZArith",
+      ":Zify",
+      ":ZifyClasses",
+      ":Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZifyInst",
+    src  = "ZifyInst.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/micromega:zify_plugin",
+    ],
+    deps = [
+      "//theories/Arith:Arith",
+      "//theories/Arith:Max",
+      "//theories/Arith:Min",
+      "//theories/ZArith:BinInt",
+      "//theories/NArith:BinNat",
+      "//theories/ZArith:Znat",
+      "//theories/NArith:Nnat",
+      ":ZifyClasses",
+    ],
+    deps_vio = [
+      "//theories/Arith:Arith",
+      "//theories/Arith:Max",
+      "//theories/Arith:Min",
+      "//theories/ZArith:BinInt",
+      "//theories/NArith:BinNat",
+      "//theories/ZArith:Znat",
+      "//theories/NArith:Nnat",
+      ":ZifyClasses",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZifyInt63",
+    src  = "ZifyInt63.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:ZArith",
+      "//theories/Numbers/Cyclic/Int63:Int63",
+      ":ZifyBool",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith",
+      "//theories/Numbers/Cyclic/Int63:Int63",
+      ":ZifyBool",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZifyPow",
+    src  = "ZifyPow.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ZifyInst",
+    ],
+    deps_vio = [
+      ":ZifyInst",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ztac",
+    src  = "Ztac.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/setoid_ring:ZArithRing",
+      "//theories/ZArith:ZArith_base",
+    ],
+    deps_vio = [
+      "//theories/setoid_ring:ZArithRing",
+      "//theories/ZArith:ZArith_base",
+    ]
+)
+

@@ -1,0 +1,117 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "Libnsatz",
+    sublibraries = [
+        ":Nsatz",
+        ":NsatzTactic",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Nsatz",
+    src  = "Nsatz.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/Setoids:Setoid",
+      "//theories/PArith:BinPos",
+      "//theories/setoid_ring:BinList",
+      "//theories/ZArith:Znumtheory",
+      "//theories/Classes:Morphisms",
+      "//theories/Bool:Bool",
+      "//theories/setoid_ring:Algebra_syntax",
+      "//theories/setoid_ring:Ncring",
+      "//theories/setoid_ring:Ncring_initial",
+      "//theories/setoid_ring:Ncring_tac",
+      "//theories/setoid_ring:Integral_domain",
+      "//theories/Reals:DiscrR",
+      "//theories/ZArith:ZArith",
+      "//theories/micromega:Lia",
+      ":NsatzTactic",
+      "//theories/Reals:Reals",
+      "//theories/setoid_ring:RealField",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/Setoids:Setoid",
+      "//theories/PArith:BinPos",
+      "//theories/setoid_ring:BinList",
+      "//theories/ZArith:Znumtheory",
+      "//theories/Classes:Morphisms",
+      "//theories/Bool:Bool",
+      "//theories/setoid_ring:Algebra_syntax",
+      "//theories/setoid_ring:Ncring",
+      "//theories/setoid_ring:Ncring_initial",
+      "//theories/setoid_ring:Ncring_tac",
+      "//theories/setoid_ring:Integral_domain",
+      "//theories/Reals:DiscrR",
+      "//theories/ZArith:ZArith",
+      "//theories/micromega:Lia",
+      ":NsatzTactic",
+      "//theories/Reals:Reals",
+      "//theories/setoid_ring:RealField",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NsatzTactic",
+    src  = "NsatzTactic.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/nsatz:nsatz_plugin",
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/Setoids:Setoid",
+      "//theories/PArith:BinPos",
+      "//theories/setoid_ring:BinList",
+      "//theories/ZArith:Znumtheory",
+      "//theories/Classes:Morphisms",
+      "//theories/Bool:Bool",
+      "//theories/setoid_ring:Algebra_syntax",
+      "//theories/setoid_ring:Ncring",
+      "//theories/setoid_ring:Ncring_initial",
+      "//theories/setoid_ring:Ncring_tac",
+      "//theories/setoid_ring:Integral_domain",
+      "//theories/ZArith:ZArith",
+      "//theories/micromega:Lia",
+      "//theories/QArith:QArith",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/Setoids:Setoid",
+      "//theories/PArith:BinPos",
+      "//theories/setoid_ring:BinList",
+      "//theories/ZArith:Znumtheory",
+      "//theories/Classes:Morphisms",
+      "//theories/Bool:Bool",
+      "//theories/setoid_ring:Algebra_syntax",
+      "//theories/setoid_ring:Ncring",
+      "//theories/setoid_ring:Ncring_initial",
+      "//theories/setoid_ring:Ncring_tac",
+      "//theories/setoid_ring:Integral_domain",
+      "//theories/ZArith:ZArith",
+      "//theories/micromega:Lia",
+      "//theories/QArith:QArith",
+    ]
+)
+

@@ -1,0 +1,409 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+BOOT_OPTS = [
+    # "-boot",
+    "-noinit",
+    "-R", "bazel-out/darwin-fastbuild/bin/theories", "Coq"
+]
+
+coq_library(
+    name = "LibInit",
+    sublibraries = [
+        ":Byte",
+        ":Datatypes",
+        ":Decimal",
+        ":Hexadecimal",
+        ":Logic",
+        ":Logic_Type",
+        ":Ltac",
+        ":Nat",
+        ":Notations",
+        ":Number",
+        ":Numeral",
+        ":Peano",
+        ":Prelude",
+        ":Specif",
+        ":Tactics",
+        ":Tauto",
+        ":Wf",
+    ]
+)
+
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Byte",
+    src  = "Byte.v",
+    opts = BOOT_OPTS,
+    plugins = [
+      "//plugins/syntax:number_string_notation_plugin",
+    ],
+    deps = [
+      ":Ltac",
+      ":Datatypes",
+      ":Logic",
+      ":Specif",
+      ":Nat",
+    ],
+    deps_vio = [
+      ":Ltac",
+      ":Datatypes",
+      ":Logic",
+      ":Specif",
+      ":Nat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Datatypes",
+    src  = "Datatypes.v",
+    opts = BOOT_OPTS,
+    plugins = [
+    ],
+    deps = [
+      ":Notations",
+      ":Ltac",
+      ":Logic",
+    ],
+    deps_vio = [
+      ":Notations",
+      ":Ltac",
+      ":Logic",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Decimal",
+    src  = "Decimal.v",
+    opts = BOOT_OPTS,
+    plugins = [
+    ],
+    deps = [
+      ":Datatypes",
+      ":Specif",
+    ],
+    deps_vio = [
+      ":Datatypes",
+      ":Specif",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Hexadecimal",
+    src  = "Hexadecimal.v",
+    opts = BOOT_OPTS,
+    plugins = [
+    ],
+    deps = [
+      ":Datatypes",
+      ":Specif",
+      ":Decimal",
+    ],
+    deps_vio = [
+      ":Datatypes",
+      ":Specif",
+      ":Decimal",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Logic",
+    src  = "Logic.v",
+    opts = BOOT_OPTS,
+    plugins = [
+    ],
+    deps = [
+      ":Notations",
+      ":Ltac",
+    ],
+    deps_vio = [
+      ":Notations",
+      ":Ltac",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Logic_Type",
+    src  = "Logic_Type.v",
+    opts = BOOT_OPTS,
+    plugins = [
+    ],
+    deps = [
+      ":Ltac",
+      ":Datatypes",
+      ":Logic",
+    ],
+    deps_vio = [
+      ":Ltac",
+      ":Datatypes",
+      ":Logic",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ltac",
+    src  = "Ltac.v",
+    opts = BOOT_OPTS,
+    plugins = [
+      "//plugins/ltac:ltac_plugin",
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Nat",
+    src  = "Nat.v",
+    opts = BOOT_OPTS,
+    plugins = [
+    ],
+    deps = [
+      ":Notations",
+      ":Logic",
+      ":Datatypes",
+      ":Decimal",
+      ":Hexadecimal",
+      ":Number",
+    ],
+    deps_vio = [
+      ":Notations",
+      ":Logic",
+      ":Datatypes",
+      ":Decimal",
+      ":Hexadecimal",
+      ":Number",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Notations",
+    src  = "Notations.v",
+    opts = BOOT_OPTS,
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Number",
+    src  = "Number.v",
+    opts = BOOT_OPTS,
+    plugins = [
+    ],
+    deps = [
+      ":Decimal",
+      ":Hexadecimal",
+    ],
+    deps_vio = [
+      ":Decimal",
+      ":Hexadecimal",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Numeral",
+    src  = "Numeral.v",
+    opts = BOOT_OPTS,
+    plugins = [
+    ],
+    deps = [
+      ":Decimal",
+      ":Hexadecimal",
+      ":Number",
+    ],
+    deps_vio = [
+      ":Decimal",
+      ":Hexadecimal",
+      ":Number",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Peano",
+    src  = "Peano.v",
+    opts = BOOT_OPTS,
+    plugins = [
+    ],
+    deps = [
+      ":Notations",
+      ":Ltac",
+      ":Datatypes",
+      ":Logic",
+      ":Nat",
+    ],
+    deps_vio = [
+      ":Notations",
+      ":Ltac",
+      ":Datatypes",
+      ":Logic",
+      ":Nat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Prelude",
+    src  = "Prelude.v",
+    opts = BOOT_OPTS,
+    plugins = [
+      "//plugins/cc:cc_plugin",
+      "//plugins/firstorder:ground_plugin",
+    ],
+    deps = [
+      ":Notations",
+      ":Logic",
+      ":Logic_Type",
+      ":Datatypes",
+      ":Specif",
+      ":Byte",
+      ":Decimal",
+      ":Hexadecimal",
+      ":Numeral",
+      ":Number",
+      ":Nat",
+      ":Peano",
+      ":Wf",
+      ":Ltac",
+      ":Tactics",
+      ":Tauto",
+    ],
+    deps_vio = [
+      ":Notations",
+      ":Logic",
+      ":Logic_Type",
+      ":Datatypes",
+      ":Specif",
+      ":Byte",
+      ":Decimal",
+      ":Hexadecimal",
+      ":Numeral",
+      ":Number",
+      ":Nat",
+      ":Peano",
+      ":Wf",
+      ":Ltac",
+      ":Tactics",
+      ":Tauto",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Specif",
+    src  = "Specif.v",
+    opts = BOOT_OPTS,
+    plugins = [
+    ],
+    deps = [
+      ":Notations",
+      ":Ltac",
+      ":Datatypes",
+      ":Logic",
+    ],
+    deps_vio = [
+      ":Notations",
+      ":Ltac",
+      ":Datatypes",
+      ":Logic",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Tactics",
+    src  = "Tactics.v",
+    opts = BOOT_OPTS,
+    plugins = [
+    ],
+    deps = [
+      ":Notations",
+      ":Ltac",
+      ":Logic",
+      ":Specif",
+    ],
+    deps_vio = [
+      ":Notations",
+      ":Ltac",
+      ":Logic",
+      ":Specif",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Tauto",
+    src  = "Tauto.v",
+    # with_libs = {"//theories/Init:Logic": "Coq.Init.Logic"},
+    # opts = [
+    #     "-I", "theories/Init",
+    #     "-I", "bazel-out/darwin-fastbuild/bin/theories/Init",
+    # ],
+    opts = BOOT_OPTS,
+    plugins = [
+      "//plugins/ltac:tauto_plugin",
+    ],
+    deps = [
+      ":Notations",
+      ":Ltac",
+      ":Datatypes",
+      ":Logic",
+    ],
+    deps_vio = [
+      ":Notations",
+      ":Ltac",
+      ":Datatypes",
+      ":Logic",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Wf",
+    src  = "Wf.v",
+    opts = BOOT_OPTS,
+    plugins = [
+    ],
+    deps = [
+      ":Notations",
+      ":Ltac",
+      ":Logic",
+      ":Datatypes",
+    ],
+    deps_vio = [
+      ":Notations",
+      ":Ltac",
+      ":Logic",
+      ":Datatypes",
+    ]
+)
+

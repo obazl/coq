@@ -1,0 +1,438 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibAbstract",
+    sublibraries = [
+        ":NAdd",
+        ":NAddOrder",
+        ":NAxioms",
+        ":NBase",
+        ":NBits",
+        ":NDefOps",
+        ":NDiv",
+        ":NGcd",
+        ":NIso",
+        ":NLcm",
+        ":NLog",
+        ":NMaxMin",
+        ":NMulOrder",
+        ":NOrder",
+        ":NParity",
+        ":NPow",
+        ":NProperties",
+        ":NSqrt",
+        ":NStrongRec",
+        ":NSub",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NAdd",
+    src  = "NAdd.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NBase",
+    ],
+    deps_vio = [
+      ":NBase",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NAddOrder",
+    src  = "NAddOrder.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NOrder",
+    ],
+    deps_vio = [
+      ":NOrder",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NAxioms",
+    src  = "NAxioms.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/Numbers/NatInt:NZAxioms",
+      "//theories/Numbers/NatInt:NZParity",
+      "//theories/Numbers/NatInt:NZPow",
+      "//theories/Numbers/NatInt:NZSqrt",
+      "//theories/Numbers/NatInt:NZLog",
+      "//theories/Numbers/NatInt:NZDiv",
+      "//theories/Numbers/NatInt:NZGcd",
+      "//theories/Numbers/NatInt:NZBits",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/Numbers/NatInt:NZAxioms",
+      "//theories/Numbers/NatInt:NZParity",
+      "//theories/Numbers/NatInt:NZPow",
+      "//theories/Numbers/NatInt:NZSqrt",
+      "//theories/Numbers/NatInt:NZLog",
+      "//theories/Numbers/NatInt:NZDiv",
+      "//theories/Numbers/NatInt:NZGcd",
+      "//theories/Numbers/NatInt:NZBits",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NBase",
+    src  = "NBase.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Logic:Decidable",
+      ":NAxioms",
+      "//theories/Numbers/NatInt:NZProperties",
+    ],
+    deps_vio = [
+      "//theories/Logic:Decidable",
+      ":NAxioms",
+      "//theories/Numbers/NatInt:NZProperties",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NBits",
+    src  = "NBits.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      ":NAxioms",
+      ":NSub",
+      ":NPow",
+      ":NDiv",
+      ":NParity",
+      ":NLog",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      ":NAxioms",
+      ":NSub",
+      ":NPow",
+      ":NDiv",
+      ":NParity",
+      ":NLog",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NDefOps",
+    src  = "NDefOps.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/Classes:RelationPairs",
+      ":NStrongRec",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/Classes:RelationPairs",
+      ":NStrongRec",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NDiv",
+    src  = "NDiv.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NAxioms",
+      ":NSub",
+      "//theories/Numbers/NatInt:NZDiv",
+    ],
+    deps_vio = [
+      ":NAxioms",
+      ":NSub",
+      "//theories/Numbers/NatInt:NZDiv",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NGcd",
+    src  = "NGcd.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NAxioms",
+      ":NSub",
+      "//theories/Numbers/NatInt:NZGcd",
+    ],
+    deps_vio = [
+      ":NAxioms",
+      ":NSub",
+      "//theories/Numbers/NatInt:NZGcd",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NIso",
+    src  = "NIso.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NBase",
+    ],
+    deps_vio = [
+      ":NBase",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NLcm",
+    src  = "NLcm.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NAxioms",
+      ":NSub",
+      ":NDiv",
+      ":NGcd",
+    ],
+    deps_vio = [
+      ":NAxioms",
+      ":NSub",
+      ":NDiv",
+      ":NGcd",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NLog",
+    src  = "NLog.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NAxioms",
+      ":NSub",
+      ":NPow",
+      ":NParity",
+      "//theories/Numbers/NatInt:NZLog",
+    ],
+    deps_vio = [
+      ":NAxioms",
+      ":NSub",
+      ":NPow",
+      ":NParity",
+      "//theories/Numbers/NatInt:NZLog",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NMaxMin",
+    src  = "NMaxMin.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NAxioms",
+      ":NSub",
+      "//theories/Structures:GenericMinMax",
+    ],
+    deps_vio = [
+      ":NAxioms",
+      ":NSub",
+      "//theories/Structures:GenericMinMax",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NMulOrder",
+    src  = "NMulOrder.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NAddOrder",
+    ],
+    deps_vio = [
+      ":NAddOrder",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NOrder",
+    src  = "NOrder.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NAdd",
+    ],
+    deps_vio = [
+      ":NAdd",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NParity",
+    src  = "NParity.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      ":NSub",
+      "//theories/Numbers/NatInt:NZParity",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      ":NSub",
+      "//theories/Numbers/NatInt:NZParity",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NPow",
+    src  = "NPow.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      ":NAxioms",
+      ":NSub",
+      ":NParity",
+      "//theories/Numbers/NatInt:NZPow",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      ":NAxioms",
+      ":NSub",
+      ":NParity",
+      "//theories/Numbers/NatInt:NZPow",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NProperties",
+    src  = "NProperties.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NAxioms",
+      ":NMaxMin",
+      ":NParity",
+      ":NPow",
+      ":NSqrt",
+      ":NLog",
+      ":NDiv",
+      ":NGcd",
+      ":NLcm",
+      ":NBits",
+    ],
+    deps_vio = [
+      ":NAxioms",
+      ":NMaxMin",
+      ":NParity",
+      ":NPow",
+      ":NSqrt",
+      ":NLog",
+      ":NDiv",
+      ":NGcd",
+      ":NLcm",
+      ":NBits",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NSqrt",
+    src  = "NSqrt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NAxioms",
+      ":NSub",
+      "//theories/Numbers/NatInt:NZSqrt",
+    ],
+    deps_vio = [
+      ":NAxioms",
+      ":NSub",
+      "//theories/Numbers/NatInt:NZSqrt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NStrongRec",
+    src  = "NStrongRec.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NSub",
+    ],
+    deps_vio = [
+      ":NSub",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NSub",
+    src  = "NSub.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NMulOrder",
+    ],
+    deps_vio = [
+      ":NMulOrder",
+    ]
+)
+

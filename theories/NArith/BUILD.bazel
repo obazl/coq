@@ -1,0 +1,274 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibNArith",
+    sublibraries = [
+        ":BinNat",
+        ":BinNatDef",
+        ":NArith",
+        ":Ndec",
+        ":Ndigits",
+        ":Ndist",
+        ":Ndiv_def",
+        ":Ngcd_def",
+        ":Nnat",
+        ":Nsqrt_def",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "BinNat",
+    src  = "BinNat.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers:BinNums",
+      "//theories/PArith:BinPos",
+      "//theories/Classes:RelationClasses",
+      "//theories/Classes:Morphisms",
+      "//theories/Setoids:Setoid",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:OrdersFacts",
+      "//theories/Structures:GenericMinMax",
+      "//theories/Bool:Bool",
+      "//theories/Numbers/Natural/Abstract:NAxioms",
+      "//theories/Numbers/Natural/Abstract:NMaxMin",
+      "//theories/Numbers/Natural/Abstract:NProperties",
+      ":BinNatDef",
+    ],
+    deps_vio = [
+      "//theories/Numbers:BinNums",
+      "//theories/PArith:BinPos",
+      "//theories/Classes:RelationClasses",
+      "//theories/Classes:Morphisms",
+      "//theories/Setoids:Setoid",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:OrdersFacts",
+      "//theories/Structures:GenericMinMax",
+      "//theories/Bool:Bool",
+      "//theories/Numbers/Natural/Abstract:NAxioms",
+      "//theories/Numbers/Natural/Abstract:NMaxMin",
+      "//theories/Numbers/Natural/Abstract:NProperties",
+      ":BinNatDef",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "BinNatDef",
+    src  = "BinNatDef.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers:BinNums",
+      "//theories/PArith:BinPos",
+    ],
+    deps_vio = [
+      "//theories/Numbers:BinNums",
+      "//theories/PArith:BinPos",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NArith",
+    src  = "NArith.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers:BinNums",
+      "//theories/PArith:BinPos",
+      ":BinNat",
+      ":Nnat",
+      ":Ndiv_def",
+      ":Nsqrt_def",
+      ":Ngcd_def",
+      ":Ndigits",
+      "//theories/setoid_ring:NArithRing",
+    ],
+    deps_vio = [
+      "//theories/Numbers:BinNums",
+      "//theories/PArith:BinPos",
+      ":BinNat",
+      ":Nnat",
+      ":Ndiv_def",
+      ":Nsqrt_def",
+      ":Ngcd_def",
+      ":Ndigits",
+      "//theories/setoid_ring:NArithRing",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ndec",
+    src  = "Ndec.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/Bool:Sumbool",
+      "//theories/Arith:Arith",
+      "//theories/PArith:BinPos",
+      ":BinNat",
+      "//theories/PArith:Pnat",
+      ":Nnat",
+      ":Ndigits",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/Bool:Sumbool",
+      "//theories/Arith:Arith",
+      "//theories/PArith:BinPos",
+      ":BinNat",
+      "//theories/PArith:Pnat",
+      ":Nnat",
+      ":Ndigits",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ndigits",
+    src  = "Ndigits.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/Classes:Morphisms",
+      "//theories/Setoids:Setoid",
+      "//theories/Bool:Bvector",
+      "//theories/PArith:BinPos",
+      ":BinNat",
+      "//theories/Arith:PeanoNat",
+      "//theories/PArith:Pnat",
+      ":Nnat",
+      "//theories/Program:Basics",
+      "//theories/Strings:ByteVector",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/Classes:Morphisms",
+      "//theories/Setoids:Setoid",
+      "//theories/Bool:Bvector",
+      "//theories/PArith:BinPos",
+      ":BinNat",
+      "//theories/Arith:PeanoNat",
+      "//theories/PArith:Pnat",
+      ":Nnat",
+      "//theories/Program:Basics",
+      "//theories/Strings:ByteVector",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ndist",
+    src  = "Ndist.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Arith",
+      "//theories/Arith:Min",
+      "//theories/PArith:BinPos",
+      ":BinNat",
+      ":Ndigits",
+    ],
+    deps_vio = [
+      "//theories/Arith:Arith",
+      "//theories/Arith:Min",
+      "//theories/PArith:BinPos",
+      ":BinNat",
+      ":Ndigits",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ndiv_def",
+    src  = "Ndiv_def.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":BinNat",
+    ],
+    deps_vio = [
+      ":BinNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ngcd_def",
+    src  = "Ngcd_def.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/PArith:BinPos",
+      ":BinNat",
+    ],
+    deps_vio = [
+      "//theories/PArith:BinPos",
+      ":BinNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Nnat",
+    src  = "Nnat.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/PArith:BinPos",
+      ":BinNat",
+      "//theories/Arith:PeanoNat",
+      "//theories/PArith:Pnat",
+    ],
+    deps_vio = [
+      "//theories/PArith:BinPos",
+      ":BinNat",
+      "//theories/Arith:PeanoNat",
+      "//theories/PArith:Pnat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Nsqrt_def",
+    src  = "Nsqrt_def.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":BinNat",
+    ],
+    deps_vio = [
+      ":BinNat",
+    ]
+)
+

@@ -1,0 +1,194 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibWellfounded",
+    sublibraries = [
+        ":Disjoint_Union",
+        ":Inclusion",
+        ":Inverse_Image",
+        ":Lexicographic_Exponentiation",
+        ":Lexicographic_Product",
+        ":Transitive_Closure",
+        ":Union",
+        ":Well_Ordering",
+        ":Wellfounded",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Disjoint_Union",
+    src  = "Disjoint_Union.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Relations:Relation_Operators",
+    ],
+    deps_vio = [
+      "//theories/Relations:Relation_Operators",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Inclusion",
+    src  = "Inclusion.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Relations:Relation_Definitions",
+    ],
+    deps_vio = [
+      "//theories/Relations:Relation_Definitions",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Inverse_Image",
+    src  = "Inverse_Image.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Lexicographic_Exponentiation",
+    src  = "Lexicographic_Exponentiation.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/Relations:Relation_Operators",
+      "//theories/Relations:Operators_Properties",
+      ":Transitive_Closure",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/Relations:Relation_Operators",
+      "//theories/Relations:Operators_Properties",
+      ":Transitive_Closure",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Lexicographic_Product",
+    src  = "Lexicographic_Product.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Logic:Eqdep",
+      "//theories/Relations:Relation_Operators",
+      ":Transitive_Closure",
+    ],
+    deps_vio = [
+      "//theories/Logic:Eqdep",
+      "//theories/Relations:Relation_Operators",
+      ":Transitive_Closure",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Transitive_Closure",
+    src  = "Transitive_Closure.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Relations:Relation_Definitions",
+      "//theories/Relations:Relation_Operators",
+    ],
+    deps_vio = [
+      "//theories/Relations:Relation_Definitions",
+      "//theories/Relations:Relation_Operators",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Union",
+    src  = "Union.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Relations:Relation_Operators",
+      "//theories/Relations:Relation_Definitions",
+      ":Transitive_Closure",
+    ],
+    deps_vio = [
+      "//theories/Relations:Relation_Operators",
+      "//theories/Relations:Relation_Definitions",
+      ":Transitive_Closure",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Well_Ordering",
+    src  = "Well_Ordering.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Logic:Eqdep",
+    ],
+    deps_vio = [
+      "//theories/Logic:Eqdep",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Wellfounded",
+    src  = "Wellfounded.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Disjoint_Union",
+      ":Inclusion",
+      ":Inverse_Image",
+      ":Lexicographic_Exponentiation",
+      ":Lexicographic_Product",
+      ":Transitive_Closure",
+      ":Union",
+      ":Well_Ordering",
+    ],
+    deps_vio = [
+      ":Disjoint_Union",
+      ":Inclusion",
+      ":Inverse_Image",
+      ":Lexicographic_Exponentiation",
+      ":Lexicographic_Product",
+      ":Transitive_Closure",
+      ":Union",
+      ":Well_Ordering",
+    ]
+)
+

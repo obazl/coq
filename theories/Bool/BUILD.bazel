@@ -1,0 +1,155 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibBool",
+    sublibraries = [
+        ":Bool",
+        ":BoolEq",
+        ":BoolOrder",
+        ":Bvector",
+        ":DecBool",
+        ":IfProp",
+        ":Sumbool",
+        ":Zerob",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Bool",
+    src  = "Bool.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+        "//theories/Init:Prelude",
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "BoolEq",
+    src  = "BoolEq.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Bool",
+    ],
+    deps_vio = [
+      ":Bool",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "BoolOrder",
+    src  = "BoolOrder.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Bool",
+      "//theories/Structures:Orders",
+    ],
+    deps_vio = [
+      ":Bool",
+      "//theories/Structures:Orders",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Bvector",
+    src  = "Bvector.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Bool",
+      ":Sumbool",
+      "//theories/Vectors:Vector",
+      "//theories/Arith:Minus",
+    ],
+    deps_vio = [
+      ":Bool",
+      ":Sumbool",
+      "//theories/Vectors:Vector",
+      "//theories/Arith:Minus",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DecBool",
+    src  = "DecBool.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "IfProp",
+    src  = "IfProp.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Bool",
+    ],
+    deps_vio = [
+      ":Bool",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Sumbool",
+    src  = "Sumbool.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+        "//theories/Init:Prelude",
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zerob",
+    src  = "Zerob.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Arith",
+      ":Bool",
+    ],
+    deps_vio = [
+      "//theories/Arith:Arith",
+      ":Bool",
+    ]
+)
+

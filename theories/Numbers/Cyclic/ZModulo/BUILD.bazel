@@ -1,0 +1,41 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZModulo",
+    src  = "ZModulo.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/ZArith:ZArith",
+      "//theories/ZArith:Znumtheory",
+      "//theories/ZArith:Zpow_facts",
+      "//theories/Numbers/Cyclic/Abstract:DoubleType",
+      "//theories/Numbers/Cyclic/Abstract:CyclicAxioms",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/ZArith:ZArith",
+      "//theories/ZArith:Znumtheory",
+      "//theories/ZArith:Zpow_facts",
+      "//theories/Numbers/Cyclic/Abstract:DoubleType",
+      "//theories/Numbers/Cyclic/Abstract:CyclicAxioms",
+      "//theories/micromega:Lia",
+    ]
+)
+

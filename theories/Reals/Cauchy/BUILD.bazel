@@ -1,0 +1,224 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibCauchy",
+    sublibraries = [
+        ":ConstructiveCauchyAbs",
+        ":ConstructiveCauchyReals",
+        ":ConstructiveCauchyRealsMult",
+        ":ConstructiveExtra",
+        ":ConstructiveRcomplete",
+        ":PosExtra",
+        ":QExtra",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructiveCauchyAbs",
+    src  = "ConstructiveCauchyAbs.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveCauchyReals",
+      ":ConstructiveCauchyRealsMult",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lqa",
+      ":QExtra",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveCauchyReals",
+      ":ConstructiveCauchyRealsMult",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lqa",
+      ":QExtra",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructiveCauchyReals",
+    src  = "ConstructiveCauchyReals.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qpower",
+      "//theories/QArith:Qabs",
+      "//theories/QArith:Qround",
+      "//theories/Logic:ConstructiveEpsilon",
+      "//theories/Classes:CMorphisms",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lqa",
+      ":QExtra",
+      ":ConstructiveExtra",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qpower",
+      "//theories/QArith:Qabs",
+      "//theories/QArith:Qround",
+      "//theories/Logic:ConstructiveEpsilon",
+      "//theories/Classes:CMorphisms",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lqa",
+      ":QExtra",
+      ":ConstructiveExtra",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructiveCauchyRealsMult",
+    src  = "ConstructiveCauchyRealsMult.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      "//theories/QArith:Qround",
+      "//theories/QArith:Qpower",
+      "//theories/Logic:ConstructiveEpsilon",
+      ":ConstructiveCauchyReals",
+      "//theories/Classes:CMorphisms",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lqa",
+      ":QExtra",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      "//theories/QArith:Qround",
+      "//theories/QArith:Qpower",
+      "//theories/Logic:ConstructiveEpsilon",
+      ":ConstructiveCauchyReals",
+      "//theories/Classes:CMorphisms",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lqa",
+      ":QExtra",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructiveExtra",
+    src  = "ConstructiveExtra.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:ZArith",
+      "//theories/Logic:ConstructiveEpsilon",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith",
+      "//theories/Logic:ConstructiveEpsilon",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructiveRcomplete",
+    src  = "ConstructiveRcomplete.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith_base",
+      "//theories/QArith:Qabs",
+      "//theories/Reals/Abstract:ConstructiveReals",
+      ":ConstructiveCauchyRealsMult",
+      "//theories/Logic:ConstructiveEpsilon",
+      ":ConstructiveCauchyAbs",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lqa",
+      "//theories/QArith:Qpower",
+      ":QExtra",
+      ":PosExtra",
+      ":ConstructiveExtra",
+      "//theories/QArith:Qminmax",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith_base",
+      "//theories/QArith:Qabs",
+      "//theories/Reals/Abstract:ConstructiveReals",
+      ":ConstructiveCauchyRealsMult",
+      "//theories/Logic:ConstructiveEpsilon",
+      ":ConstructiveCauchyAbs",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lqa",
+      "//theories/QArith:Qpower",
+      ":QExtra",
+      ":PosExtra",
+      ":ConstructiveExtra",
+      "//theories/QArith:Qminmax",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "PosExtra",
+    src  = "PosExtra.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/PArith:PArith",
+      "//theories/ZArith:ZArith",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      "//theories/PArith:PArith",
+      "//theories/ZArith:ZArith",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "QExtra",
+    src  = "QExtra.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qpower",
+      "//theories/QArith:Qabs",
+      "//theories/QArith:Qround",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lqa",
+      ":PosExtra",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qpower",
+      "//theories/QArith:Qabs",
+      "//theories/QArith:Qround",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lqa",
+      ":PosExtra",
+    ]
+)
+

@@ -1,0 +1,479 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "Libextraction",
+    sublibraries = [
+        ":ExtrHaskellBasic",
+        ":ExtrHaskellNatInt",
+        ":ExtrHaskellNatInteger",
+        ":ExtrHaskellNatNum",
+        ":ExtrHaskellString",
+        ":ExtrHaskellZInt",
+        ":ExtrHaskellZInteger",
+        ":ExtrHaskellZNum",
+        ":ExtrOCamlFloats",
+        ":ExtrOCamlInt63",
+        ":ExtrOCamlPArray",
+        ":ExtrOcamlBasic",
+        ":ExtrOcamlBigIntConv",
+        ":ExtrOcamlChar",
+        ":ExtrOcamlIntConv",
+        ":ExtrOcamlNatBigInt",
+        ":ExtrOcamlNatInt",
+        ":ExtrOcamlNativeString",
+        ":ExtrOcamlString",
+        ":ExtrOcamlZBigInt",
+        ":ExtrOcamlZInt",
+        ":Extraction",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrHaskellBasic",
+    src  = "ExtrHaskellBasic.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+    ],
+    deps_vio = [
+      ":Extraction",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrHaskellNatInt",
+    src  = "ExtrHaskellNatInt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      ":ExtrHaskellNatNum",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      ":ExtrHaskellNatNum",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrHaskellNatInteger",
+    src  = "ExtrHaskellNatInteger.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      ":ExtrHaskellNatNum",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      ":ExtrHaskellNatNum",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrHaskellNatNum",
+    src  = "ExtrHaskellNatNum.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      "//theories/Arith:EqNat",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      "//theories/Arith:EqNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrHaskellString",
+    src  = "ExtrHaskellString.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+      "//theories/Strings:Byte",
+      ":ExtrHaskellBasic",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+      "//theories/Strings:Byte",
+      ":ExtrHaskellBasic",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrHaskellZInt",
+    src  = "ExtrHaskellZInt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/ZArith:ZArith",
+      ":ExtrHaskellZNum",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/ZArith:ZArith",
+      ":ExtrHaskellZNum",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrHaskellZInteger",
+    src  = "ExtrHaskellZInteger.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/ZArith:ZArith",
+      ":ExtrHaskellZNum",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/ZArith:ZArith",
+      ":ExtrHaskellZNum",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrHaskellZNum",
+    src  = "ExtrHaskellZNum.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/ZArith:ZArith",
+      "//theories/Arith:EqNat",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/ZArith:ZArith",
+      "//theories/Arith:EqNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrOCamlFloats",
+    src  = "ExtrOCamlFloats.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Floats:Floats",
+      ":Extraction",
+    ],
+    deps_vio = [
+      "//theories/Floats:Floats",
+      ":Extraction",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrOCamlInt63",
+    src  = "ExtrOCamlInt63.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers/Cyclic/Int63:Int63",
+      "//theories/Numbers/Cyclic/Int63:Sint63",
+      ":Extraction",
+    ],
+    deps_vio = [
+      "//theories/Numbers/Cyclic/Int63:Int63",
+      "//theories/Numbers/Cyclic/Int63:Sint63",
+      ":Extraction",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrOCamlPArray",
+    src  = "ExtrOCamlPArray.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Array:PArray",
+      ":Extraction",
+    ],
+    deps_vio = [
+      "//theories/Array:PArray",
+      ":Extraction",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrOcamlBasic",
+    src  = "ExtrOcamlBasic.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+    ],
+    deps_vio = [
+      ":Extraction",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrOcamlBigIntConv",
+    src  = "ExtrOcamlBigIntConv.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      "//theories/ZArith:ZArith",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      "//theories/ZArith:ZArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrOcamlChar",
+    src  = "ExtrOcamlChar.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+      "//theories/Strings:Byte",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+      "//theories/Strings:Byte",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrOcamlIntConv",
+    src  = "ExtrOcamlIntConv.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      "//theories/ZArith:ZArith",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      "//theories/ZArith:ZArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrOcamlNatBigInt",
+    src  = "ExtrOcamlNatBigInt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      "//theories/Arith:Even",
+      "//theories/Arith:Div2",
+      "//theories/Arith:EqNat",
+      "//theories/Arith:Euclid",
+      ":ExtrOcamlBasic",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      "//theories/Arith:Even",
+      "//theories/Arith:Div2",
+      "//theories/Arith:EqNat",
+      "//theories/Arith:Euclid",
+      ":ExtrOcamlBasic",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrOcamlNatInt",
+    src  = "ExtrOcamlNatInt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      "//theories/Arith:Even",
+      "//theories/Arith:Div2",
+      "//theories/Arith:EqNat",
+      "//theories/Arith:Euclid",
+      ":ExtrOcamlBasic",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/Arith:Arith",
+      "//theories/Arith:Even",
+      "//theories/Arith:Div2",
+      "//theories/Arith:EqNat",
+      "//theories/Arith:Euclid",
+      ":ExtrOcamlBasic",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrOcamlNativeString",
+    src  = "ExtrOcamlNativeString.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+      "//theories/Strings:Byte",
+      ":ExtrOcamlChar",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+      "//theories/Strings:Byte",
+      ":ExtrOcamlChar",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrOcamlString",
+    src  = "ExtrOcamlString.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+      "//theories/Strings:Byte",
+      ":ExtrOcamlChar",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+      "//theories/Strings:Byte",
+      ":ExtrOcamlChar",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrOcamlZBigInt",
+    src  = "ExtrOcamlZBigInt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/ZArith:ZArith",
+      "//theories/NArith:NArith",
+      ":ExtrOcamlBasic",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/ZArith:ZArith",
+      "//theories/NArith:NArith",
+      ":ExtrOcamlBasic",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ExtrOcamlZInt",
+    src  = "ExtrOcamlZInt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Extraction",
+      "//theories/ZArith:ZArith",
+      "//theories/NArith:NArith",
+      ":ExtrOcamlBasic",
+    ],
+    deps_vio = [
+      ":Extraction",
+      "//theories/ZArith:ZArith",
+      "//theories/NArith:NArith",
+      ":ExtrOcamlBasic",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Extraction",
+    src  = "Extraction.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/extraction:extraction_plugin",
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+

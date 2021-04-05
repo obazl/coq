@@ -1,0 +1,614 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "Libsetoid_ring",
+    sublibraries = [
+        ":Algebra_syntax",
+        ":ArithRing",
+        ":BinList",
+        ":Cring",
+        ":Field",
+        ":Field_tac",
+        ":Field_theory",
+        ":InitialRing",
+        ":Integral_domain",
+        ":NArithRing",
+        ":Ncring",
+        ":Ncring_initial",
+        ":Ncring_polynom",
+        ":Ncring_tac",
+        ":RealField",
+        ":Ring",
+        ":Ring_base",
+        ":Ring_polynom",
+        ":Ring_tac",
+        ":Ring_theory",
+        ":Rings_Q",
+        ":Rings_R",
+        ":Rings_Z",
+        ":ZArithRing",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Algebra_syntax",
+    src  = "Algebra_syntax.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ArithRing",
+    src  = "ArithRing.v",
+     with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+   plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Mult",
+      "//theories/NArith:BinNat",
+      "//theories/NArith:Nnat",
+      ":Ring",
+    ],
+    deps_vio = [
+      "//theories/Arith:Mult",
+      "//theories/NArith:BinNat",
+      "//theories/NArith:Nnat",
+      ":Ring",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "BinList",
+    src  = "BinList.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/PArith:BinPos",
+      "//theories/Lists:List",
+    ],
+    deps_vio = [
+      "//theories/PArith:BinPos",
+      "//theories/Lists:List",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Cring",
+    src  = "Cring.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+        "//theories/Lists:List",
+        "//theories/Setoids:Setoid",
+        "//theories/PArith:BinPos",
+        ":BinList",
+        "//theories/ZArith:Znumtheory",
+        "//theories/Classes:Morphisms",
+        "//theories/Bool:Bool",
+        "//theories/ZArith:ZArith_base",
+        ":Algebra_syntax",
+        ":Ncring",
+        ":Ncring_initial",
+        ":Ncring_tac",
+        ":InitialRing",
+    ],
+    deps_vio = [
+        "//theories/Lists:List",
+        "//theories/Setoids:Setoid",
+        "//theories/PArith:BinPos",
+        ":BinList",
+        "//theories/ZArith:Znumtheory",
+        "//theories/Classes:Morphisms",
+        "//theories/Bool:Bool",
+        "//theories/ZArith:ZArith_base",
+        ":Algebra_syntax",
+        ":Ncring",
+        ":Ncring_initial",
+        ":Ncring_tac",
+        ":InitialRing",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Field",
+    src  = "Field.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Field_theory",
+      ":Field_tac",
+    ],
+    deps_vio = [
+      ":Field_theory",
+      ":Field_tac",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Field_tac",
+    src  = "Field_tac.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ring_tac",
+      ":BinList",
+      ":Ring_polynom",
+      ":InitialRing",
+      ":Field_theory",
+    ],
+    deps_vio = [
+      ":Ring_tac",
+      ":BinList",
+      ":Ring_polynom",
+      ":InitialRing",
+      ":Field_theory",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Field_theory",
+    src  = "Field_theory.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ring",
+      "//theories/ZArith:ZArith_base",
+    ],
+    deps_vio = [
+      ":Ring",
+      "//theories/ZArith:ZArith_base",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "InitialRing",
+    src  = "InitialRing.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:Zbool",
+      "//theories/ZArith:BinInt",
+      "//theories/NArith:BinNat",
+      "//theories/Setoids:Setoid",
+      ":Ring_theory",
+      ":Ring_polynom",
+    ],
+    deps_vio = [
+      "//theories/ZArith:Zbool",
+      "//theories/ZArith:BinInt",
+      "//theories/NArith:BinNat",
+      "//theories/Setoids:Setoid",
+      ":Ring_theory",
+      ":Ring_polynom",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Integral_domain",
+    src  = "Integral_domain.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Cring",
+    ],
+    deps_vio = [
+      ":Cring",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NArithRing",
+    src  = "NArithRing.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ring",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+    ],
+    deps_vio = [
+      ":Ring",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ncring",
+    src  = "Ncring.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Setoids:Setoid",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      "//theories/Classes:Morphisms",
+      "//theories/Bool:Bool",
+      "//theories/ZArith:ZArith_base",
+      ":Algebra_syntax",
+    ],
+    deps_vio = [
+      "//theories/Setoids:Setoid",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      "//theories/Classes:Morphisms",
+      "//theories/Bool:Bool",
+      "//theories/ZArith:ZArith_base",
+      ":Algebra_syntax",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ncring_initial",
+    src  = "Ncring_initial.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:ZArith_base",
+      "//theories/ZArith:Zpow_def",
+      "//theories/ZArith:BinInt",
+      "//theories/NArith:BinNat",
+      "//theories/Setoids:Setoid",
+      ":BinList",
+      "//theories/PArith:BinPos",
+      ":Ncring",
+      ":Ncring_polynom",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith_base",
+      "//theories/ZArith:Zpow_def",
+      "//theories/ZArith:BinInt",
+      "//theories/NArith:BinNat",
+      "//theories/Setoids:Setoid",
+      ":BinList",
+      "//theories/PArith:BinPos",
+      ":Ncring",
+      ":Ncring_polynom",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ncring_polynom",
+    src  = "Ncring_polynom.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Setoids:Setoid",
+      ":BinList",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      "//theories/ZArith:BinInt",
+      ":Ring_polynom",
+      ":Ncring",
+    ],
+    deps_vio = [
+      "//theories/Setoids:Setoid",
+      ":BinList",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      "//theories/ZArith:BinInt",
+      ":Ring_polynom",
+      ":Ncring",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ncring_tac",
+    src  = "Ncring_tac.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/Setoids:Setoid",
+      "//theories/PArith:BinPos",
+      ":BinList",
+      "//theories/ZArith:Znumtheory",
+      "//theories/Classes:Morphisms",
+      "//theories/Bool:Bool",
+      "//theories/ZArith:ZArith",
+      ":Algebra_syntax",
+      ":Ncring",
+      ":Ncring_polynom",
+      ":Ncring_initial",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/Setoids:Setoid",
+      "//theories/PArith:BinPos",
+      ":BinList",
+      "//theories/ZArith:Znumtheory",
+      "//theories/Classes:Morphisms",
+      "//theories/Bool:Bool",
+      "//theories/ZArith:ZArith",
+      ":Algebra_syntax",
+      ":Ncring",
+      ":Ncring_polynom",
+      ":Ncring_initial",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "RealField",
+    src  = "RealField.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/NArith:Nnat",
+      ":ArithRing",
+      ":Ring",
+      ":Field",
+      "//theories/Reals:Rdefinitions",
+      "//theories/Reals:Rpow_def",
+      "//theories/Reals:Raxioms",
+    ],
+    deps_vio = [
+      "//theories/NArith:Nnat",
+      ":ArithRing",
+      ":Ring",
+      ":Field",
+      "//theories/Reals:Rdefinitions",
+      "//theories/Reals:Rpow_def",
+      "//theories/Reals:Raxioms",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ring",
+    src  = "Ring.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      ":Ring_theory",
+      ":Ring_base",
+      ":InitialRing",
+      ":Ring_tac",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      ":Ring_theory",
+      ":Ring_base",
+      ":InitialRing",
+      ":Ring_tac",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ring_base",
+    src  = "Ring_base.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/ring:ring_plugin",
+    ],
+    deps = [
+      ":Ring_theory",
+      ":Ring_tac",
+      ":InitialRing",
+    ],
+    deps_vio = [
+      ":Ring_theory",
+      ":Ring_tac",
+      ":InitialRing",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ring_polynom",
+    src  = "Ring_polynom.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      ":BinList",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      "//theories/ZArith:BinInt",
+      ":Ring_theory",
+    ],
+    deps_vio = [
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      ":BinList",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      "//theories/ZArith:BinInt",
+      ":Ring_theory",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ring_tac",
+    src  = "Ring_tac.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+        "//plugins/btauto:btauto_plugin",
+        "//plugins/cc:cc_plugin",
+        "//plugins/derive:derive_plugin",
+        "//plugins/extraction:extraction_plugin",
+        "//plugins/firstorder:ground_plugin",
+        "//plugins/funind:recdef_plugin",
+        "//plugins/ltac:ltac_plugin",
+        "//plugins/ltac:tauto_plugin",
+        "//plugins/micromega:micromega_plugin",
+        "//plugins/micromega:zify_plugin",
+        "//plugins/nsatz:nsatz_plugin",
+        "//plugins/omega:omega_plugin",
+        "//plugins/ring:ring_plugin",
+        "//plugins/rtauto:rtauto_plugin",
+        "//plugins/ssr:ssreflect_plugin",
+        "//plugins/ssrmatching:ssrmatching_plugin",
+        "//plugins/ssrsearch:ssrsearch_plugin",
+        "//plugins/syntax:float_syntax_plugin",
+        "//plugins/syntax:number_string_notation_plugin",
+    ],
+    deps = [
+      ":Ring_polynom",
+      ":BinList",
+      ":InitialRing",
+      "//theories/Setoids:Setoid",
+      "//theories/PArith:BinPos",
+      "//theories/Lists:ListTactics",
+    ],
+    deps_vio = [
+      "//theories/Setoids:Setoid",
+      "//theories/PArith:BinPos",
+      ":Ring_polynom",
+      # ":BinList",
+      # "//theories/Lists:ListTactics",
+      ":InitialRing",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ring_theory",
+    src  = "Ring_theory.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+    ],
+    deps_vio = [
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rings_Q",
+    src  = "Rings_Q.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Cring",
+      ":Integral_domain",
+      "//theories/QArith:QArith",
+    ],
+    deps_vio = [
+      ":Cring",
+      ":Integral_domain",
+      "//theories/QArith:QArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rings_R",
+    src  = "Rings_R.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Cring",
+      ":Integral_domain",
+      "//theories/Reals:Reals",
+      ":RealField",
+    ],
+    deps_vio = [
+      ":Cring",
+      ":Integral_domain",
+      "//theories/Reals:Reals",
+      ":RealField",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rings_Z",
+    src  = "Rings_Z.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Cring",
+      ":Integral_domain",
+      ":Ncring_initial",
+    ],
+    deps_vio = [
+      ":Cring",
+      ":Integral_domain",
+      ":Ncring_initial",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZArithRing",
+    src  = "ZArithRing.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ring",
+      "//theories/ZArith:ZArith_base",
+      "//theories/ZArith:Zpow_def",
+    ],
+    deps_vio = [
+      ":Ring",
+      "//theories/ZArith:ZArith_base",
+      "//theories/ZArith:Zpow_def",
+    ]
+)
+

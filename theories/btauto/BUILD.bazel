@@ -1,0 +1,91 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "Libbtauto",
+    sublibraries = [
+        ":Algebra",
+        ":Btauto",
+        ":Reflect",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Algebra",
+    src  = "Algebra.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/PArith:PArith",
+      "//theories/Classes:DecidableClass",
+      "//theories/setoid_ring:Ring",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/PArith:PArith",
+      "//theories/Classes:DecidableClass",
+      "//theories/setoid_ring:Ring",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Btauto",
+    src  = "Btauto.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/btauto:btauto_plugin",
+    ],
+    deps = [
+      ":Algebra",
+      ":Reflect",
+    ],
+    deps_vio = [
+      ":Algebra",
+      ":Reflect",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Reflect",
+    src  = "Reflect.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/Classes:DecidableClass",
+      ":Algebra",
+      "//theories/setoid_ring:Ring",
+      "//theories/PArith:PArith",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/Classes:DecidableClass",
+      ":Algebra",
+      "//theories/setoid_ring:Ring",
+      "//theories/PArith:PArith",
+      "//theories/micromega:Lia",
+    ]
+)
+

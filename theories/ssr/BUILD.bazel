@@ -1,0 +1,131 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "Libssr",
+    sublibraries = [
+        ":ssrbool",
+        ":ssrclasses",
+        ":ssreflect",
+        ":ssrfun",
+        ":ssrsetoid",
+        ":ssrunder",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ssrbool",
+    src  = "ssrbool.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      ":ssreflect",
+      ":ssrfun",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      ":ssreflect",
+      ":ssrfun",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ssrclasses",
+    src  = "ssrclasses.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ssreflect",
+    src  = "ssreflect.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/ssr:ssreflect_plugin",
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/ssrmatching:ssrmatching",
+      ":ssrunder",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/ssrmatching:ssrmatching",
+      ":ssrunder",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ssrfun",
+    src  = "ssrfun.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ssreflect",
+    ],
+    deps_vio = [
+      ":ssreflect",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ssrsetoid",
+    src  = "ssrsetoid.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ssrclasses",
+      ":ssrunder",
+      "//theories/Classes:RelationClasses",
+      "//theories/Relations:Relation_Definitions",
+    ],
+    deps_vio = [
+      ":ssrclasses",
+      ":ssrunder",
+      "//theories/Classes:RelationClasses",
+      "//theories/Relations:Relation_Definitions",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ssrunder",
+    src  = "ssrunder.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ssrclasses",
+    ],
+    deps_vio = [
+      ":ssrclasses",
+    ]
+)
+

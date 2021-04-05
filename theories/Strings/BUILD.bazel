@@ -1,0 +1,176 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibStrings",
+    sublibraries = [
+        ":Ascii",
+        ":BinaryString",
+        ":Byte",
+        ":ByteVector",
+        ":HexString",
+        ":OctalString",
+        ":String",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ascii",
+    src  = "Ascii.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      "//theories/Arith:PeanoNat",
+      "//theories/NArith:Nnat",
+      ":Byte",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      "//theories/Arith:PeanoNat",
+      "//theories/NArith:Nnat",
+      ":Byte",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "BinaryString",
+    src  = "BinaryString.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ascii",
+      ":String",
+      "//theories/Numbers:BinNums",
+    ],
+    deps_vio = [
+      ":Ascii",
+      ":String",
+      "//theories/Numbers:BinNums",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Byte",
+    src  = "Byte.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:EqNat",
+      "//theories/NArith:BinNat",
+      "//theories/NArith:Nnat",
+      "//theories/Init:Byte",
+    ],
+    deps_vio = [
+      "//theories/Arith:EqNat",
+      "//theories/NArith:BinNat",
+      "//theories/NArith:Nnat",
+      "//theories/Init:Byte",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ByteVector",
+    src  = "ByteVector.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ascii",
+      "//theories/Program:Basics",
+      "//theories/Bool:Bvector",
+      ":String",
+      "//theories/Vectors:Vector",
+    ],
+    deps_vio = [
+      ":Ascii",
+      "//theories/Program:Basics",
+      "//theories/Bool:Bvector",
+      ":String",
+      "//theories/Vectors:Vector",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "HexString",
+    src  = "HexString.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ascii",
+      ":String",
+      "//theories/Numbers:BinNums",
+    ],
+    deps_vio = [
+      ":Ascii",
+      ":String",
+      "//theories/Numbers:BinNums",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "OctalString",
+    src  = "OctalString.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Ascii",
+      ":String",
+      "//theories/Numbers:BinNums",
+    ],
+    deps_vio = [
+      ":Ascii",
+      ":String",
+      "//theories/Numbers:BinNums",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "String",
+    src  = "String.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Arith",
+      ":Ascii",
+      "//theories/Bool:Bool",
+      ":Byte",
+    ],
+    deps_vio = [
+      "//theories/Arith:Arith",
+      ":Ascii",
+      "//theories/Bool:Bool",
+      ":Byte",
+    ]
+)
+

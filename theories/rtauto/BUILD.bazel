@@ -1,0 +1,65 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "Librtauto",
+    sublibraries = [
+        ":Bintree",
+        ":Rtauto",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Bintree",
+    src  = "Bintree.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/PArith:BinPos",
+      "//theories/Arith:EqNat",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/PArith:BinPos",
+      "//theories/Arith:EqNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rtauto",
+    src  = "Rtauto.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/rtauto:rtauto_plugin",
+    ],
+    deps = [
+      "//theories/Lists:List",
+      ":Bintree",
+      "//theories/Bool:Bool",
+      "//theories/PArith:BinPos",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      ":Bintree",
+      "//theories/Bool:Bool",
+      "//theories/PArith:BinPos",
+    ]
+)
+

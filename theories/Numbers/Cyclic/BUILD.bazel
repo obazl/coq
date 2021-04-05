@@ -1,0 +1,14 @@
+load("@obazl_rules_coq//coq:rules.bzl", "coq_library")
+
+coq_library(
+    name = "LibCyclic",
+    sublibraries = [
+        "//theories/Numbers/Cyclic/Abstract:LibAbstract",
+        "//theories/Numbers/Cyclic/Int31:LibInt31",
+        "//theories/Numbers/Cyclic/Int63:LibInt63",
+        "//theories/Numbers/Cyclic/ZModulo"
+    ],
+    visibility = ["//theories/Numbers:__pkg__"]
+)
+
+

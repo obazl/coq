@@ -1,0 +1,778 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibZArith",
+    sublibraries = [
+        ":BinInt",
+        ":BinIntDef",
+        ":Int",
+        ":Wf_Z",
+        ":ZArith",
+        ":ZArith_base",
+        ":ZArith_dec",
+        ":Zabs",
+        ":Zbool",
+        ":Zcompare",
+        ":Zcomplements",
+        ":Zdigits",
+        ":Zdiv",
+        ":Zeuclid",
+        ":Zeven",
+        ":Zgcd_alt",
+        ":Zhints",
+        ":Zmax",
+        ":Zmin",
+        ":Zminmax",
+        ":Zmisc",
+        ":Znat",
+        ":Znumtheory",
+        ":Zorder",
+        ":Zpow_alt",
+        ":Zpow_def",
+        ":Zpow_facts",
+        ":Zpower",
+        ":Zquot",
+        ":Zwf",
+        ":auxiliary"
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "BinInt",
+    src  = "BinInt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers:BinNums",
+      "//theories/PArith:BinPos",
+      "//theories/PArith:Pnat",
+      "//theories/NArith:BinNat",
+      "//theories/Bool:Bool",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:GenericMinMax",
+      "//theories/Structures:OrdersFacts",
+      "//theories/Numbers/Integer/Abstract:ZAxioms",
+      "//theories/Numbers/Integer/Abstract:ZProperties",
+      ":BinIntDef",
+    ],
+    deps_vio = [
+      "//theories/Numbers:BinNums",
+      "//theories/PArith:BinPos",
+      "//theories/PArith:Pnat",
+      "//theories/NArith:BinNat",
+      "//theories/Bool:Bool",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:GenericMinMax",
+      "//theories/Structures:OrdersFacts",
+      "//theories/Numbers/Integer/Abstract:ZAxioms",
+      "//theories/Numbers/Integer/Abstract:ZProperties",
+      ":BinIntDef",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "BinIntDef",
+    src  = "BinIntDef.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers:BinNums",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+    ],
+    deps_vio = [
+      "//theories/Numbers:BinNums",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Int",
+    src  = "Int.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":BinInt",
+    ],
+    deps_vio = [
+      ":BinInt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Wf_Z",
+    src  = "Wf_Z.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+      ":Znat",
+      ":Zmisc",
+      "//theories/Arith:Wf_nat",
+    ],
+    deps_vio = [
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+      ":Znat",
+      ":Zmisc",
+      "//theories/Arith:Wf_nat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZArith",
+    src  = "ZArith.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ZArith_base",
+      ":Zpow_def",
+      "//theories/omega:Omega",
+      ":Zcomplements",
+      ":Zpower",
+      ":Zdiv",
+    ],
+    deps_vio = [
+      ":ZArith_base",
+      ":Zpow_def",
+      "//theories/omega:Omega",
+      ":Zcomplements",
+      ":Zpower",
+      ":Zdiv",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZArith_base",
+    src  = "ZArith_base.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers:BinNums",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+      ":Zeven",
+      ":Zminmax",
+      ":Zmin",
+      ":Zmax",
+      ":Zabs",
+      ":Znat",
+      ":auxiliary",
+      ":ZArith_dec",
+      ":Zbool",
+      ":Zmisc",
+      ":Wf_Z",
+      ":Zhints",
+    ],
+    deps_vio = [
+      "//theories/Numbers:BinNums",
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+      ":Zeven",
+      ":Zminmax",
+      ":Zmin",
+      ":Zmax",
+      ":Zabs",
+      ":Znat",
+      ":auxiliary",
+      ":ZArith_dec",
+      ":Zbool",
+      ":Zmisc",
+      ":Wf_Z",
+      ":Zhints",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZArith_dec",
+    src  = "ZArith_dec.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Sumbool",
+      ":BinInt",
+      ":Zorder",
+      ":Zcompare",
+    ],
+    deps_vio = [
+      "//theories/Bool:Sumbool",
+      ":BinInt",
+      ":Zorder",
+      ":Zcompare",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zabs",
+    src  = "Zabs.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Arith_base",
+      "//theories/PArith:BinPos",
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+      ":Znat",
+      ":ZArith_dec",
+    ],
+    deps_vio = [
+      "//theories/Arith:Arith_base",
+      "//theories/PArith:BinPos",
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+      ":Znat",
+      ":ZArith_dec",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zbool",
+    src  = "Zbool.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":BinInt",
+      ":Zeven",
+      ":Zorder",
+      ":Zcompare",
+      ":ZArith_dec",
+      "//theories/Bool:Sumbool",
+    ],
+    deps_vio = [
+      ":BinInt",
+      ":Zeven",
+      ":Zorder",
+      ":Zcompare",
+      ":ZArith_dec",
+      "//theories/Bool:Sumbool",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zcompare",
+    src  = "Zcompare.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/PArith:BinPos",
+      ":BinInt",
+      "//theories/Arith:Lt",
+      "//theories/Arith:Gt",
+      "//theories/Arith:Plus",
+      "//theories/Arith:Mult",
+    ],
+    deps_vio = [
+      "//theories/PArith:BinPos",
+      ":BinInt",
+      "//theories/Arith:Lt",
+      "//theories/Arith:Gt",
+      "//theories/Arith:Plus",
+      "//theories/Arith:Mult",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zcomplements",
+    src  = "Zcomplements.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/setoid_ring:ZArithRing",
+      ":ZArith_base",
+      "//theories/Arith:Wf_nat",
+      "//theories/Lists:List",
+    ],
+    deps_vio = [
+      "//theories/setoid_ring:ZArithRing",
+      ":ZArith_base",
+      "//theories/Arith:Wf_nat",
+      "//theories/Lists:List",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zdigits",
+    src  = "Zdigits.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bvector",
+      ":ZArith",
+      ":Zpower",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bvector",
+      ":ZArith",
+      ":Zpower",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zdiv",
+    src  = "Zdiv.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ZArith_base",
+      ":Zbool",
+      "//theories/setoid_ring:ZArithRing",
+      ":Zcomplements",
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      "//theories/Arith:PeanoNat",
+    ],
+    deps_vio = [
+      ":ZArith_base",
+      ":Zbool",
+      "//theories/setoid_ring:ZArithRing",
+      ":Zcomplements",
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      "//theories/Arith:PeanoNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zeuclid",
+    src  = "Zeuclid.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Classes:Morphisms",
+      ":BinInt",
+      "//theories/Numbers/Integer/Abstract:ZDivEucl",
+    ],
+    deps_vio = [
+      "//theories/Classes:Morphisms",
+      ":BinInt",
+      "//theories/Numbers/Integer/Abstract:ZDivEucl",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zeven",
+    src  = "Zeven.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":BinInt",
+    ],
+    deps_vio = [
+      ":BinInt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zgcd_alt",
+    src  = "Zgcd_alt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ZArith_base",
+      "//theories/setoid_ring:ZArithRing",
+      ":Zdiv",
+      ":Znumtheory",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      ":ZArith_base",
+      "//theories/setoid_ring:ZArithRing",
+      ":Zdiv",
+      ":Znumtheory",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zhints",
+    src  = "Zhints.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":BinInt",
+      ":Zorder",
+      ":Zmin",
+      ":Zabs",
+      ":Zcompare",
+      ":Znat",
+      ":auxiliary",
+      ":Zmisc",
+      ":Wf_Z",
+    ],
+    deps_vio = [
+      ":BinInt",
+      ":Zorder",
+      ":Zmin",
+      ":Zabs",
+      ":Zcompare",
+      ":Znat",
+      ":auxiliary",
+      ":Zmisc",
+      ":Wf_Z",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zmax",
+    src  = "Zmax.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+    ],
+    deps_vio = [
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zmin",
+    src  = "Zmin.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+    ],
+    deps_vio = [
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zminmax",
+    src  = "Zminmax.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Structures:Orders",
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+    ],
+    deps_vio = [
+      "//theories/Structures:Orders",
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zmisc",
+    src  = "Zmisc.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Wf_nat",
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+      "//theories/Bool:Bool",
+    ],
+    deps_vio = [
+      "//theories/Arith:Wf_nat",
+      ":BinInt",
+      ":Zcompare",
+      ":Zorder",
+      "//theories/Bool:Bool",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Znat",
+    src  = "Znat.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Arith_base",
+      "//theories/PArith:BinPos",
+      ":BinInt",
+      "//theories/NArith:BinNat",
+      "//theories/PArith:Pnat",
+      "//theories/NArith:Nnat",
+    ],
+    deps_vio = [
+      "//theories/Arith:Arith_base",
+      "//theories/PArith:BinPos",
+      ":BinInt",
+      "//theories/NArith:BinNat",
+      "//theories/PArith:Pnat",
+      "//theories/NArith:Nnat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Znumtheory",
+    src  = "Znumtheory.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ZArith_base",
+      "//theories/setoid_ring:ZArithRing",
+      ":Zcomplements",
+      ":Zdiv",
+      "//theories/Arith:Wf_nat",
+    ],
+    deps_vio = [
+      ":ZArith_base",
+      "//theories/setoid_ring:ZArithRing",
+      ":Zcomplements",
+      ":Zdiv",
+      "//theories/Arith:Wf_nat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zorder",
+    src  = "Zorder.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/PArith:BinPos",
+      ":BinInt",
+      "//theories/Logic:Decidable",
+      ":Zcompare",
+      "//theories/Arith:Arith_base",
+    ],
+    deps_vio = [
+      "//theories/PArith:BinPos",
+      ":BinInt",
+      "//theories/Logic:Decidable",
+      ":Zcompare",
+      "//theories/Arith:Arith_base",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zpow_alt",
+    src  = "Zpow_alt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":BinInt",
+    ],
+    deps_vio = [
+      ":BinInt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zpow_def",
+    src  = "Zpow_def.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":BinInt",
+      "//theories/setoid_ring:Ring_theory",
+    ],
+    deps_vio = [
+      ":BinInt",
+      "//theories/setoid_ring:Ring_theory",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zpow_facts",
+    src  = "Zpow_facts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ZArith_base",
+      "//theories/setoid_ring:ZArithRing",
+      "//theories/micromega:Lia",
+      ":Zcomplements",
+      ":Zdiv",
+      ":Znumtheory",
+      ":Zpower",
+    ],
+    deps_vio = [
+      ":ZArith_base",
+      "//theories/setoid_ring:ZArithRing",
+      "//theories/micromega:Lia",
+      ":Zcomplements",
+      ":Zdiv",
+      ":Znumtheory",
+      ":Zpower",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zpower",
+    src  = "Zpower.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Wf_nat",
+      ":ZArith_base",
+      ":Zcomplements",
+      ":Zpow_def",
+    ],
+    deps_vio = [
+      "//theories/Arith:Wf_nat",
+      ":ZArith_base",
+      ":Zcomplements",
+      ":Zpow_def",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zquot",
+    src  = "Zquot.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/NArith:Nnat",
+      ":ZArith_base",
+      "//theories/micromega:Lia",
+      "//theories/setoid_ring:ZArithRing",
+      ":Zdiv",
+      "//theories/Classes:Morphisms",
+    ],
+    deps_vio = [
+      "//theories/NArith:Nnat",
+      ":ZArith_base",
+      "//theories/micromega:Lia",
+      "//theories/setoid_ring:ZArithRing",
+      ":Zdiv",
+      "//theories/Classes:Morphisms",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Zwf",
+    src  = "Zwf.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":ZArith_base",
+      "//theories/Arith:Wf_nat",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      ":ZArith_base",
+      "//theories/Arith:Wf_nat",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "auxiliary",
+    src  = "auxiliary.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Arith_base",
+      ":BinInt",
+      ":Zorder",
+      "//theories/Logic:Decidable",
+      "//theories/Arith:Peano_dec",
+      "//theories/Arith:Compare_dec",
+    ],
+    deps_vio = [
+      "//theories/Arith:Arith_base",
+      ":BinInt",
+      ":Zorder",
+      "//theories/Logic:Decidable",
+      "//theories/Arith:Peano_dec",
+      "//theories/Arith:Compare_dec",
+    ]
+)
+

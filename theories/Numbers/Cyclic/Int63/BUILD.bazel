@@ -1,0 +1,124 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibInt63",
+    sublibraries = [
+        ":Cyclic63",
+        ":Int63",
+        ":PrimInt63",
+        ":Ring63",
+        ":Sint63",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Cyclic63",
+    src  = "Cyclic63.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers/Cyclic/Abstract:CyclicAxioms",
+      "//theories/ZArith:ZArith",
+      ":Int63",
+    ],
+    deps_vio = [
+      "//theories/Numbers/Cyclic/Abstract:CyclicAxioms",
+      "//theories/ZArith:ZArith",
+      ":Int63",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Int63",
+    src  = "Int63.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Unicode:Utf8",
+      "//theories/Numbers/Cyclic/Abstract:DoubleType",
+      "//theories/micromega:Lia",
+      "//theories/ZArith:Zpow_facts",
+      "//theories/ZArith:Zgcd_alt",
+      "//theories/ZArith:ZArith",
+      ":PrimInt63",
+    ],
+    deps_vio = [
+      "//theories/Unicode:Utf8",
+      "//theories/Numbers/Cyclic/Abstract:DoubleType",
+      "//theories/micromega:Lia",
+      "//theories/ZArith:Zpow_facts",
+      "//theories/ZArith:Zgcd_alt",
+      "//theories/ZArith:ZArith",
+      ":PrimInt63",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "PrimInt63",
+    src  = "PrimInt63.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers/Cyclic/Abstract:CarryType",
+    ],
+    deps_vio = [
+      "//theories/Numbers/Cyclic/Abstract:CarryType",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ring63",
+    src  = "Ring63.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Cyclic63",
+      "//theories/Numbers/Cyclic/Abstract:CyclicAxioms",
+    ],
+    deps_vio = [
+      ":Cyclic63",
+      "//theories/Numbers/Cyclic/Abstract:CyclicAxioms",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Sint63",
+    src  = "Sint63.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:ZArith",
+      ":Int63",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith",
+      ":Int63",
+      "//theories/micromega:Lia",
+    ]
+)
+

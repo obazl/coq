@@ -1,0 +1,334 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibStructures",
+    sublibraries = [
+        ":DecidableType",
+        ":DecidableTypeEx",
+        ":Equalities",
+        ":EqualitiesFacts",
+        ":GenericMinMax",
+        ":OrderedType",
+        ":OrderedTypeAlt",
+        ":OrderedTypeEx",
+        ":Orders",
+        ":OrdersAlt",
+        ":OrdersEx",
+        ":OrdersFacts",
+        ":OrdersLists",
+        ":OrdersTac",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DecidableType",
+    src  = "DecidableType.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:SetoidList",
+      ":Equalities",
+    ],
+    deps_vio = [
+      "//theories/Lists:SetoidList",
+      ":Equalities",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DecidableTypeEx",
+    src  = "DecidableTypeEx.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":DecidableType",
+      ":OrderedType",
+      ":OrderedTypeEx",
+    ],
+    deps_vio = [
+      ":DecidableType",
+      ":OrderedType",
+      ":OrderedTypeEx",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Equalities",
+    src  = "Equalities.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Classes:RelationClasses",
+      "//theories/Bool:Bool",
+      "//theories/Classes:Morphisms",
+      "//theories/Setoids:Setoid",
+    ],
+    deps_vio = [
+      "//theories/Classes:RelationClasses",
+      "//theories/Bool:Bool",
+      "//theories/Classes:Morphisms",
+      "//theories/Setoids:Setoid",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "EqualitiesFacts",
+    src  = "EqualitiesFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Equalities",
+      "//theories/Bool:Bool",
+      "//theories/Lists:SetoidList",
+      "//theories/Classes:RelationPairs",
+    ],
+    deps_vio = [
+      ":Equalities",
+      "//theories/Bool:Bool",
+      "//theories/Lists:SetoidList",
+      "//theories/Classes:RelationPairs",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "GenericMinMax",
+    src  = "GenericMinMax.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Orders",
+      ":OrdersTac",
+      ":OrdersFacts",
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      "//theories/Program:Basics",
+    ],
+    deps_vio = [
+      ":Orders",
+      ":OrdersTac",
+      ":OrdersFacts",
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      "//theories/Program:Basics",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "OrderedType",
+    src  = "OrderedType.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:SetoidList",
+      "//theories/Classes:Morphisms",
+      ":OrdersTac",
+    ],
+    deps_vio = [
+      "//theories/Lists:SetoidList",
+      "//theories/Classes:Morphisms",
+      ":OrdersTac",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "OrderedTypeAlt",
+    src  = "OrderedTypeAlt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":OrderedType",
+    ],
+    deps_vio = [
+      ":OrderedType",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "OrderedTypeEx",
+    src  = "OrderedTypeEx.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":OrderedType",
+      "//theories/ZArith:ZArith_base",
+      "//theories/Arith:PeanoNat",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+      "//theories/NArith:NArith",
+      "//theories/NArith:Ndec",
+      "//theories/Arith:Compare_dec",
+    ],
+    deps_vio = [
+      ":OrderedType",
+      "//theories/ZArith:ZArith_base",
+      "//theories/Arith:PeanoNat",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+      "//theories/NArith:NArith",
+      "//theories/NArith:Ndec",
+      "//theories/Arith:Compare_dec",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Orders",
+    src  = "Orders.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Relations:Relations",
+      "//theories/Classes:Morphisms",
+      "//theories/Setoids:Setoid",
+      ":Equalities",
+    ],
+    deps_vio = [
+      "//theories/Relations:Relations",
+      "//theories/Classes:Morphisms",
+      "//theories/Setoids:Setoid",
+      ":Equalities",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "OrdersAlt",
+    src  = "OrdersAlt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":OrderedType",
+      ":Orders",
+    ],
+    deps_vio = [
+      ":OrderedType",
+      ":Orders",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "OrdersEx",
+    src  = "OrdersEx.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Orders",
+      "//theories/Bool:BoolOrder",
+      "//theories/Arith:PeanoNat",
+      "//theories/PArith:POrderedType",
+      "//theories/NArith:BinNat",
+      "//theories/ZArith:BinInt",
+      "//theories/Classes:RelationPairs",
+      ":EqualitiesFacts",
+    ],
+    deps_vio = [
+      ":Orders",
+      "//theories/Bool:BoolOrder",
+      "//theories/Arith:PeanoNat",
+      "//theories/PArith:POrderedType",
+      "//theories/NArith:BinNat",
+      "//theories/ZArith:BinInt",
+      "//theories/Classes:RelationPairs",
+      ":EqualitiesFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "OrdersFacts",
+    src  = "OrdersFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/Program:Basics",
+      ":OrdersTac",
+      ":Orders",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/Program:Basics",
+      ":OrdersTac",
+      ":Orders",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "OrdersLists",
+    src  = "OrdersLists.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Classes:RelationPairs",
+      "//theories/Lists:SetoidList",
+      ":Orders",
+      ":EqualitiesFacts",
+    ],
+    deps_vio = [
+      "//theories/Classes:RelationPairs",
+      "//theories/Lists:SetoidList",
+      ":Orders",
+      ":EqualitiesFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "OrdersTac",
+    src  = "OrdersTac.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      "//theories/Program:Basics",
+      ":Equalities",
+      ":Orders",
+    ],
+    deps_vio = [
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      "//theories/Program:Basics",
+      ":Equalities",
+      ":Orders",
+    ]
+)
+

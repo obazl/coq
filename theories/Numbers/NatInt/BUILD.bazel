@@ -1,0 +1,346 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibNatInt",
+    sublibraries = [
+        ":NZAdd",
+        ":NZAddOrder",
+        ":NZAxioms",
+        ":NZBase",
+        ":NZBits",
+        ":NZDiv",
+        ":NZDomain",
+        ":NZGcd",
+        ":NZLog",
+        ":NZMul",
+        ":NZMulOrder",
+        ":NZOrder",
+        ":NZParity",
+        ":NZPow",
+        ":NZProperties",
+        ":NZSqrt"
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZAdd",
+    src  = "NZAdd.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NZAxioms",
+      ":NZBase",
+    ],
+    deps_vio = [
+      ":NZAxioms",
+      ":NZBase",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZAddOrder",
+    src  = "NZAddOrder.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NZAxioms",
+      ":NZBase",
+      ":NZMul",
+      ":NZOrder",
+    ],
+    deps_vio = [
+      ":NZAxioms",
+      ":NZBase",
+      ":NZMul",
+      ":NZOrder",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZAxioms",
+    src  = "NZAxioms.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Structures:Equalities",
+      "//theories/Structures:Orders",
+      "//theories/Numbers:NumPrelude",
+      "//theories/Structures:GenericMinMax",
+    ],
+    deps_vio = [
+      "//theories/Structures:Equalities",
+      "//theories/Structures:Orders",
+      "//theories/Numbers:NumPrelude",
+      "//theories/Structures:GenericMinMax",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZBase",
+    src  = "NZBase.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NZAxioms",
+    ],
+    deps_vio = [
+      ":NZAxioms",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZBits",
+    src  = "NZBits.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      ":NZAxioms",
+      ":NZMulOrder",
+      ":NZParity",
+      ":NZPow",
+      ":NZDiv",
+      ":NZLog",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      ":NZAxioms",
+      ":NZMulOrder",
+      ":NZParity",
+      ":NZPow",
+      ":NZDiv",
+      ":NZLog",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZDiv",
+    src  = "NZDiv.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NZAxioms",
+      ":NZMulOrder",
+    ],
+    deps_vio = [
+      ":NZAxioms",
+      ":NZMulOrder",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZDomain",
+    src  = "NZDomain.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers:NumPrelude",
+      ":NZAxioms",
+      ":NZBase",
+      ":NZOrder",
+      ":NZAddOrder",
+      "//theories/Arith:Plus",
+      "//theories/Arith:Minus",
+    ],
+    deps_vio = [
+      "//theories/Numbers:NumPrelude",
+      ":NZAxioms",
+      ":NZBase",
+      ":NZOrder",
+      ":NZAddOrder",
+      "//theories/Arith:Plus",
+      "//theories/Arith:Minus",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZGcd",
+    src  = "NZGcd.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NZAxioms",
+      ":NZMulOrder",
+    ],
+    deps_vio = [
+      ":NZAxioms",
+      ":NZMulOrder",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZLog",
+    src  = "NZLog.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NZAxioms",
+      ":NZMulOrder",
+      ":NZPow",
+    ],
+    deps_vio = [
+      ":NZAxioms",
+      ":NZMulOrder",
+      ":NZPow",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZMul",
+    src  = "NZMul.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NZAxioms",
+      ":NZBase",
+      ":NZAdd",
+    ],
+    deps_vio = [
+      ":NZAxioms",
+      ":NZBase",
+      ":NZAdd",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZMulOrder",
+    src  = "NZMulOrder.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NZAxioms",
+      ":NZAddOrder",
+    ],
+    deps_vio = [
+      ":NZAxioms",
+      ":NZAddOrder",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZOrder",
+    src  = "NZOrder.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NZAxioms",
+      ":NZBase",
+      "//theories/Logic:Decidable",
+      "//theories/Structures:OrdersTac",
+    ],
+    deps_vio = [
+      ":NZAxioms",
+      ":NZBase",
+      "//theories/Logic:Decidable",
+      "//theories/Structures:OrdersTac",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZParity",
+    src  = "NZParity.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      ":NZAxioms",
+      ":NZMulOrder",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      ":NZAxioms",
+      ":NZMulOrder",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZPow",
+    src  = "NZPow.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NZAxioms",
+      ":NZMulOrder",
+    ],
+    deps_vio = [
+      ":NZAxioms",
+      ":NZMulOrder",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZProperties",
+    src  = "NZProperties.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NZAxioms",
+      ":NZMulOrder",
+    ],
+    deps_vio = [
+      ":NZAxioms",
+      ":NZMulOrder",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NZSqrt",
+    src  = "NZSqrt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NZAxioms",
+      ":NZMulOrder",
+    ],
+    deps_vio = [
+      ":NZAxioms",
+      ":NZMulOrder",
+    ]
+)
+

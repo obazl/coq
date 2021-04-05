@@ -1,0 +1,13 @@
+load("@obazl_rules_coq//coq:rules.bzl", "coq_library")
+
+coq_library(
+    name = "LibInteger",
+    sublibraries = [
+        "//theories/Numbers/Integer/Abstract:LibAbstract",
+        "//theories/Numbers/Integer/Binary:ZBinary",
+        "//theories/Numbers/Integer/NatPairs:ZNatPairs"
+    ],
+    visibility = ["//theories/Numbers:__pkg__"]
+)
+
+

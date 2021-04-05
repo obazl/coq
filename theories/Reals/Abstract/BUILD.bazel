@@ -1,0 +1,212 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibAbstract",
+    sublibraries = [
+        ":ConstructiveAbs",
+        ":ConstructiveLUB",
+        ":ConstructiveLimits",
+        ":ConstructiveMinMax",
+        ":ConstructivePower",
+        ":ConstructiveReals",
+        ":ConstructiveRealsMorphisms",
+        ":ConstructiveSum",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructiveAbs",
+    src  = "ConstructiveAbs.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructiveLUB",
+    src  = "ConstructiveLUB.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith_base",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+      ":ConstructiveAbs",
+      ":ConstructiveLimits",
+      "//theories/Logic:ConstructiveEpsilon",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith_base",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+      ":ConstructiveAbs",
+      ":ConstructiveLimits",
+      "//theories/Logic:ConstructiveEpsilon",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructiveLimits",
+    src  = "ConstructiveLimits.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+      ":ConstructiveAbs",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+      ":ConstructiveAbs",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructiveMinMax",
+    src  = "ConstructiveMinMax.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+      ":ConstructiveAbs",
+      ":ConstructiveRealsMorphisms",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+      ":ConstructiveAbs",
+      ":ConstructiveRealsMorphisms",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructivePower",
+    src  = "ConstructivePower.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+      ":ConstructiveRealsMorphisms",
+      ":ConstructiveAbs",
+      ":ConstructiveLimits",
+      ":ConstructiveSum",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+      ":ConstructiveRealsMorphisms",
+      ":ConstructiveAbs",
+      ":ConstructiveLimits",
+      ":ConstructiveSum",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructiveReals",
+    src  = "ConstructiveReals.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      "//theories/QArith:Qround",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      "//theories/QArith:Qround",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructiveRealsMorphisms",
+    src  = "ConstructiveRealsMorphisms.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+      ":ConstructiveLimits",
+      ":ConstructiveAbs",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+      ":ConstructiveLimits",
+      ":ConstructiveAbs",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ConstructiveSum",
+    src  = "ConstructiveSum.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+      ":ConstructiveRealsMorphisms",
+      ":ConstructiveAbs",
+      ":ConstructiveLimits",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      ":ConstructiveReals",
+      ":ConstructiveRealsMorphisms",
+      ":ConstructiveAbs",
+      ":ConstructiveLimits",
+    ]
+)
+

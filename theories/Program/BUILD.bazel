@@ -1,0 +1,195 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibProgram",
+    sublibraries = [
+        ":Basics",
+        ":Combinators",
+        ":Equality",
+        ":Program",
+        ":Subset",
+        ":Syntax",
+        ":Tactics",
+        ":Utils",
+        ":Wf",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Basics",
+    src  = "Basics.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Combinators",
+    src  = "Combinators.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Basics",
+      "//theories/Logic:FunctionalExtensionality",
+    ],
+    deps_vio = [
+      ":Basics",
+      "//theories/Logic:FunctionalExtensionality",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Equality",
+    src  = "Equality.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Logic:JMeq",
+      ":Tactics",
+      "//theories/Logic:Eqdep",
+    ],
+    deps_vio = [
+      "//theories/Logic:JMeq",
+      ":Tactics",
+      "//theories/Logic:Eqdep",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Program",
+    src  = "Program.v",
+    plugins = [
+    ],
+    deps = [
+      ":Utils",
+      ":Wf",
+      ":Equality",
+      ":Subset",
+      ":Basics",
+      ":Combinators",
+      ":Syntax",
+    ],
+    deps_vio = [
+      ":Utils",
+      ":Wf",
+      ":Equality",
+      ":Subset",
+      ":Basics",
+      ":Combinators",
+      ":Syntax",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Subset",
+    src  = "Subset.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Utils",
+      ":Equality",
+      "//theories/Logic:ProofIrrelevance",
+    ],
+    deps_vio = [
+      ":Utils",
+      ":Equality",
+      "//theories/Logic:ProofIrrelevance",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Syntax",
+    src  = "Syntax.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bvector",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bvector",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Tactics",
+    src  = "Tactics.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Utils",
+    src  = "Utils.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Tactics",
+      "//theories/Bool:Sumbool",
+    ],
+    deps_vio = [
+      ":Tactics",
+      "//theories/Bool:Sumbool",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Wf",
+    src  = "Wf.v",
+    with_libs = {
+        # "//theories/extraction:Extraction": "Coq.extraction.Extraction",
+        "//theories/Init:Prelude": "Coq.Init.Prelude",
+    },
+    plugins = [
+        "//plugins/extraction:extraction_plugin"
+    ],
+    deps = [
+      "//theories/Init:Wf",
+      ":Utils",
+      "//theories/extraction:Extraction",
+      "//theories/Logic:FunctionalExtensionality",
+    ],
+    deps_vio = [
+      "//theories/Init:Wf",
+      ":Utils",
+      "//theories/extraction:Extraction",
+      "//theories/Logic:FunctionalExtensionality",
+    ]
+)
+

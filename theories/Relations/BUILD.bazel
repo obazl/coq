@@ -1,0 +1,90 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibRelations",
+    sublibraries = [
+        ":Operators_Properties",
+        ":Relation_Definitions",
+        ":Relation_Operators",
+        ":Relations",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Operators_Properties",
+    src  = "Operators_Properties.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Relation_Definitions",
+      ":Relation_Operators",
+    ],
+    deps_vio = [
+      ":Relation_Definitions",
+      ":Relation_Operators",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Relation_Definitions",
+    src  = "Relation_Definitions.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Relation_Operators",
+    src  = "Relation_Operators.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Relation_Definitions",
+    ],
+    deps_vio = [
+      ":Relation_Definitions",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Relations",
+    src  = "Relations.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Relation_Definitions",
+      ":Relation_Operators",
+      ":Operators_Properties",
+    ],
+    deps_vio = [
+      ":Relation_Definitions",
+      ":Relation_Operators",
+      ":Operators_Properties",
+    ]
+)
+

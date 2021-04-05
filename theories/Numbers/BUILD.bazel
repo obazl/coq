@@ -1,0 +1,470 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibNumbers",
+    sublibraries = [
+        "//theories/Numbers/Cyclic:LibCyclic",
+        "//theories/Numbers/Integer:LibInteger",
+        "//theories/Numbers/NatInt:LibNatInt",
+        "//theories/Numbers/Natural:LibNatural",
+        ":AltBinNotations",
+        ":BinNums",
+        ":DecimalFacts",
+        ":DecimalN",
+        ":DecimalNat",
+        ":DecimalPos",
+        ":DecimalQ",
+        ":DecimalR",
+        ":DecimalString",
+        ":DecimalZ",
+        ":HexadecimalFacts",
+        ":HexadecimalN",
+        ":HexadecimalNat",
+        ":HexadecimalPos",
+        ":HexadecimalQ",
+        ":HexadecimalR",
+        ":HexadecimalString",
+        ":HexadecimalZ",
+        ":NaryFunctions",
+        ":NumPrelude",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "AltBinNotations",
+    src  = "AltBinNotations.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":BinNums",
+    ],
+    deps_vio = [
+      ":BinNums",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "BinNums",
+    src  = "BinNums.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DecimalFacts",
+    src  = "DecimalFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Decimal",
+      "//theories/Arith:Arith",
+      "//theories/ZArith:ZArith",
+    ],
+    deps_vio = [
+      "//theories/Init:Decimal",
+      "//theories/Arith:Arith",
+      "//theories/ZArith:ZArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DecimalN",
+    src  = "DecimalN.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      ":DecimalPos",
+      "//theories/PArith:PArith",
+      "//theories/NArith:NArith",
+    ],
+    deps_vio = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      ":DecimalPos",
+      "//theories/PArith:PArith",
+      "//theories/NArith:NArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DecimalNat",
+    src  = "DecimalNat.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      "//theories/Arith:Arith",
+    ],
+    deps_vio = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      "//theories/Arith:Arith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DecimalPos",
+    src  = "DecimalPos.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      "//theories/PArith:PArith",
+      "//theories/NArith:NArith",
+    ],
+    deps_vio = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      "//theories/PArith:PArith",
+      "//theories/NArith:NArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DecimalQ",
+    src  = "DecimalQ.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      ":DecimalPos",
+      ":DecimalN",
+      ":DecimalZ",
+      "//theories/QArith:QArith",
+    ],
+    deps_vio = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      ":DecimalPos",
+      ":DecimalN",
+      ":DecimalZ",
+      "//theories/QArith:QArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DecimalR",
+    src  = "DecimalR.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      ":DecimalPos",
+      ":DecimalZ",
+      ":DecimalQ",
+      "//theories/Reals:Rdefinitions",
+    ],
+    deps_vio = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      ":DecimalPos",
+      ":DecimalZ",
+      ":DecimalQ",
+      "//theories/Reals:Rdefinitions",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DecimalString",
+    src  = "DecimalString.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Decimal",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+    ],
+    deps_vio = [
+      "//theories/Init:Decimal",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DecimalZ",
+    src  = "DecimalZ.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      ":DecimalPos",
+      ":DecimalN",
+      "//theories/ZArith:ZArith",
+    ],
+    deps_vio = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      ":DecimalPos",
+      ":DecimalN",
+      "//theories/ZArith:ZArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "HexadecimalFacts",
+    src  = "HexadecimalFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Hexadecimal",
+      "//theories/Arith:Arith",
+      "//theories/ZArith:ZArith",
+    ],
+    deps_vio = [
+      "//theories/Init:Hexadecimal",
+      "//theories/Arith:Arith",
+      "//theories/ZArith:ZArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "HexadecimalN",
+    src  = "HexadecimalN.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Hexadecimal",
+      ":HexadecimalFacts",
+      ":HexadecimalPos",
+      "//theories/PArith:PArith",
+      "//theories/NArith:NArith",
+    ],
+    deps_vio = [
+      "//theories/Init:Hexadecimal",
+      ":HexadecimalFacts",
+      ":HexadecimalPos",
+      "//theories/PArith:PArith",
+      "//theories/NArith:NArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "HexadecimalNat",
+    src  = "HexadecimalNat.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Hexadecimal",
+      ":HexadecimalFacts",
+      "//theories/Arith:Arith",
+    ],
+    deps_vio = [
+      "//theories/Init:Hexadecimal",
+      ":HexadecimalFacts",
+      "//theories/Arith:Arith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "HexadecimalPos",
+    src  = "HexadecimalPos.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Hexadecimal",
+      ":HexadecimalFacts",
+      "//theories/PArith:PArith",
+      "//theories/NArith:NArith",
+    ],
+    deps_vio = [
+      "//theories/Init:Hexadecimal",
+      ":HexadecimalFacts",
+      "//theories/PArith:PArith",
+      "//theories/NArith:NArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "HexadecimalQ",
+    src  = "HexadecimalQ.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      ":DecimalPos",
+      ":DecimalN",
+      ":DecimalZ",
+      "//theories/Init:Hexadecimal",
+      ":HexadecimalFacts",
+      ":HexadecimalPos",
+      ":HexadecimalN",
+      ":HexadecimalZ",
+      "//theories/QArith:QArith",
+    ],
+    deps_vio = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      ":DecimalPos",
+      ":DecimalN",
+      ":DecimalZ",
+      "//theories/Init:Hexadecimal",
+      ":HexadecimalFacts",
+      ":HexadecimalPos",
+      ":HexadecimalN",
+      ":HexadecimalZ",
+      "//theories/QArith:QArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "HexadecimalR",
+    src  = "HexadecimalR.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      "//theories/Init:Hexadecimal",
+      ":HexadecimalFacts",
+      ":HexadecimalPos",
+      ":HexadecimalZ",
+      ":HexadecimalQ",
+      "//theories/Reals:Rdefinitions",
+    ],
+    deps_vio = [
+      "//theories/Init:Decimal",
+      ":DecimalFacts",
+      "//theories/Init:Hexadecimal",
+      ":HexadecimalFacts",
+      ":HexadecimalPos",
+      ":HexadecimalZ",
+      ":HexadecimalQ",
+      "//theories/Reals:Rdefinitions",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "HexadecimalString",
+    src  = "HexadecimalString.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Hexadecimal",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+    ],
+    deps_vio = [
+      "//theories/Init:Hexadecimal",
+      "//theories/Strings:Ascii",
+      "//theories/Strings:String",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "HexadecimalZ",
+    src  = "HexadecimalZ.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Init:Hexadecimal",
+      ":HexadecimalFacts",
+      ":HexadecimalPos",
+      ":HexadecimalN",
+      "//theories/ZArith:ZArith",
+    ],
+    deps_vio = [
+      "//theories/Init:Hexadecimal",
+      ":HexadecimalFacts",
+      ":HexadecimalPos",
+      ":HexadecimalN",
+      "//theories/ZArith:ZArith",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NaryFunctions",
+    src  = "NaryFunctions.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NumPrelude",
+    src  = "NumPrelude.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      "//theories/Classes:Morphisms_Prop",
+    ],
+    deps_vio = [
+      "//theories/Setoids:Setoid",
+      "//theories/Classes:Morphisms",
+      "//theories/Classes:Morphisms_Prop",
+    ]
+)
+

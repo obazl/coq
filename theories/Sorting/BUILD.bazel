@@ -1,0 +1,210 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibSorting",
+    sublibraries = [
+        ":CPermutation",
+        ":Heap",
+        ":Mergesort",
+        ":PermutEq",
+        ":PermutSetoid",
+        ":Permutation",
+        ":Sorted",
+        ":Sorting",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "CPermutation",
+    src  = "CPermutation.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      ":Permutation",
+      "//theories/Classes:Morphisms",
+      "//theories/Arith:PeanoNat",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      ":Permutation",
+      "//theories/Classes:Morphisms",
+      "//theories/Arith:PeanoNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Heap",
+    src  = "Heap.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/Sets:Multiset",
+      ":PermutSetoid",
+      "//theories/Relations:Relations",
+      ":Sorting",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/Sets:Multiset",
+      ":PermutSetoid",
+      "//theories/Relations:Relations",
+      ":Sorting",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Mergesort",
+    src  = "Mergesort.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/Setoids:Setoid",
+      ":Permutation",
+      ":Sorted",
+      "//theories/Structures:Orders",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/Setoids:Setoid",
+      ":Permutation",
+      ":Sorted",
+      "//theories/Structures:Orders",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "PermutEq",
+    src  = "PermutEq.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Relations:Relations",
+      "//theories/Setoids:Setoid",
+      "//theories/Lists:SetoidList",
+      "//theories/Lists:List",
+      "//theories/Sets:Multiset",
+      ":PermutSetoid",
+      ":Permutation",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      "//theories/Relations:Relations",
+      "//theories/Setoids:Setoid",
+      "//theories/Lists:SetoidList",
+      "//theories/Lists:List",
+      "//theories/Sets:Multiset",
+      ":PermutSetoid",
+      ":Permutation",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "PermutSetoid",
+    src  = "PermutSetoid.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/micromega:Lia",
+      "//theories/Relations:Relations",
+      "//theories/Sets:Multiset",
+      "//theories/Lists:SetoidList",
+      ":Permutation",
+    ],
+    deps_vio = [
+      "//theories/micromega:Lia",
+      "//theories/Relations:Relations",
+      "//theories/Sets:Multiset",
+      "//theories/Lists:SetoidList",
+      ":Permutation",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Permutation",
+    src  = "Permutation.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/Setoids:Setoid",
+      "//theories/Arith:Compare_dec",
+      "//theories/Classes:Morphisms",
+      "//theories/Logic:FinFun",
+      "//theories/Arith:PeanoNat",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/Setoids:Setoid",
+      "//theories/Arith:Compare_dec",
+      "//theories/Classes:Morphisms",
+      "//theories/Logic:FinFun",
+      "//theories/Arith:PeanoNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Sorted",
+    src  = "Sorted.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/Relations:Relations",
+      "//theories/Sets:Relations_1",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/Relations:Relations",
+      "//theories/Sets:Relations_1",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Sorting",
+    src  = "Sorting.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Sorted",
+      ":Mergesort",
+    ],
+    deps_vio = [
+      ":Sorted",
+      ":Mergesort",
+    ]
+)
+

@@ -1,0 +1,35 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NBinary",
+    src  = "NBinary.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      "//theories/Numbers/Natural/Abstract:NAxioms",
+      "//theories/Numbers/Natural/Abstract:NProperties",
+    ],
+    deps_vio = [
+      "//theories/PArith:BinPos",
+      "//theories/NArith:BinNat",
+      "//theories/Numbers/Natural/Abstract:NAxioms",
+      "//theories/Numbers/Natural/Abstract:NProperties",
+    ]
+)
+

@@ -1,0 +1,139 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "Libomega",
+    sublibraries = [
+        ":Omega",
+        ":OmegaLemmas",
+        ":OmegaPlugin",
+        ":OmegaTactic",
+        ":PreOmega",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Omega",
+    src  = "Omega.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/omega:omega_plugin",
+    ],
+    deps = [
+      "//theories/ZArith:ZArith_base",
+      ":OmegaLemmas",
+      ":PreOmega",
+      "//theories/micromega:ZArith_hints",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith_base",
+      ":OmegaLemmas",
+      ":PreOmega",
+      "//theories/micromega:ZArith_hints",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "OmegaLemmas",
+    src  = "OmegaLemmas.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:BinInt",
+      "//theories/ZArith:Znat",
+    ],
+    deps_vio = [
+      "//theories/ZArith:BinInt",
+      "//theories/ZArith:Znat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "OmegaPlugin",
+    src  = "OmegaPlugin.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/omega:omega_plugin",
+    ],
+    deps = [
+      "//theories/ZArith:ZArith_base",
+      ":OmegaLemmas",
+      ":PreOmega",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith_base",
+      ":OmegaLemmas",
+      ":PreOmega",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "OmegaTactic",
+    src  = "OmegaTactic.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/omega:omega_plugin",
+    ],
+    deps = [
+      "//theories/ZArith:ZArith_base",
+      ":OmegaLemmas",
+      ":PreOmega",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith_base",
+      ":OmegaLemmas",
+      ":PreOmega",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "PreOmega",
+    src  = "PreOmega.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Arith",
+      "//theories/Arith:Max",
+      "//theories/Arith:Min",
+      "//theories/ZArith:BinInt",
+      "//theories/NArith:BinNat",
+      "//theories/ZArith:Znat",
+      "//theories/NArith:Nnat",
+      "//theories/micromega:ZifyClasses",
+      "//theories/micromega:ZifyInst",
+      "//theories/micromega:Zify",
+    ],
+    deps_vio = [
+      "//theories/Arith:Arith",
+      "//theories/Arith:Max",
+      "//theories/Arith:Min",
+      "//theories/ZArith:BinInt",
+      "//theories/NArith:BinNat",
+      "//theories/ZArith:Znat",
+      "//theories/NArith:Nnat",
+      "//theories/micromega:ZifyClasses",
+      "//theories/micromega:ZifyInst",
+      "//theories/micromega:Zify",
+    ]
+)
+

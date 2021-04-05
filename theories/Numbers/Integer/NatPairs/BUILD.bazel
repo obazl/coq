@@ -1,0 +1,33 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZNatPairs",
+    src  = "ZNatPairs.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers/Natural/Abstract:NSub",
+      "//theories/Numbers/Integer/Abstract:ZAxioms",
+      "//theories/setoid_ring:Ring",
+    ],
+    deps_vio = [
+      "//theories/Numbers/Natural/Abstract:NSub",
+      "//theories/Numbers/Integer/Abstract:ZAxioms",
+      "//theories/setoid_ring:Ring",
+    ]
+)
+

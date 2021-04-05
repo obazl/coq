@@ -1,0 +1,96 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibInt31",
+    sublibraries = [
+        ":Cyclic31",
+        ":Int31",
+        ":Ring31",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Cyclic31",
+    src  = "Cyclic31.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      "//theories/Arith:Min",
+      ":Int31",
+      "//theories/ZArith:Znumtheory",
+      "//theories/ZArith:Zgcd_alt",
+      "//theories/ZArith:Zpow_facts",
+      "//theories/Numbers/Cyclic/Abstract:CyclicAxioms",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      "//theories/Arith:Min",
+      ":Int31",
+      "//theories/ZArith:Znumtheory",
+      "//theories/ZArith:Zgcd_alt",
+      "//theories/ZArith:Zpow_facts",
+      "//theories/Numbers/Cyclic/Abstract:CyclicAxioms",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Int31",
+    src  = "Int31.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers:NaryFunctions",
+      "//theories/Arith:Wf_nat",
+      "//theories/ZArith:ZArith",
+      "//theories/Numbers/Cyclic/Abstract:DoubleType",
+    ],
+    deps_vio = [
+      "//theories/Numbers:NaryFunctions",
+      "//theories/Arith:Wf_nat",
+      "//theories/ZArith:ZArith",
+      "//theories/Numbers/Cyclic/Abstract:DoubleType",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ring31",
+    src  = "Ring31.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/micromega:Lia",
+      ":Int31",
+      ":Cyclic31",
+      "//theories/Numbers/Cyclic/Abstract:CyclicAxioms",
+    ],
+    deps_vio = [
+      "//theories/micromega:Lia",
+      ":Int31",
+      ":Cyclic31",
+      "//theories/Numbers/Cyclic/Abstract:CyclicAxioms",
+    ]
+)
+

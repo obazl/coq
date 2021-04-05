@@ -1,0 +1,29 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ssrmatching",
+    src  = "ssrmatching.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/ltac:ltac_plugin",
+      "//plugins/ssrmatching:ssrmatching_plugin",
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+

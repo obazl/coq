@@ -1,0 +1,33 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ZBinary",
+    src  = "ZBinary.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Numbers/Integer/Abstract:ZAxioms",
+      "//theories/Numbers/Integer/Abstract:ZProperties",
+      "//theories/ZArith:BinInt",
+    ],
+    deps_vio = [
+      "//theories/Numbers/Integer/Abstract:ZAxioms",
+      "//theories/Numbers/Integer/Abstract:ZProperties",
+      "//theories/ZArith:BinInt",
+    ]
+)
+

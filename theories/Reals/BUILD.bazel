@@ -1,0 +1,1814 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibReals",
+    sublibraries = [
+        "//theories/Reals/Abstract:LibAbstract",
+        "//theories/Reals/Cauchy:LibCauchy",
+        ":Alembert",
+        ":AltSeries",
+        ":ArithProp",
+        ":Binomial",
+        ":Cauchy_prod",
+        ":ClassicalConstructiveReals",
+        ":ClassicalDedekindReals",
+        ":Cos_plus",
+        ":Cos_rel",
+        ":DiscrR",
+        ":Exp_prop",
+        ":Integration",
+        ":MVT",
+        ":Machin",
+        ":NewtonInt",
+        ":PSeries_reg",
+        ":PartSum",
+        ":RIneq",
+        ":RList",
+        ":ROrderedType",
+        ":R_Ifp",
+        ":R_sqr",
+        ":R_sqrt",
+        ":Ranalysis",
+        ":Ranalysis1",
+        ":Ranalysis2",
+        ":Ranalysis3",
+        ":Ranalysis4",
+        ":Ranalysis5",
+        ":Ranalysis_reg",
+        ":Ratan",
+        ":Raxioms",
+        ":Rbase",
+        ":Rbasic_fun",
+        ":Rcomplete",
+        ":Rdefinitions",
+        ":Rderiv",
+        ":Reals",
+        ":Rfunctions",
+        ":Rgeom",
+        ":RiemannInt",
+        ":RiemannInt_SF",
+        ":Rlimit",
+        ":Rlogic",
+        ":Rminmax",
+        ":Rpow_def",
+        ":Rpower",
+        ":Rprod",
+        ":Rregisternames",
+        ":Rseries",
+        ":Rsigma",
+        ":Rsqrt_def",
+        ":Rtopology",
+        ":Rtrigo",
+        ":Rtrigo1",
+        ":Rtrigo_alt",
+        ":Rtrigo_calc",
+        ":Rtrigo_def",
+        ":Rtrigo_facts",
+        ":Rtrigo_fun",
+        ":Rtrigo_reg",
+        ":Runcountable",
+        ":SeqProp",
+        ":SeqSeries",
+        ":SplitAbsolu",
+        ":SplitRmult",
+        ":Sqrt_reg",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Alembert",
+    src  = "Alembert.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":SeqProp",
+      ":PartSum",
+      "//theories/Arith:Max",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":SeqProp",
+      ":PartSum",
+      "//theories/Arith:Max",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "AltSeries",
+    src  = "AltSeries.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":SeqProp",
+      ":PartSum",
+      "//theories/Arith:Max",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":SeqProp",
+      ":PartSum",
+      "//theories/Arith:Max",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ArithProp",
+    src  = "ArithProp.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+      ":Rbasic_fun",
+      "//theories/Arith:Even",
+      "//theories/Arith:Div2",
+      "//theories/setoid_ring:ArithRing",
+    ],
+    deps_vio = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+      ":Rbasic_fun",
+      "//theories/Arith:Even",
+      "//theories/Arith:Div2",
+      "//theories/setoid_ring:ArithRing",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Binomial",
+    src  = "Binomial.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":PartSum",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":PartSum",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Cauchy_prod",
+    src  = "Cauchy_prod.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":PartSum",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":PartSum",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ClassicalConstructiveReals",
+    src  = "ClassicalConstructiveReals.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/QArith:QArith_base",
+      ":Rdefinitions",
+      ":Raxioms",
+      "//theories/Reals/Abstract:ConstructiveReals",
+      "//theories/Reals/Cauchy:ConstructiveCauchyReals",
+      "//theories/Reals/Cauchy:ConstructiveCauchyRealsMult",
+      "//theories/Reals/Cauchy:ConstructiveRcomplete",
+      "//theories/Reals/Cauchy:ConstructiveCauchyAbs",
+      "//theories/Reals/Abstract:ConstructiveRealsMorphisms",
+    ],
+    deps_vio = [
+      "//theories/QArith:QArith_base",
+      ":Rdefinitions",
+      ":Raxioms",
+      "//theories/Reals/Abstract:ConstructiveReals",
+      "//theories/Reals/Cauchy:ConstructiveCauchyReals",
+      "//theories/Reals/Cauchy:ConstructiveCauchyRealsMult",
+      "//theories/Reals/Cauchy:ConstructiveRcomplete",
+      "//theories/Reals/Cauchy:ConstructiveCauchyAbs",
+      "//theories/Reals/Abstract:ConstructiveRealsMorphisms",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ClassicalDedekindReals",
+    src  = "ClassicalDedekindReals.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Logic:Eqdep_dec",
+      "//theories/Logic:FunctionalExtensionality",
+      "//theories/Logic:HLevels",
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      "//theories/Reals/Cauchy:ConstructiveCauchyReals",
+      "//theories/Reals/Cauchy:ConstructiveRcomplete",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lqa",
+      "//theories/QArith:Qpower",
+      "//theories/Reals/Cauchy:QExtra",
+      "//theories/Classes:CMorphisms",
+    ],
+    deps_vio = [
+      "//theories/Logic:Eqdep_dec",
+      "//theories/Logic:FunctionalExtensionality",
+      "//theories/Logic:HLevels",
+      "//theories/QArith:QArith",
+      "//theories/QArith:Qabs",
+      "//theories/Reals/Cauchy:ConstructiveCauchyReals",
+      "//theories/Reals/Cauchy:ConstructiveRcomplete",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lqa",
+      "//theories/QArith:Qpower",
+      "//theories/Reals/Cauchy:QExtra",
+      "//theories/Classes:CMorphisms",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Cos_plus",
+    src  = "Cos_plus.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo_def",
+      ":Cos_rel",
+      "//theories/Arith:Max",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo_def",
+      ":Cos_rel",
+      "//theories/Arith:Max",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Cos_rel",
+    src  = "Cos_rel.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo_def",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo_def",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "DiscrR",
+    src  = "DiscrR.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":RIneq",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      ":RIneq",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Exp_prop",
+    src  = "Exp_prop.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":Ranalysis1",
+      ":PSeries_reg",
+      "//theories/Arith:Div2",
+      "//theories/Arith:Even",
+      "//theories/Arith:Max",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":Ranalysis1",
+      ":PSeries_reg",
+      "//theories/Arith:Div2",
+      "//theories/Arith:Even",
+      "//theories/Arith:Max",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Integration",
+    src  = "Integration.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":NewtonInt",
+      ":RiemannInt_SF",
+      ":RiemannInt",
+    ],
+    deps_vio = [
+      ":NewtonInt",
+      ":RiemannInt_SF",
+      ":RiemannInt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MVT",
+    src  = "MVT.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Ranalysis1",
+      ":Rtopology",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Ranalysis1",
+      ":Rtopology",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Machin",
+    src  = "Machin.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lra",
+      ":Rbase",
+      ":Rtrigo1",
+      ":Ranalysis_reg",
+      ":Rfunctions",
+      ":AltSeries",
+      ":Rseries",
+      ":SeqProp",
+      ":PartSum",
+      ":Ratan",
+    ],
+    deps_vio = [
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lra",
+      ":Rbase",
+      ":Rtrigo1",
+      ":Ranalysis_reg",
+      ":Rfunctions",
+      ":AltSeries",
+      ":Rseries",
+      ":SeqProp",
+      ":PartSum",
+      ":Ratan",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "NewtonInt",
+    src  = "NewtonInt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":Ranalysis",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":Ranalysis",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "PSeries_reg",
+    src  = "PSeries_reg.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Ranalysis1",
+      ":MVT",
+      "//theories/Arith:Max",
+      "//theories/Arith:Even",
+      "//theories/micromega:Lra",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Ranalysis1",
+      ":MVT",
+      "//theories/Arith:Max",
+      "//theories/Arith:Even",
+      "//theories/micromega:Lra",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "PartSum",
+    src  = "PartSum.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":Rcomplete",
+      "//theories/Arith:Max",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":Rcomplete",
+      "//theories/Arith:Max",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "RIneq",
+    src  = "RIneq.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Reals/Cauchy:ConstructiveCauchyReals",
+      "//theories/Reals/Cauchy:ConstructiveCauchyRealsMult",
+      ":Raxioms",
+      ":Rpow_def",
+      "//theories/ZArith:Zpower",
+      "//theories/setoid_ring:ZArithRing",
+      "//theories/micromega:Ztac",
+      "//theories/setoid_ring:RealField",
+    ],
+    deps_vio = [
+      "//theories/Reals/Cauchy:ConstructiveCauchyReals",
+      "//theories/Reals/Cauchy:ConstructiveCauchyRealsMult",
+      ":Raxioms",
+      ":Rpow_def",
+      "//theories/ZArith:Zpower",
+      "//theories/setoid_ring:ZArithRing",
+      "//theories/micromega:Ztac",
+      "//theories/setoid_ring:RealField",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "RList",
+    src  = "RList.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Lists:List",
+      ":Rbase",
+      ":Rfunctions",
+    ],
+    deps_vio = [
+      "//theories/Lists:List",
+      ":Rbase",
+      ":Rfunctions",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "ROrderedType",
+    src  = "ROrderedType.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersTac",
+    ],
+    deps_vio = [
+      ":Rbase",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersTac",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "R_Ifp",
+    src  = "R_Ifp.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+      "//theories/micromega:Ztac",
+    ],
+    deps_vio = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+      "//theories/micromega:Ztac",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "R_sqr",
+    src  = "R_sqr.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+      ":Rbasic_fun",
+    ],
+    deps_vio = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+      ":Rbasic_fun",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "R_sqrt",
+    src  = "R_sqrt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rsqrt_def",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rsqrt_def",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ranalysis",
+    src  = "Ranalysis.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rtrigo",
+      ":SeqSeries",
+      ":Ranalysis1",
+      ":Ranalysis2",
+      ":Ranalysis3",
+      ":Rtopology",
+      ":MVT",
+      ":PSeries_reg",
+      ":Exp_prop",
+      ":Rtrigo_reg",
+      ":Rsqrt_def",
+      ":R_sqrt",
+      ":Rtrigo_calc",
+      ":Rgeom",
+      ":Sqrt_reg",
+      ":Ranalysis4",
+      ":Rpower",
+      ":Ranalysis_reg",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rtrigo",
+      ":SeqSeries",
+      ":Ranalysis1",
+      ":Ranalysis2",
+      ":Ranalysis3",
+      ":Rtopology",
+      ":MVT",
+      ":PSeries_reg",
+      ":Exp_prop",
+      ":Rtrigo_reg",
+      ":Rsqrt_def",
+      ":R_sqrt",
+      ":Rtrigo_calc",
+      ":Rgeom",
+      ":Sqrt_reg",
+      ":Ranalysis4",
+      ":Rpower",
+      ":Ranalysis_reg",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ranalysis1",
+    src  = "Ranalysis1.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rlimit",
+      ":Rderiv",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rlimit",
+      ":Rderiv",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ranalysis2",
+    src  = "Ranalysis2.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Ranalysis1",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Ranalysis1",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ranalysis3",
+    src  = "Ranalysis3.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Ranalysis1",
+      ":Ranalysis2",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Ranalysis1",
+      ":Ranalysis2",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ranalysis4",
+    src  = "Ranalysis4.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":Ranalysis1",
+      ":Ranalysis3",
+      ":Exp_prop",
+      ":MVT",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":Ranalysis1",
+      ":Ranalysis3",
+      ":Exp_prop",
+      ":MVT",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ranalysis5",
+    src  = "Ranalysis5.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Ranalysis_reg",
+      ":Rfunctions",
+      ":Rseries",
+      "//theories/micromega:Lra",
+      ":RiemannInt",
+      ":SeqProp",
+      "//theories/Arith:Max",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Ranalysis_reg",
+      ":Rfunctions",
+      ":Rseries",
+      "//theories/micromega:Lra",
+      ":RiemannInt",
+      ":SeqProp",
+      "//theories/Arith:Max",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ranalysis_reg",
+    src  = "Ranalysis_reg.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rtrigo1",
+      ":SeqSeries",
+      ":Ranalysis1",
+      ":Ranalysis2",
+      ":Ranalysis3",
+      ":Rtopology",
+      ":MVT",
+      ":PSeries_reg",
+      ":Exp_prop",
+      ":Rtrigo_reg",
+      ":Rsqrt_def",
+      ":R_sqrt",
+      ":Rtrigo_calc",
+      ":Rgeom",
+      ":Sqrt_reg",
+      ":Ranalysis4",
+      ":Rpower",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rtrigo1",
+      ":SeqSeries",
+      ":Ranalysis1",
+      ":Ranalysis2",
+      ":Ranalysis3",
+      ":Rtopology",
+      ":MVT",
+      ":PSeries_reg",
+      ":Exp_prop",
+      ":Rtrigo_reg",
+      ":Rsqrt_def",
+      ":R_sqrt",
+      ":Rtrigo_calc",
+      ":Rgeom",
+      ":Sqrt_reg",
+      ":Ranalysis4",
+      ":Rpower",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Ratan",
+    src  = "Ratan.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/micromega:Lra",
+      ":Rbase",
+      ":PSeries_reg",
+      ":Rtrigo1",
+      ":Rtrigo_facts",
+      ":Ranalysis_reg",
+      ":Rfunctions",
+      ":AltSeries",
+      ":Rseries",
+      ":SeqProp",
+      ":Ranalysis5",
+      ":SeqSeries",
+      ":PartSum",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      "//theories/micromega:Lra",
+      ":Rbase",
+      ":PSeries_reg",
+      ":Rtrigo1",
+      ":Rtrigo_facts",
+      ":Ranalysis_reg",
+      ":Rfunctions",
+      ":AltSeries",
+      ":Rseries",
+      ":SeqProp",
+      ":Ranalysis5",
+      ":SeqSeries",
+      ":PartSum",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Raxioms",
+    src  = "Raxioms.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:ZArith_base",
+      ":ClassicalDedekindReals",
+      "//theories/Reals/Cauchy:ConstructiveCauchyReals",
+      "//theories/Reals/Cauchy:ConstructiveCauchyRealsMult",
+      "//theories/Reals/Cauchy:ConstructiveRcomplete",
+      "//theories/Reals/Abstract:ConstructiveLUB",
+      ":Rdefinitions",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith_base",
+      ":ClassicalDedekindReals",
+      "//theories/Reals/Cauchy:ConstructiveCauchyReals",
+      "//theories/Reals/Cauchy:ConstructiveCauchyRealsMult",
+      "//theories/Reals/Cauchy:ConstructiveRcomplete",
+      "//theories/Reals/Abstract:ConstructiveLUB",
+      ":Rdefinitions",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rbase",
+    src  = "Rbase.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+      ":DiscrR",
+    ],
+    deps_vio = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+      ":DiscrR",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rbasic_fun",
+    src  = "Rbasic_fun.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+      ":R_Ifp",
+    ],
+    deps_vio = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+      ":R_Ifp",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rcomplete",
+    src  = "Rcomplete.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":SeqProp",
+      "//theories/Arith:Max",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":SeqProp",
+      "//theories/Arith:Max",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rdefinitions",
+    src  = "Rdefinitions.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:ZArith_base",
+      "//theories/QArith:QArith_base",
+      "//theories/Reals/Cauchy:ConstructiveCauchyReals",
+      "//theories/Reals/Cauchy:ConstructiveCauchyRealsMult",
+      "//theories/Reals/Cauchy:ConstructiveRcomplete",
+      ":ClassicalDedekindReals",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith_base",
+      "//theories/QArith:QArith_base",
+      "//theories/Reals/Cauchy:ConstructiveCauchyReals",
+      "//theories/Reals/Cauchy:ConstructiveCauchyRealsMult",
+      "//theories/Reals/Cauchy:ConstructiveRcomplete",
+      ":ClassicalDedekindReals",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rderiv",
+    src  = "Rderiv.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rlimit",
+      "//theories/micromega:Lra",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rlimit",
+      "//theories/micromega:Lra",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Reals",
+    src  = "Reals.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo",
+      ":Ranalysis",
+      ":Integration",
+      "//theories/micromega:Fourier",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo",
+      ":Ranalysis",
+      ":Integration",
+      "//theories/micromega:Fourier",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rfunctions",
+    src  = "Rfunctions.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/setoid_ring:ArithRing",
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+      ":Rpow_def",
+      ":R_Ifp",
+      ":Rbasic_fun",
+      ":R_sqr",
+      ":SplitAbsolu",
+      ":SplitRmult",
+      ":ArithProp",
+      "//theories/ZArith:Zpower",
+      "//theories/micromega:Ztac",
+    ],
+    deps_vio = [
+      "//theories/setoid_ring:ArithRing",
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+      ":Rpow_def",
+      ":R_Ifp",
+      ":Rbasic_fun",
+      ":R_sqr",
+      ":SplitAbsolu",
+      ":SplitRmult",
+      ":ArithProp",
+      "//theories/ZArith:Zpower",
+      "//theories/micromega:Ztac",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rgeom",
+    src  = "Rgeom.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":R_sqrt",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":R_sqrt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "RiemannInt",
+    src  = "RiemannInt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Ranalysis_reg",
+      ":Rbase",
+      ":RiemannInt_SF",
+      "//theories/Arith:Max",
+      ":RList",
+    ],
+    deps_vio = [
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Ranalysis_reg",
+      ":Rbase",
+      ":RiemannInt_SF",
+      "//theories/Arith:Max",
+      ":RList",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "RiemannInt_SF",
+    src  = "RiemannInt_SF.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Ranalysis_reg",
+      "//theories/Logic:Classical_Prop",
+      "//theories/Lists:List",
+      ":RList",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Ranalysis_reg",
+      "//theories/Logic:Classical_Prop",
+      "//theories/Lists:List",
+      ":RList",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rlimit",
+    src  = "Rlimit.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      "//theories/micromega:Lra",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      "//theories/micromega:Lra",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rlogic",
+    src  = "Rlogic.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":RIneq",
+    ],
+    deps_vio = [
+      ":RIneq",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rminmax",
+    src  = "Rminmax.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Structures:Orders",
+      ":Rbase",
+      ":Rbasic_fun",
+      ":ROrderedType",
+      "//theories/Structures:GenericMinMax",
+    ],
+    deps_vio = [
+      "//theories/Structures:Orders",
+      ":Rbase",
+      ":Rbasic_fun",
+      ":ROrderedType",
+      "//theories/Structures:GenericMinMax",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rpow_def",
+    src  = "Rpow_def.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rdefinitions",
+    ],
+    deps_vio = [
+      ":Rdefinitions",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rpower",
+    src  = "Rpower.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":Ranalysis1",
+      ":Exp_prop",
+      ":Rsqrt_def",
+      ":R_sqrt",
+      ":Sqrt_reg",
+      ":MVT",
+      ":Ranalysis4",
+      "//theories/micromega:Lra",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":Ranalysis1",
+      ":Exp_prop",
+      ":Rsqrt_def",
+      ":R_sqrt",
+      ":Sqrt_reg",
+      ":MVT",
+      ":Ranalysis4",
+      "//theories/micromega:Lra",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rprod",
+    src  = "Rprod.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Arith:Compare",
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":PartSum",
+      ":Binomial",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      "//theories/Arith:Compare",
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":PartSum",
+      ":Binomial",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rregisternames",
+    src  = "Rregisternames.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Raxioms",
+      ":Rfunctions",
+    ],
+    deps_vio = [
+      ":Raxioms",
+      ":Rfunctions",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rseries",
+    src  = "Rseries.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      "//theories/Arith:Compare",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      "//theories/Arith:Compare",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rsigma",
+    src  = "Rsigma.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":PartSum",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      ":PartSum",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rsqrt_def",
+    src  = "Rsqrt_def.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Sumbool",
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Ranalysis1",
+    ],
+    deps_vio = [
+      "//theories/Bool:Sumbool",
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Ranalysis1",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rtopology",
+    src  = "Rtopology.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Ranalysis1",
+      ":RList",
+      "//theories/Lists:List",
+      "//theories/Logic:Classical_Prop",
+      "//theories/Logic:Classical_Pred_Type",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Ranalysis1",
+      ":RList",
+      "//theories/Lists:List",
+      "//theories/Logic:Classical_Prop",
+      "//theories/Logic:Classical_Pred_Type",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rtrigo",
+    src  = "Rtrigo.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo_fun",
+      ":Rtrigo_def",
+      ":Rtrigo_alt",
+      ":Cos_rel",
+      ":Cos_plus",
+      "//theories/ZArith:ZArith_base",
+      "//theories/ZArith:Zcomplements",
+      "//theories/micromega:Lra",
+      ":Ranalysis1",
+      ":Rsqrt_def",
+      ":PSeries_reg",
+      ":Rtrigo1",
+      ":Ratan",
+      ":Machin",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo_fun",
+      ":Rtrigo_def",
+      ":Rtrigo_alt",
+      ":Cos_rel",
+      ":Cos_plus",
+      "//theories/ZArith:ZArith_base",
+      "//theories/ZArith:Zcomplements",
+      "//theories/micromega:Lra",
+      ":Ranalysis1",
+      ":Rsqrt_def",
+      ":PSeries_reg",
+      ":Rtrigo1",
+      ":Ratan",
+      ":Machin",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rtrigo1",
+    src  = "Rtrigo1.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo_fun",
+      ":Rtrigo_def",
+      ":Rtrigo_alt",
+      ":Cos_rel",
+      ":Cos_plus",
+      "//theories/ZArith:ZArith_base",
+      "//theories/ZArith:Zcomplements",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lra",
+      ":Ranalysis1",
+      ":Rsqrt_def",
+      ":PSeries_reg",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo_fun",
+      ":Rtrigo_def",
+      ":Rtrigo_alt",
+      ":Cos_rel",
+      ":Cos_plus",
+      "//theories/ZArith:ZArith_base",
+      "//theories/ZArith:Zcomplements",
+      "//theories/micromega:Lia",
+      "//theories/micromega:Lra",
+      ":Ranalysis1",
+      ":Rsqrt_def",
+      ":PSeries_reg",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rtrigo_alt",
+    src  = "Rtrigo_alt.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo_def",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo_def",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rtrigo_calc",
+    src  = "Rtrigo_calc.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":R_sqrt",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":R_sqrt",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rtrigo_def",
+    src  = "Rtrigo_def.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo_fun",
+      "//theories/Arith:Max",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo_fun",
+      "//theories/Arith:Max",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rtrigo_facts",
+    src  = "Rtrigo_facts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rtrigo1",
+      ":Rfunctions",
+      "//theories/micromega:Lra",
+      ":Ranalysis_reg",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rtrigo1",
+      ":Rfunctions",
+      "//theories/micromega:Lra",
+      ":Ranalysis_reg",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rtrigo_fun",
+    src  = "Rtrigo_fun.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Rtrigo_reg",
+    src  = "Rtrigo_reg.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":Ranalysis1",
+      ":PSeries_reg",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":SeqSeries",
+      ":Rtrigo1",
+      ":Ranalysis1",
+      ":PSeries_reg",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Runcountable",
+    src  = "Runcountable.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":Rfunctions",
+      ":RIneq",
+      "//theories/Logic:FinFun",
+      "//theories/Logic:ConstructiveEpsilon",
+    ],
+    deps_vio = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":Rfunctions",
+      ":RIneq",
+      "//theories/Logic:FinFun",
+      "//theories/Logic:ConstructiveEpsilon",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "SeqProp",
+    src  = "SeqProp.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      "//theories/Arith:Max",
+      "//theories/micromega:Lia",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Rseries",
+      "//theories/Arith:Max",
+      "//theories/micromega:Lia",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "SeqSeries",
+    src  = "SeqSeries.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      "//theories/Arith:Max",
+      ":Rseries",
+      ":SeqProp",
+      ":Rcomplete",
+      ":PartSum",
+      ":AltSeries",
+      ":Binomial",
+      ":Rsigma",
+      ":Rprod",
+      ":Cauchy_prod",
+      ":Alembert",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      "//theories/Arith:Max",
+      ":Rseries",
+      ":SeqProp",
+      ":Rcomplete",
+      ":PartSum",
+      ":AltSeries",
+      ":Binomial",
+      ":Rsigma",
+      ":Rprod",
+      ":Cauchy_prod",
+      ":Alembert",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "SplitAbsolu",
+    src  = "SplitAbsolu.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbasic_fun",
+    ],
+    deps_vio = [
+      ":Rbasic_fun",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "SplitRmult",
+    src  = "SplitRmult.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+    ],
+    deps_vio = [
+      ":Rdefinitions",
+      ":Raxioms",
+      ":RIneq",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Sqrt_reg",
+    src  = "Sqrt_reg.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Ranalysis1",
+      ":R_sqrt",
+    ],
+    deps_vio = [
+      ":Rbase",
+      ":Rfunctions",
+      ":Ranalysis1",
+      ":R_sqrt",
+    ]
+)
+

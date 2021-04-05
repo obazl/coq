@@ -1,0 +1,172 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibFloats",
+    sublibraries = [
+        ":FloatAxioms",
+        ":FloatClass",
+        ":FloatLemmas",
+        ":FloatOps",
+        ":Floats",
+        ":PrimFloat",
+        ":SpecFloat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FloatAxioms",
+    src  = "FloatAxioms.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:ZArith",
+      "//theories/Numbers/Cyclic/Int63:Int63",
+      ":SpecFloat",
+      ":PrimFloat",
+      ":FloatOps",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith",
+      "//theories/Numbers/Cyclic/Int63:Int63",
+      ":SpecFloat",
+      ":PrimFloat",
+      ":FloatOps",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FloatClass",
+    src  = "FloatClass.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+    ],
+    deps_vio = [
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FloatLemmas",
+    src  = "FloatLemmas.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:ZArith",
+      "//theories/Numbers/Cyclic/Int63:Int63",
+      ":SpecFloat",
+      ":PrimFloat",
+      ":FloatOps",
+      ":FloatAxioms",
+      "//theories/micromega:Psatz",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith",
+      "//theories/Numbers/Cyclic/Int63:Int63",
+      ":SpecFloat",
+      ":PrimFloat",
+      ":FloatOps",
+      ":FloatAxioms",
+      "//theories/micromega:Psatz",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "FloatOps",
+    src  = "FloatOps.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:ZArith",
+      "//theories/Numbers/Cyclic/Int63:Int63",
+      ":SpecFloat",
+      ":PrimFloat",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith",
+      "//theories/Numbers/Cyclic/Int63:Int63",
+      ":SpecFloat",
+      ":PrimFloat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "Floats",
+    src  = "Floats.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":FloatClass",
+      ":PrimFloat",
+      ":SpecFloat",
+      ":FloatOps",
+      ":FloatAxioms",
+      ":FloatLemmas",
+    ],
+    deps_vio = [
+      ":FloatClass",
+      ":PrimFloat",
+      ":SpecFloat",
+      ":FloatOps",
+      ":FloatAxioms",
+      ":FloatLemmas",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "PrimFloat",
+    src  = "PrimFloat.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+      "//plugins/syntax:float_syntax_plugin",
+    ],
+    deps = [
+      "//theories/Numbers/Cyclic/Int63:PrimInt63",
+      ":FloatClass",
+    ],
+    deps_vio = [
+      "//theories/Numbers/Cyclic/Int63:PrimInt63",
+      ":FloatClass",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "SpecFloat",
+    src  = "SpecFloat.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/ZArith:ZArith",
+      ":FloatClass",
+    ],
+    deps_vio = [
+      "//theories/ZArith:ZArith",
+      ":FloatClass",
+    ]
+)
+

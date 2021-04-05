@@ -1,0 +1,348 @@
+load(
+    "@obazl_rules_coq//coq:rules.bzl",
+    "coq_library",
+    "coq_sublibrary"
+)
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(glob(["*.v"]))
+
+filegroup(
+    name = "vfiles",
+    srcs = glob(["*.v"])
+)
+
+coq_library(
+    name = "LibMSets",
+    sublibraries = [
+        ":MSetAVL",
+        ":MSetDecide",
+        ":MSetEqProperties",
+        ":MSetFacts",
+        ":MSetGenTree",
+        ":MSetInterface",
+        ":MSetList",
+        ":MSetPositive",
+        ":MSetProperties",
+        ":MSetRBT",
+        ":MSetToFiniteSet",
+        ":MSetWeakList",
+        ":MSets",
+    ]
+)
+
+###############
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MSetAVL",
+    src  = "MSetAVL.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/funind:FunInd",
+      ":MSetInterface",
+      ":MSetGenTree",
+      "//theories/ZArith:BinInt",
+      "//theories/ZArith:Int",
+    ],
+    deps_vio = [
+      "//theories/funind:FunInd",
+      ":MSetInterface",
+      ":MSetGenTree",
+      "//theories/ZArith:BinInt",
+      "//theories/ZArith:Int",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MSetDecide",
+    src  = "MSetDecide.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Logic:Decidable",
+      "//theories/Setoids:Setoid",
+      "//theories/Structures:DecidableTypeEx",
+      ":MSetFacts",
+      ":MSetInterface",
+    ],
+    deps_vio = [
+      "//theories/Logic:Decidable",
+      "//theories/Setoids:Setoid",
+      "//theories/Structures:DecidableTypeEx",
+      ":MSetFacts",
+      ":MSetInterface",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MSetEqProperties",
+    src  = "MSetEqProperties.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":MSetProperties",
+      "//theories/Bool:Zerob",
+      "//theories/Bool:Sumbool",
+      "//theories/micromega:Lia",
+      "//theories/Structures:DecidableTypeEx",
+      "//theories/FSets:FSetEqProperties",
+    ],
+    deps_vio = [
+      ":MSetProperties",
+      "//theories/Bool:Zerob",
+      "//theories/Bool:Sumbool",
+      "//theories/micromega:Lia",
+      "//theories/Structures:DecidableTypeEx",
+      "//theories/FSets:FSetEqProperties",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MSetFacts",
+    src  = "MSetFacts.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Structures:DecidableTypeEx",
+      ":MSetInterface",
+    ],
+    deps_vio = [
+      "//theories/Structures:DecidableTypeEx",
+      ":MSetInterface",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MSetGenTree",
+    src  = "MSetGenTree.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/funind:FunInd",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersFacts",
+      ":MSetInterface",
+      "//theories/Arith:PeanoNat",
+    ],
+    deps_vio = [
+      "//theories/funind:FunInd",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersFacts",
+      ":MSetInterface",
+      "//theories/Arith:PeanoNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MSetInterface",
+    src  = "MSetInterface.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/Lists:SetoidList",
+      "//theories/Classes:RelationClasses",
+      "//theories/Classes:Morphisms",
+      "//theories/Classes:RelationPairs",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersFacts",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/Lists:SetoidList",
+      "//theories/Classes:RelationClasses",
+      "//theories/Classes:Morphisms",
+      "//theories/Classes:RelationPairs",
+      "//theories/Structures:Equalities",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersFacts",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MSetList",
+    src  = "MSetList.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":MSetInterface",
+      "//theories/Structures:OrdersFacts",
+      "//theories/Structures:OrdersLists",
+      "//theories/Logic:Eqdep_dec",
+    ],
+    deps_vio = [
+      ":MSetInterface",
+      "//theories/Structures:OrdersFacts",
+      "//theories/Structures:OrdersLists",
+      "//theories/Logic:Eqdep_dec",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MSetPositive",
+    src  = "MSetPositive.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Bool:Bool",
+      "//theories/PArith:BinPos",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersEx",
+      ":MSetInterface",
+    ],
+    deps_vio = [
+      "//theories/Bool:Bool",
+      "//theories/PArith:BinPos",
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersEx",
+      ":MSetInterface",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MSetProperties",
+    src  = "MSetProperties.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":MSetInterface",
+      "//theories/Structures:DecidableTypeEx",
+      "//theories/Structures:OrdersLists",
+      ":MSetFacts",
+      ":MSetDecide",
+    ],
+    deps_vio = [
+      ":MSetInterface",
+      "//theories/Structures:DecidableTypeEx",
+      "//theories/Structures:OrdersLists",
+      ":MSetFacts",
+      ":MSetDecide",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MSetRBT",
+    src  = "MSetRBT.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":MSetGenTree",
+      "//theories/Bool:Bool",
+      "//theories/Lists:List",
+      "//theories/PArith:BinPos",
+      "//theories/PArith:Pnat",
+      "//theories/Setoids:Setoid",
+      "//theories/Lists:SetoidList",
+      "//theories/Arith:PeanoNat",
+    ],
+    deps_vio = [
+      ":MSetGenTree",
+      "//theories/Bool:Bool",
+      "//theories/Lists:List",
+      "//theories/PArith:BinPos",
+      "//theories/PArith:Pnat",
+      "//theories/Setoids:Setoid",
+      "//theories/Lists:SetoidList",
+      "//theories/Arith:PeanoNat",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MSetToFiniteSet",
+    src  = "MSetToFiniteSet.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Sets:Ensembles",
+      "//theories/Sets:Finite_sets",
+      ":MSetInterface",
+      ":MSetProperties",
+      "//theories/Structures:OrdersEx",
+    ],
+    deps_vio = [
+      "//theories/Sets:Ensembles",
+      "//theories/Sets:Finite_sets",
+      ":MSetInterface",
+      ":MSetProperties",
+      "//theories/Structures:OrdersEx",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MSetWeakList",
+    src  = "MSetWeakList.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      ":MSetInterface",
+    ],
+    deps_vio = [
+      ":MSetInterface",
+    ]
+)
+
+coq_sublibrary(
+    tool = "//topbin:coqc",
+    name = "MSets",
+    src  = "MSets.v",
+    with_libs = {"//theories/Init:Prelude": "Coq.Init.Prelude"},
+    plugins = [
+    ],
+    deps = [
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersEx",
+      "//theories/Structures:OrdersAlt",
+      "//theories/Structures:Equalities",
+      ":MSetInterface",
+      ":MSetFacts",
+      ":MSetDecide",
+      ":MSetProperties",
+      ":MSetEqProperties",
+      ":MSetWeakList",
+      ":MSetList",
+      ":MSetPositive",
+      ":MSetAVL",
+    ],
+    deps_vio = [
+      "//theories/Structures:Orders",
+      "//theories/Structures:OrdersEx",
+      "//theories/Structures:OrdersAlt",
+      "//theories/Structures:Equalities",
+      ":MSetInterface",
+      ":MSetFacts",
+      ":MSetDecide",
+      ":MSetProperties",
+      ":MSetEqProperties",
+      ":MSetWeakList",
+      ":MSetList",
+      ":MSetPositive",
+      ":MSetAVL",
+    ]
+)
+
