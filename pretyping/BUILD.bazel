@@ -983,6 +983,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = KERNEL_DEPS + [
+        "//kernel:_Vmvalues",
         ":_Reductionops",
         ":_Retyping"
     ],
@@ -994,7 +995,8 @@ ocaml_signature(
     src  = "vnorm.mli",
     opts = ["-rectypes"],
     deps = KERNEL_DEPS + [
-        "//engine:_EConstr",
+        "//engine:_EConstr.cmi",
+        "//kernel:_Vmvalues"
     ],
 )
 

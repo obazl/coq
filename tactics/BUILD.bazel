@@ -16,6 +16,7 @@ package(default_visibility = ["//visibility:public"])
 #################
 ocaml_archive(
     name = "tactics",
+    # shared = True,
     modules = [
         ":_Abstract",
         ":_Auto",
@@ -116,7 +117,8 @@ ocaml_module(
     sig     = "_Autorewrite.cmi",
     opts = [
         "-rectypes",
-        "-w", "-27" # unused variable
+        "-w", "-27", # unused variable
+        "-linkall"
     ],
     deps = [
         ":_Hints",

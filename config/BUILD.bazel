@@ -41,7 +41,7 @@ genrule(
     tools = [TOOL],
     outs = ["plugin_list"],
     cmd = "\n".join([
-        "$(location {tool}) enum > $(location coq_instruct.h)".format( tool = TOOL ),
+        "$(location {tool}) enum > $(location plugin_list)".format( tool = TOOL ),
     ]),
 )
 

@@ -47,20 +47,118 @@ genrule(
 ########
 genrule(
     # generate .ml file
-    name = "gen_coq_config",
+    name = "gen_config",
     srcs = glob(["dev/*"]) + [
         "configure.ml",
         "//dev:ocamldebug-coq.run"
     ],
     outs = [
-        "coq_config.ml"
+        "coq_config.ml",
+        "coq_config.py",
+        "Makefile",
+        "dune.c_flags"
     ],
     cmd = "\n".join([
         "set -x",
         "mkdir config;",
         "$(location {tool}) configure.ml -no-ask -native-compiler no -bin-annot;".format( tool = OCAML ),
         "echo `ls config`;",
-        "cp config/coq_config.ml $(location coq_config.ml)"
+        "cp config/coq_config.ml $(location coq_config.ml)",
+        "cp config/coq_config.py $(location coq_config.py)",
+        "cp config/Makefile $(location Makefile)",
+        "cp config/dune.c_flags $(location dune.c_flags)",
     ]),
     tools = [OCAML]
 )
+
+################################################################
+# COQC = "//topbin:coqc"
+# genrule(  ## FIXME: timing args
+#     name = "gen_prelude",
+#     tools = [COQC],
+#     # srcs = glob(["plugins/**/*"]) + #, "theories/**/*"]), #
+#     srcs = [
+#         "//theories/Arith:vfiles",
+#         "//theories/Array:vfiles",
+#         "//theories/Bool:vfiles",
+#         "//theories/Classes:vfiles",
+#         "//theories/Compat:vfiles",
+#         "//theories/FSets:vfiles",
+#         "//theories/Floats:vfiles",
+#         "//theories/Init:vfiles",
+#         "//theories/Lists:vfiles",
+#         "//theories/Logic:vfiles",
+#         "//theories/MSets:vfiles",
+#         "//theories/NArith:vfiles",
+#         "//theories/Numbers:vfiles",
+#         "//theories/PArith:vfiles",
+#         "//theories/Program:vfiles",
+#         "//theories/QArith:vfiles",
+#         "//theories/Reals:vfiles",
+#         "//theories/Relations:vfiles",
+#         "//theories/Setoids:vfiles",
+#         "//theories/Sets:vfiles",
+#         "//theories/Sorting:vfiles",
+#         "//theories/Strings:vfiles",
+#         "//theories/Structures:vfiles",
+#         "//theories/Unicode:vfiles",
+#         "//theories/Vectors:vfiles",
+#         "//theories/Wellfounded:vfiles",
+#         "//theories/ZArith:vfiles",
+#         "//theories/btauto:vfiles",
+#         "//theories/derive:vfiles",
+#         "//theories/extraction:vfiles",
+#         "//theories/funind:vfiles",
+#         "//theories/micromega:vfiles",
+#         "//theories/nsatz:vfiles",
+#         "//theories/omega:vfiles",
+#         "//theories/rtauto:vfiles",
+#         "//theories/setoid_ring:vfiles",
+#         "//theories/ssr:vfiles",
+#         "//theories/ssrmatching:vfiles",
+#         "//theories/ssrsearch:vfiles",
+
+#         "//plugins/btauto",
+#         "//plugins/cc",
+#         "//plugins/derive",
+#         "//plugins/extraction",
+#         "//plugins/firstorder",
+#         "//plugins/ltac:ltac_plugin",
+#         "//plugins/ltac:tauto",
+#         "//plugins/micromega",
+#         "//plugins/micromega:zify",
+#         "//plugins/nsatz",
+#         "//plugins/omega",
+#         "//plugins/ring",
+#         "//plugins/rtauto",
+#         "//plugins/ssr",
+#         "//plugins/ssrmatching",
+#         "//plugins/ssrsearch",
+#         "//plugins/syntax:float_syntax",
+#         "//plugins/syntax:number_string_notation_plugin",
+#     ],
+#     # ["//theories/Init/Prelude.v"],
+#     outs = ["Prelude.vo"],
+#     cmd = " ".join([
+#         "$(location {tool}) theories/Init/Prelude.v".format( tool = COQC ),
+#         "-boot -noinit",
+#         "-I plugins/btauto",
+#         "-I plugins/cc",
+#         "-I plugins/derive",
+#         "-I plugins/extraction",
+#         "-I plugins/firstorder",
+#         "-I plugins/micromega",
+#         "-I plugins/nstaz",
+#         "-I plugins/omega",
+#         "-I plugins/ring",
+#         "-I plugins/rtauto",
+#         "-I plugins/ssr",
+#         "-I plugins/ssrmatching",
+#         "-I plugins/ssrsearch",
+#         "-I plugins/syntax",
+#         "-coqlib . -q -noinit -R theories Coq"
+#     ])
+# )
+
+# -coqlib . -q -native-compiler yes -w +default theories/Init/Prelude -noinit -R /Users/gar/ocaml/coq/theories Coq
+

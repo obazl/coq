@@ -16,7 +16,8 @@ DEPS_OPAM = [
 # ltac2_plugin.mlpack
 ##############
 ocaml_archive(
-    name = "Ltac2",
+    name = "ltac2_plugin",
+    resolver = "Ltac2_plugin",
     modules = [
         ":_Tac2core",
         ":_Tac2dyn",
@@ -219,7 +220,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac:Ltac_plugin",
+        "//plugins/ltac:ltac_plugin",
         "//pretyping:_Locus",
         ":_Tac2env",
         ":_Tac2print"
@@ -357,7 +358,7 @@ ocaml_signature(
     opts = ["-rectypes"],
     deps = [
         "//kernel:_Names",
-        "//plugins/ltac:Ltac_plugin",
+        "//plugins/ltac:ltac_plugin",
         ":_Tac2dyn",
         ":_Tac2qexpr.cmi",
         # ":_Tac2expr.cmi"

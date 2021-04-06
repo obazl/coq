@@ -1,5 +1,6 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
+    "ocaml_archive",
     "ocaml_executable",
     "ocaml_module",
 )
@@ -19,11 +20,23 @@ ocaml_executable(
         "//bzl/host:linux": ["-ccopt", "-flto"],
         "//bzl/host:macos": ["-ccopt", "-flto"],
         "//conditions:default": []
-    }) + ["-linkall"]
+    }) + ["-linkall"],
+    deps = [
+    ]
 )
+
+# ocaml_archive(
+#     name    = "coqc_bin",
+#     shared  = True,
+#     standalone = True,
+#     modules = [
+#         ":_Coqc_bin",
+#     ]
+# )
 
 #############
 ocaml_module(
+    ## this just runs "let _ = Coqc.main ()", which is //toplevel:_Coqc
     name    = "_Coqc_bin",
     struct  = "coqc_bin.ml",
     deps = [
@@ -40,7 +53,10 @@ alias(
 ocaml_executable(
     name = "coqtop.opt",
     main = "_Coqtop_bin",
-    opts = ["-linkall"]
+    opts = ["-linkall"],
+    # deps = ["//toplevel"]
+
+    # deps_runtime ??? plugins and stdlib
 )
 
 #############
@@ -52,8 +68,18 @@ ocaml_module(
         "-rectypes"
     ],
     deps = [
-        "//toplevel:_Coqtop",
-        "//vernac:_Mltop"
+        "//tactics:_Autorewrite",
+        "//tactics:_Contradiction",
+        "//tactics:_Elim",
+        "//tactics:_Eqdecide",
+        "//tactics:_Inv",
+        "//toplevel",
+        "//vernac:_Mltop",
+        "//vernac:_G_proofs"
+    ],
+    deps_runtime = [
+        "//theories"
+        # "//theories/FSets:LibFSets"
     ],
     deps_opam = [ "dynlink" ]
 )

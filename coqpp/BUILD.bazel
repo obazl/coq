@@ -59,8 +59,8 @@ ocaml_module(
         "-w", "-9" #  labels are not bound in this record pattern:
     ],
     deps = [
-        ":_Coqpp_ast.cmi",
         ":_Coqpp_parser"
+        # ":_Coqpp_ast.cmi",
     ],
 )
 

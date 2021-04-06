@@ -75,10 +75,10 @@ ocaml_signature(
     src  = "extend.mli",
     opts = ["-rectypes"],
     deps = [
-        "//gramlib",
         "//interp:_Constrexpr",
         "//interp:_Notation_term",
-        "_Tok"
+        "_Tok",
+        "//gramlib",
     ],
 )
 

@@ -14,45 +14,48 @@ DEPS_OPAM = []
 #############
 ocaml_archive(
     name   = "gramlib",
+    # shared = True,
+    resolver = "Gramlib",
+    opts = ["-no-alias-deps"],
     modules = [
         ":_Ploc",
         ":_Plexing",
         ":_Gramext",
         ":_Grammar",
-        ":_Gramlib"
+        # ":_Gramlib"
     ],
 )
 
 #############
-ocaml_module(
-    name   = "_Gramlib",
-    struct = "gramlib.ml",
-    opts   = [
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-    ],
-)
+# ocaml_module(
+#     name   = "_Gramlib",
+#     struct = "gramlib.ml",
+#     opts   = [
+#         "-no-alias-deps",
+#         "-w", "-49", # no cmi file was found in path for module
+#     ],
+# )
 
-FLOAT_SUBMODS = [
-    "Gramext",
-    "Grammar",
-    "Plexing",
-    "Ploc"
-]
+# FLOAT_SUBMODS = [
+#     "Gramext",
+#     "Grammar",
+#     "Plexing",
+#     "Ploc"
+# ]
 
-FLOAT_SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in FLOAT_SUBMODS
-]
+# FLOAT_SUBMODULES = [
+#     'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+#     for SUBMOD in FLOAT_SUBMODS
+# ]
 
-########
-genrule(
-    name = "gen_plugin_resolver",
-    outs = [
-        "gramlib.ml"
-    ],
-    cmd = "\n".join(FLOAT_SUBMODULES),
-)
+# ########
+# genrule(
+#     name = "gen_plugin_resolver",
+#     outs = [
+#         "gramlib.ml"
+#     ],
+#     cmd = "\n".join(FLOAT_SUBMODULES),
+# )
 
 ################################################################
 #############
@@ -60,7 +63,9 @@ ocaml_module(
     name   = "_Gramext",
     struct = "gramext.ml",
     sig    = "_Gramext.cmi",
-    deps = DEPS,
+    deps = DEPS + [
+        ":_Plexing",
+    ],
     deps_opam = DEPS_OPAM
 )
 
@@ -91,9 +96,9 @@ ocaml_signature(
     name = "_Grammar.cmi",
     src = "grammar.mli",
     deps = DEPS + [
-        ":_Gramext",
+        ":_Ploc",
         ":_Plexing",
-        ":_Ploc"
+        ":_Gramext",
     ],
     deps_opam = DEPS_OPAM
 )
@@ -118,6 +123,7 @@ ocaml_signature(
         # "//lib:_Util",
         "//lib:_Util.cmi",
         # ":_Util"
+        ":_Ploc"
     ],
     deps_opam = DEPS_OPAM + [
         "base",

@@ -1,6 +1,7 @@
 load(
     "@obazl_rules_ocaml//ocaml:rules.bzl",
     "ocaml_archive",
+    "ocaml_library",
     "ocaml_module",
     "ocaml_signature",
 )
@@ -11,7 +12,7 @@ DEPS = []
 DEPS_OPAM = []
 
 #################
-ocaml_archive(
+ocaml_library(
     name = "toplevel",
     modules = [
         ":_Ccompile",
@@ -55,16 +56,39 @@ ocaml_signature(
 
 #############
 ocaml_module(
+    ## this module contains the "main" routine.
     name    = "_Coqc",
     struct  = "coqc.ml",
     sig     = "_Coqc.cmi",
     opts = ["-rectypes"],
     deps = [
+        # build-time deps:
         "//clib:_CUnix",
         "//vernac:_Vernacstate",
         ":_Coqcargs",
-        ":_Coqtop"
+        ":_Coqtop",
+        "//parsing:_G_prim",
+        "//parsing:_G_constr",
+        "//vernac:_G_proofs",
+        "//vernac:_G_vernac",
+        "//tactics:_Autorewrite",
+        "//tactics:_Contradiction",
+        "//tactics:_Elim",
+        "//tactics:_Eqdecide",
+        "//tactics:_Inv",
     ],
+    deps_runtime = [
+        # "//theories/Arith:LibArith"
+        # "//parsing:_G_prim",
+        # "//parsing:_G_constr",
+        # "//vernac:_G_proofs",
+        # "//vernac:_G_vernac",
+        # "//tactics:_Autorewrite",
+        # "//tactics:_Contradiction",
+        # "//tactics:_Elim",
+        # "//tactics:_Eqdecide",
+        # "//tactics:_Inv",
+    ]
 )
 
 ######
@@ -150,11 +174,78 @@ ocaml_module(
     opts = [
         "-rectypes",
         "-w", "-9", # labels not bound
+        "-linkall",
     ],
     deps = [
+        "//parsing:_G_prim",
+        "//parsing:_G_constr",
+        "//vernac:_G_proofs",
+        "//vernac:_G_vernac",
+
         "//stm:_Stmargs",
         ":_Ccompile",
-        ":_Coqloop"
+        ":_Coqloop",
+        "//sysinit:_Coqinit",
+        # "//tactics:Autorewrite"
+        # "//theories/Arith:LibArith",
+        # "//theories/Array:vfiles",
+        # "//theories/Bool:vfiles",
+        # "//theories/Classes:vfiles",
+        # "//theories/Compat:vfiles",
+        # "//theories/FSets:vfiles",
+        # "//theories/Floats:vfiles",
+        # "//theories/Init:vfiles",
+        # "//theories/Lists:vfiles",
+        # "//theories/Logic:vfiles",
+        # "//theories/MSets:vfiles",
+        # "//theories/NArith:vfiles",
+        # "//theories/Numbers:vfiles",
+        # "//theories/PArith:vfiles",
+        # "//theories/Program:vfiles",
+        # "//theories/QArith:vfiles",
+        # "//theories/Reals:vfiles",
+        # "//theories/Relations:vfiles",
+        # "//theories/Setoids:vfiles",
+        # "//theories/Sets:vfiles",
+        # "//theories/Sorting:vfiles",
+        # "//theories/Strings:vfiles",
+        # "//theories/Structures:vfiles",
+        # "//theories/Unicode:vfiles",
+        # "//theories/Vectors:vfiles",
+        # "//theories/Wellfounded:vfiles",
+        # "//theories/ZArith:vfiles",
+        # "//theories/btauto:vfiles",
+        # "//theories/derive:vfiles",
+        # "//theories/extraction:vfiles",
+        # "//theories/funind:vfiles",
+        # "//theories/micromega:vfiles",
+        # "//theories/nsatz:vfiles",
+        # "//theories/omega:vfiles",
+        # "//theories/rtauto:vfiles",
+        # "//theories/setoid_ring:vfiles",
+        # "//theories/ssr:vfiles",
+        # "//theories/ssrmatching:vfiles",
+        # "//theories/ssrsearch:vfiles",
+
+        # "//plugins/btauto:btauto_plugin",
+        # "//plugins/cc:cc_plugin",
+        # "//plugins/derive:derive_plugin",
+        # "//plugins/extraction:extraction_plugin",
+        # "//plugins/firstorder:ground_plugin",
+        # "//plugins/funind:recdef_plugin",
+        # "//plugins/ltac:ltac_plugin",
+        # "//plugins/ltac:tauto_plugin",
+        # "//plugins/micromega:micromega_plugin",
+        # "//plugins/micromega:zify_plugin",
+        # "//plugins/nsatz:nsatz_plugin",
+        # "//plugins/omega:omega_plugin",
+        # "//plugins/ring:ring_plugin",
+        # "//plugins/rtauto:rtauto_plugin",
+        # "//plugins/ssr:ssreflect_plugin",
+        # "//plugins/ssrmatching:ssrmatching_plugin",
+        # "//plugins/ssrsearch:ssrsearch_plugin",
+        # "//plugins/syntax:float_syntax_plugin",
+        # "//plugins/syntax:number_string_notation_plugin",
     ],
 )
 
@@ -166,7 +257,7 @@ ocaml_signature(
     deps = [
         "//stm:_Stm",
         "//sysinit:_Coqargs",
-        "//sysinit:_Usage",
+        "//sysinit:_Usage.cmi",
         ":_Coqcargs",
         ":_Vernac"
     ],

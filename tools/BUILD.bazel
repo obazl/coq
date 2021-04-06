@@ -57,9 +57,9 @@ ocaml_module(
 ocaml_executable(
     name = "coqdep",
     # main = "_Coqdep",
-    opts = [
-        "-I", "bazel-out/darwin-fastbuild/bin/__obazl"
-    ],
+    # opts = [
+    #     "-I", "bazel-out/darwin-fastbuild/bin/__obazl"
+    # ],
     deps = [
         ":_Coqdep"
     ],

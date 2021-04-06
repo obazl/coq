@@ -28,6 +28,18 @@ load("//:WORKSPACE.bzl", "opam")
 ocaml_configure()
 # ocaml_configure( opam = opam, build = "coq-x.y.z" )
 
+################
+local_repository(
+    name = "obazl_rules_coq",
+    path = "/Users/gar/obazl/rules_coq"
+)
+# git_repository(
+#     name = "obazl_rules_coq",
+#     remote = "https://github.com/obazl/rules_coq",
+#     branch = "dev",
+# )
+# load("@obazl_rules_coq//coq:bootstrap.bzl", "coq_configure")
+
 ################ C/C++ Rules ################
 load("//:WORKSPACE.bzl", "cc_fetch_rules")
 cc_fetch_rules()

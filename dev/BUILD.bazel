@@ -64,6 +64,7 @@ ocaml_module(
     deps = [
         "//kernel:_Term",
         "//kernel:_Vmemitcodes",
+        "//kernel:_Vmvalues",
         "//lib:_Feedback",
     ],
 )

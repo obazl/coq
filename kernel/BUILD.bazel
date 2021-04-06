@@ -21,6 +21,9 @@ package(default_visibility = ["//visibility:public"])
 ##############
 ocaml_archive(
     name = "kernel",
+    opts    = [
+        "-w", "-50" # ambiguous document comment
+    ],
     modules = [
         ":_Names",
         ":_TransparentState",
@@ -246,7 +249,8 @@ ocaml_module(
         ":_Mod_subst",
         ":_Names",
         ":_Opaqueproof",
-        ":_Vmemitcodes"
+        ":_Vmemitcodes",
+        ":_Vmvalues"
     ],
 )
 
@@ -294,7 +298,8 @@ ocaml_module(
     sig     = "_Environ.cmi",
     deps = [
         ":_Declareops",
-        ":_Entries"
+        ":_Entries",
+        ":_Vmvalues"
     ],
 )
 
@@ -309,7 +314,8 @@ ocaml_signature(
         "//clib:_Range",
         ":_Constr",
         ":_Declarations",
-        ":_Names"
+        ":_Names",
+        ":_Vmvalues"
     ],
 )
 
@@ -1207,7 +1213,8 @@ ocaml_module(
     ],
     deps = [
         "//lib:_CWarnings",
-        ":_Vm"
+        ":_Vm",
+        ":_Vmvalues"
     ],
 )
 
@@ -1217,8 +1224,8 @@ ocaml_signature(
     src  = "vconv.mli",
     opts = [],
     deps = [
-        ":_Constr",
-        ":_Reduction"
+        ":_Constr.cmi",
+        ":_Reduction.cmi"
     ],
 )
 
@@ -1228,7 +1235,8 @@ ocaml_module(
     struct  = "vm.ml",
     sig     = "_Vm.cmi",
     deps = [
-        ":_Vmsymtable"
+        ":_Vmsymtable",
+        ":_Vmvalues"
     ],
 )
 
@@ -1248,6 +1256,7 @@ ocaml_module(
     struct  = "vmbytecodes.ml",
     sig     = "_Vmbytecodes.cmi",
     deps = [
+        ":_Vmvalues"
     ],
 )
 
@@ -1257,9 +1266,9 @@ ocaml_signature(
     src  = "vmbytecodes.mli",
     opts = [],
     deps = [
-        ":_Constr",
-        ":_CPrimitives",
-        ":_Names",
+        ":_Constr.cmi",
+        ":_CPrimitives.cmi",
+        ":_Names.cmi",
         ":_Vmvalues"
     ],
 )
@@ -1273,6 +1282,8 @@ ocaml_module(
         "-w", "-50" # unattached documentation comment (ignored)
     ],
     deps = [
+        ":_Vmlambda",
+        ":_Vmvalues"
     ],
 )
 
@@ -1285,10 +1296,10 @@ ocaml_signature(
     ],
     deps = [
         ":_Declarations",
-        ":_Environ",
-        ":_Vmbytecodes",
-        ":_Vmemitcodes",
-        ":_Vmlambda"
+        ":_Environ.cmi",
+        ":_Vmbytecodes.cmi",
+        ":_Vmemitcodes.cmi",
+        ":_Vmlambda.cmi"
     ],
 )
 
@@ -1301,7 +1312,8 @@ ocaml_module(
         "-w", "-50" # unattached documentation comment (ignored)
     ],
     deps = [
-        ":_Vmopcodes"
+        ":_Vmopcodes",
+        ":_Vmvalues"
     ],
 )
 
@@ -1326,6 +1338,7 @@ ocaml_module(
     struct  = "vmlambda.ml",
     sig     = "_Vmlambda.cmi",
     deps = [
+        ":_Vmvalues"
     ],
 )
 
@@ -1349,6 +1362,7 @@ ocaml_module(
     name    = "_Vmopcodes",
     struct  = "vmopcodes.ml",
     deps = [
+        ":_Vmvalues"
     ],
 )
 
@@ -1359,7 +1373,8 @@ ocaml_module(
     sig     = "_Vmsymtable.cmi",
     deps = [
         ":_Names",
-        ":_Vmbytegen"
+        ":_Vmbytegen",
+        ":_Vmvalues"
     ],
 )
 
@@ -1371,7 +1386,8 @@ ocaml_signature(
     deps = [
         ":_Constr",
         ":_Environ",
-        ":_Names"
+        ":_Names",
+        ":_Vmvalues"
     ],
 )
 

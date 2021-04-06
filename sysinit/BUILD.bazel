@@ -10,6 +10,7 @@ package(default_visibility = ["//visibility:public"])
 ##############
 ocaml_archive(
     name = "sysinit",
+    # opts = ["-linkall"],
     modules = [
         ":_Coqargs",
         ":_Coqinit",
@@ -40,7 +41,7 @@ ocaml_signature(
         "//kernel:_Names",
         "//library:_Goptions",
         "//vernac:_Loadpath",
-        ":_Usage"
+        ":_Usage.cmi"
     ],
 )
 
@@ -49,8 +50,12 @@ ocaml_module(
     name    = "_Coqinit",
     struct  = "coqinit.ml",
     sig     = "_Coqinit.cmi",
-    opts = ["-rectypes"],
+    opts = [
+        "-rectypes",
+        # "-linkall"
+    ],
     deps = [
+        ":_Usage"
     ],
 )
 
@@ -62,7 +67,7 @@ ocaml_signature(
     deps = [
         "//library:_Goptions",
         ":_Coqargs",
-        ":_Usage"
+        ":_Usage.cmi"
     ],
 )
 

@@ -416,7 +416,15 @@ kernel/float64.ml: kernel/float64_$(OCAML_INT_SIZE).ml
 
 .PHONY: coqbinaries coqbyte
 
+##GAR
+##GAR TOPBIN: all in bin, with .opt($EXE): coqtop, copproofworker, coqtacticworker, coqqueryworker
+##GAR COQTOPEXE: bin/coqtop$(EXE)
+##GAR CHICKEN:=bin/coqchk$(EXE)
+##GAR CSDPCERT: plugins/micromega/csdpcert$(EXE)
+##GAR FAKEIDE: bin/fake_ide$(EXE)
 coqbinaries: $(TOPBIN) $(COQC) $(COQTOPEXE) $(CHICKEN) $(CSDPCERT) $(FAKEIDE)
+##GAR same as above but with .byte suffix, e.g.
+##GAR CHICKENBYTE:=bin/coqchk.byte$(EXE)
 coqbyte: $(TOPBYTE) $(COQCBYTE) $(CHICKENBYTE)
 
 # Special rule for coqtop, we imitate `ocamlopt` can delete the target
@@ -427,6 +435,7 @@ $(COQTOPEXE): $(TOPBIN)
 $(COQC): $(COQCOPT:.opt=.$(BEST))
 	rm -f $@ && cp $< $@
 
+##GAR 179:LINKCMX:=$(CORECMA:.cma=.cmxa) $(STATICPLUGINS:.cmo=.cmx)
 bin/%.opt$(EXE): topbin/%_bin.ml $(LINKCMX) $(LIBCOQRUN)
 	$(SHOW)'COQMKTOP -o $@'
 	$(HIDE)$(OCAMLOPT) -linkall -linkpkg $(MLINCLUDES) \
@@ -458,6 +467,31 @@ $(COQTOPBYTE): $(COQTOP_BYTE) $(LINKCMO) $(LIBCOQRUN)
 ###########################################################################
 
 .PHONY: tools
+## COQWORKMGR:=bin/coqworkmgr$(EXE)
+##GAR Makefile.common
+##GAR 23:COQDEP:=bin/coqdep$(EXE)
+##GAR 24:COQPP:=bin/coqpp$(EXE)
+##GAR 26:COQDEPBYTE:=bin/coqdep.byte$(EXE)
+##GAR 27:COQMAKEFILE:=bin/coq_makefile$(EXE)
+##GAR 28:COQMAKEFILEBYTE:=bin/coq_makefile.byte$(EXE)
+##GAR 29:COQTEX:=bin/coq-tex$(EXE)
+##GAR 30:COQTEXBYTE:=bin/coq-tex.byte$(EXE)
+##GAR 31:COQWC:=bin/coqwc$(EXE)
+##GAR 32:COQWCBYTE:=bin/coqwc.byte$(EXE)
+##GAR 33:COQDOC:=bin/coqdoc$(EXE)
+##GAR 34:COQDOCBYTE:=bin/coqdoc.byte$(EXE)
+##GAR 35:COQC:=bin/coqc$(EXE)
+##GAR 36:COQCOPT:=bin/coqc.opt$(EXE)
+##GAR 37:COQCBYTE:=bin/coqc.byte$(EXE)
+##GAR 44:VOTOUR:=bin/votour
+##GAR 45:OCAMLLIBDEP:=bin/ocamllibdep$(EXE)
+##GAR 46:OCAMLLIBDEPBYTE:=bin/ocamllibdep.byte$(EXE)
+##GAR 49:TOOLS:=$(COQDEP) $(COQMAKEFILE) $(COQTEX) $(COQWC) $(COQDOC) $(COQC)\
+##GAR 50:  $(COQWORKMGR) $(COQPP) $(VOTOUR) $(OCAMLLIBDEP)
+
+##GAR 54:COQDEPBOOT:=bin/coqdep_boot$(EXE)
+##GAR 55:COQDEPBOOTBYTE:=bin/coqdep_boot.byte$(EXE)
+
 tools: $(TOOLS) $(OCAMLLIBDEP) $(COQDEPBOOT) $(DOC_GRAM)
 
 # coqdep_boot : a basic version of coqdep, with almost no dependencies.
@@ -567,6 +601,7 @@ $(COQWORKMGRBYTE): $(COQWORKMGRCMO)
 
 FAKEIDECMO:=config/config.cma clib/clib.cma lib/lib.cma ide/coqide/protocol/ideprotocol.cma ide/coqide/document.cmo ide/coqide/fake_ide.cmo
 
+##GAR 51:IDETOPEXE=bin/coqidetop$(EXE)
 $(FAKEIDE): $(call bestobj, $(FAKEIDECMO)) | $(IDETOPEXE)
 	$(SHOW)'OCAMLBEST -o $@'
 	$(HIDE)$(call bestocaml, -I ide/coqide -I ide/coqide/protocol -package str -package dynlink)
@@ -842,6 +877,12 @@ endif
 
 coqlib.timing.diff: stdlib.timing.diff
 
+##GAR Makefile.vofiles:
+##GAR 24:THEORIESVO := $(patsubst %.v,%.$(VO),$(shell find theories -type f -name "*.v"))
+##GAR 25:CONTRIBVO := $(patsubst %.v,%.$(VO),$(shell find $(addprefix user-contrib/, $(USERCONTRIBDIRS)) -type f -name "*.v"))
+##GAR 26-ALLVO := $(THEORIESVO) $(CONTRIBVO)
+##GAR 27:VFILES := $(ALLVO:.$(VO)=.v)
+
 stdlib-vo: $(THEORIESVO)
 contrib-vo: $(CONTRIBVO)
 
@@ -856,6 +897,25 @@ TIMING_EXTRA = > $<.$(TIMING_EXT)
 else
 TIMING_EXTRA =
 endif
+
+##GAR
+##GAR configure.ml:
+##GAR   nativecompiler =
+##GAR    if os_type_win32 || os_type_cygwin then NativeNo else NativeOndemand;
+##GAR 1221:  pr "NATIVECOMPUTE=%s\n" (if !prefs.nativecompiler = NativeYes then "-native-compiler yes" else "");
+##GAR 1222:  pr "COQWARNERROR=%s\n" (if !prefs.warn_error then "-w +default" else "");
+##GAR Makefiles:
+##GAR 35:COQC:=bin/coqc$(EXE)
+##GAR 330:VO_TOOLS_DEP := $(COQC)
+##GAR 331-ifdef VALIDATE
+##GAR 332: VO_TOOLS_DEP += $(CHICKEN)
+
+##GAR 241:COQOPTS=$(NATIVECOMPUTE) $(COQWARNERROR) $(COQUSERFLAGS)
+
+##GAR 245:BOOTCOQC=$(TIMER) $(COQC) -coqlib . -q $(COQOPTS)
+
+##GAR 50-# When non-empty, passed as extra arguments to coqtop/coqc:
+##GAR 51:COQUSERFLAGS ?=
 
 theories/Init/%.vo theories/Init/%.glob: theories/Init/%.v $(VO_TOOLS_DEP)
 	$(SHOW)'COQC -noinit $<'
@@ -891,6 +951,10 @@ endif
 
 PLUGININCLUDES=$(addprefix -I plugins/, $(PLUGINDIRS))
 
+##GAR
+##GAR 193:VDFILE := .vfiles
+##GAR 54:COQDEPBOOT:=bin/coqdep_boot$(EXE)
+##GAR 343:TOTARGET = > "$@" || (RV=$$?; rm -f "$@"; exit $${RV})
 $(VDFILE).d: $(D_DEPEND_BEFORE_SRC) $(VFILES) $(D_DEPEND_AFTER_SRC) $(COQDEPBOOT)
 	$(SHOW)'COQDEP    VFILES'
 	$(HIDE)$(COQDEPBOOT) -vos -boot $(DYNDEP) -R theories Coq -R plugins Coq -Q user-contrib "" $(PLUGININCLUDES) $(USERCONTRIBINCLUDES) $(VFILES) $(TOTARGET)

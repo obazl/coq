@@ -9,8 +9,14 @@ load(
 
 ###########
 cc_library(
-    name = "coqrun",  # byterun
-    srcs = [
+    name  = "coqrun",  # byterun
+    copts = [
+        ## from dune.c_flags from //:gen_config
+        "-Wall", "-Wno-unused",
+        "-g", "-O2",
+        "-UDEBUG"  ## FIXME: MacOS defaults to -DDEBUG.  make this automatic
+    ],
+    srcs  = [
         "coq_fix_code.c",
         "coq_fix_code.h",
         "coq_float64.c",
