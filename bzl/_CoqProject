@@ -1,0 +1,17 @@
+-R ../theories Coq
+-I ../plugins/btauto
+-I ../plugins/cc
+-I ../plugins/derive
+-I ../plugins/extraction
+-I ../plugins/firstorder
+-I ../plugins/funind
+-I ../plugins/ltac
+-I ../plugins/micromega
+-I ../plugins/nsatz
+-I ../plugins/omega
+-I ../plugins/ring
+-I ../plugins/rtauto
+-I ../plugins/ssr
+-I ../plugins/ssrmatching
+-I ../plugins/ssrsearch
+-I ../plugins/syntax
