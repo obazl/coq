@@ -12,10 +12,12 @@ DEPS_OPAM = []
 
 COQPP = "//coqpp"
 
-################################################################
+##############
 ocaml_archive(
-    name     = "cc",
+    name     = "cc_plugin",
     resolver = "Cc_plugin",
+    shared   = True,
+    opts = ["-rectypes"],
     modules  = [
         ":_Ccalgo",
         ":_Ccproof",
@@ -25,6 +27,7 @@ ocaml_archive(
     ]
 )
 
+################################################################
 #############
 ocaml_module(
     name    = "_Ccalgo",
@@ -112,7 +115,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac",
+        "//plugins/ltac:ltac_plugin",
         ":_Cctac"
     ],
 )

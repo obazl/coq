@@ -7,51 +7,19 @@ load(
 
 package(default_visibility = ["//visibility:public"])
 
-DEPS = []
-DEPS_OPAM = []
-
 COQPP = "//coqpp"
 
 ################################################################
 ocaml_archive(
-    name   = "omega",
+    name     = "omega_plugin",
+    resolver = "Omega_plugin",
+    shared   = True,
+    opts = ["-rectypes"],
     modules = [
         ":_Omega",
         ":_Coq_omega",
         ":_G_omega",
-        ":_Omega_plugin"
     ]
-)
-
-#############
-ocaml_module(
-    name   = "_Omega_plugin",
-    struct = "omega_plugin.ml",
-    opts   = [
-        # "-rectypes",
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-    ],
-)
-
-SUBMODS = [
-    "Omega",
-    "Coq_omega",
-    "G_Omega"
-]
-
-SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in SUBMODS
-]
-
-########
-genrule(
-    name = "gen_plugin_resolver",
-    outs = [
-        "omega_plugin.ml"
-    ],
-    cmd = "\n".join(SUBMODULES),
 )
 
 ################################################################
@@ -108,7 +76,7 @@ ocaml_module(
     ],
     deps = [
         "//vernac:_Mltop",
-        "//plugins/ltac",
+        "//plugins/ltac:ltac_plugin",
         ":_Coq_omega"
     ],
 )

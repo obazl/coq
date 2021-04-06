@@ -10,17 +10,19 @@ package(default_visibility = ["//visibility:public"])
 DEPS = []
 DEPS_OPAM = []
 
-################################################################
+##############
 ocaml_archive(
-    name   = "btauto",
-    resolver = "_Btauto_plugin",
+    name   = "btauto_plugin",
+    resolver = "Btauto_plugin",
+    shared  = True,
+    opts = ["-rectypes"],
     modules = [
         ":_Refl_btauto",
         ":_G_btauto",
-        # ":_Btauto_plugin"
     ]
 )
 
+################################################################
 #############
 ocaml_module(
     name    = "_G_btauto",
@@ -30,7 +32,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac",
+        "//plugins/ltac:ltac_plugin",
         ":_Refl_btauto"
     ],
 )

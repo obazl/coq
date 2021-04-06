@@ -14,40 +14,41 @@ COQPP = "//coqpp"
 
 ################################################################
 ocaml_archive(
-    name   = "ssrsearch",
+    name    = "ssrsearch_plugin",
+    resolver = "Ssrsearch_plugin",
+    shared  = True,
     modules = [
         ":_G_search",
-        ":_Ssrsearch_plugin"
     ]
 )
 
-#############
-ocaml_module(
-    name   = "_Ssrsearch_plugin",
-    struct = "ssrsearch_plugin.ml",
-    opts   = [
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-    ],
-)
+# #############
+# ocaml_module(
+#     name   = "_Ssrsearch_plugin",
+#     struct = "ssrsearch_plugin.ml",
+#     opts   = [
+#         "-no-alias-deps",
+#         "-w", "-49", # no cmi file was found in path for module
+#     ],
+# )
 
-SUBMODS = [
-    "G_search",
-]
+# SUBMODS = [
+#     "G_search",
+# ]
 
-SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in SUBMODS
-]
+# SUBMODULES = [
+#     'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
+#     for SUBMOD in SUBMODS
+# ]
 
-########
-genrule(
-    name = "gen_plugin_resolver",
-    outs = [
-        "ssrsearch_plugin.ml"
-    ],
-    cmd = "\n".join(SUBMODULES),
-)
+# ########
+# genrule(
+#     name = "gen_plugin_resolver",
+#     outs = [
+#         "ssrsearch_plugin.ml"
+#     ],
+#     cmd = "\n".join(SUBMODULES),
+# )
 
 ################################################################
 
@@ -60,8 +61,8 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac",
-        "//plugins/ssr",
+        "//plugins/ltac:ltac_plugin",
+        "//plugins/ssr:ssreflect_plugin",
         "//vernac:_Mltop",
     ],
 )

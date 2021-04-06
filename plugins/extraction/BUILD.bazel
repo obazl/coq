@@ -14,67 +14,24 @@ COQPP = "//coqpp"
 
 ################################################################
 ocaml_archive(
-    name   = "extraction",
-    opts   = [
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-        # "-rectypes"
-    ],
+    name    = "extraction_plugin",
+    resolver = "Extraction_plugin",
+    shared  = True,
+    opts = ["-rectypes"],
     modules = [
-        ":_Big",
-        ":_Common",
-        ":_Extract_env",
-        ":_Extraction",
-        ":_Haskell",
-        ":_Json",
         ":_Miniml",
+        ":_Table",
         ":_Mlutil",
         ":_Modutil",
+        ":_Extraction",
+        ":_Common",
         ":_Ocaml",
+        ":_Haskell",
         ":_Scheme",
-        ":_Table",
-        ":_Extraction_plugin"
+        ":_Json",
+        ":_Extract_env",
+        ":_G_extraction"
     ]
-)
-
-#############
-ocaml_module(
-    name   = "_Extraction_plugin",
-    struct = "extraction_plugin.ml",
-    opts   = [
-        # "-rectypes",
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-    ],
-)
-
-SUBMODS = [
-    "Big",
-    "Common",
-    "Extract_env",
-    "Extraction",
-    "Haskell",
-    "Json",
-    "Miniml",
-    "Mlutil",
-    "Modutil",
-    "Ocaml",
-    "Scheme",
-    "Table",
-]
-
-SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in SUBMODS
-]
-
-########
-genrule(
-    name = "gen_extraction_resolver",
-    outs = [
-        "extraction_plugin.ml"
-    ],
-    cmd = "\n".join(SUBMODULES),
 )
 
 ################################################################
@@ -396,6 +353,23 @@ ocaml_signature(
 )
 
 ################################################################
+#############
+ocaml_module(
+    name    = "_G_extraction",
+    struct  = "g_extraction.ml",
+    opts = [
+        "-rectypes",
+        "-w", "-27" # unused variable
+    ],
+    deps = [
+        "//parsing:_Pcoq",
+        "//plugins/ltac:ltac_plugin",
+        "//vernac:_Mltop",
+        ":_Extract_env",
+        ":_Table"
+    ],
+)
+
 ########
 genrule(
     name = "gen_g_extraction",

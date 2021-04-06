@@ -21,9 +21,11 @@ ocaml_executable(
 
 ################################################################
 ocaml_archive(
-    name     = "micromega",
-    resolver = ":_Micromega_plugin",
-    modules = [
+    name     = "micromega_plugin",
+    resolver = "Micromega_plugin",
+    shared   = True,
+    opts = ["-rectypes"],
+    modules  = [
         ":_Micromega",
         ":_NumCompat",
         ":_Mutils",
@@ -40,73 +42,17 @@ ocaml_archive(
     ]
 )
 
-# #############
-# ocaml_module(
-#     name   = "_Micromega_plugin",
-#     struct = "micromega_plugin.ml",
-#     opts   = [
-#         "-no-alias-deps",
-#         "-w", "-49", # no cmi file was found in path for module
-#     ],
-# )
-
-# MICROMEGA_SUBMODS = [
-#     "Micromega",
-#     "NumCompat",
-#     "Mutils",
-#     "Itv",
-#     "Vect",
-#     "Sos_types",
-#     "Polynomial",
-#     "Mfourier",
-#     "Simplex",
-#     "Certificate",
-#     "Persistent_cache",
-#     "Coq_micromega",
-#     "G_micromega",
-# ]
-
-# MICROMEGA_SUBMODULES = [
-#     'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-#     for SUBMOD in MICROMEGA_SUBMODS
-# ]
-
-# ########
-# genrule(
-#     name = "gen_micromega_resolver",
-#     outs = [
-#         "micromega_plugin.ml"
-#     ],
-#     cmd = "\n".join(MICROMEGA_SUBMODULES),
-# )
-
 ################################################################
-# zify_plugin.mlpack
 ocaml_archive(
-    name     = "zify",
+    name     = "zify_plugin",
     resolver = "Zify_plugin",
+    shared   = True,
+    opts = ["-rectypes"],
     modules = [
         ":_Zify",
         ":_G_zify"
     ]
 )
-
-# ZIFY_SUBMODS = ["Zify", "G_zify"]
-
-# ZIFY_SUBMODULES = [
-#     'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-#     for SUBMOD in ZIFY_SUBMODS
-# ]
-
-# ########
-# genrule(
-#     name = "gen_zify_resolver",
-#     outs = [
-#         "zify_plugin.ml"
-#     ],
-#     cmd = "\n".join(ZIFY_SUBMODULES),
-# )
-
 
 ################################################################
 #############
@@ -181,7 +127,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac",
+        "//plugins/ltac:ltac_plugin",
         ":_Coq_micromega"
     ],
 )
@@ -219,7 +165,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac",
+        "//plugins/ltac:ltac_plugin",
         ":_Zify"
     ],
 )
@@ -485,7 +431,7 @@ ocaml_signature(
     deps = [
         "//interp:_Constrexpr",
         "//engine:_Proofview",
-        "//plugins/ltac"
+        "//plugins/ltac:ltac_plugin"
     ],
 )
 

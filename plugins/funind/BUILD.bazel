@@ -14,58 +14,22 @@ COQPP = "//coqpp"
 
 ################################################################
 ocaml_archive(
-    name = "funind",
+    name    = "recdef_plugin",
+    resolver = "Recdef_plugin",
+    shared  = True,
+    opts = ["-rectypes"],
     modules = [
-        ":_Indfun",
+        ":_Indfun_common",
         ":_Glob_termops",
         ":_Recdef",
         ":_Glob_term_to_relation",
         ":_Functional_principles_proofs",
         ":_Functional_principles_types",
         ":_Invfun",
-        ":_Indfun_common",
+        ":_Indfun",
         ":_Gen_principle",
         ":_G_indfun",
-        ":_Recdef_plugin"
     ]
-)
-
-#############
-ocaml_module(
-    name   = "_Recdef_plugin",
-    struct = "recdef_plugin.ml",
-    opts   = [
-        "-rectypes",
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-    ],
-)
-
-SUBMODS = [
-    "Indfun",
-    "Glob_termops",
-    "Recdef",
-    "Glob_term_to_relation",
-    "Functional_principles_proofs",
-    "Functional_principles_types",
-    "Invfun",
-    "Indfun_common",
-    "Gen_principle",
-    "G_indfun",
-]
-
-SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in SUBMODS
-]
-
-########
-genrule(
-    name = "gen_plugin_resolver",
-    outs = [
-        "recdef_plugin.ml"
-    ],
-    cmd = "\n".join(SUBMODULES),
 )
 
 #############
@@ -137,7 +101,7 @@ ocaml_module(
     deps = [
         "//vernac:_ComDefinition",
         "//vernac:_ComFixpoint",
-        "//plugins/ltac",
+        "//plugins/ltac:ltac_plugin",
         ":_Functional_principles_proofs",
         ":_Functional_principles_types",
         ":_Glob_term_to_relation"
@@ -238,7 +202,7 @@ ocaml_signature(
     opts = ["-rectypes"],
     deps = [
         "//engine:_EConstr",
-        "//plugins/ltac",
+        "//plugins/ltac:ltac_plugin",
         "//proofs:_Tactypes",
     ],
 )
@@ -314,7 +278,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/extraction",
+        "//plugins/extraction:extraction_plugin",
         "//tactics:_Auto",
         "//tactics:_Eauto",
         "//tactics:_Elim",
@@ -347,7 +311,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac",
+        "//plugins/ltac:ltac_plugin",
         "//vernac:_Vernac_classifier",
         ":_Gen_principle",
         ":_Indfun",

@@ -14,9 +14,14 @@ COQPP = "//coqpp"
 
 ################################################################
 ocaml_archive(
-    name   = "ssr",
+    name   = "ssreflect_plugin",
+    resolver = "Ssreflect_plugin",
+    shared  = True,
+    opts = [
+        "-rectypes",
+        "-open", "Gramlib"
+    ],
     modules = [
-        # ":_Ssrast",
         ":_Ssrprinters",
         ":_Ssrcommon",
         ":_Ssrtacticals",
@@ -28,48 +33,7 @@ ocaml_archive(
         ":_Ssrfwd",
         ":_Ssrparser",
         ":_Ssrvernac",
-        ":_Ssreflect_plugin"
     ]
-)
-
-#############
-ocaml_module(
-    name   = "_Ssreflect_plugin",
-    struct = "ssreflect_plugin.ml",
-    opts   = [
-        # "-rectypes",
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-    ],
-)
-
-SUBMODS = [
-        "Ssrast",
-        "Ssrprinters",
-        "Ssrcommon",
-        "Ssrtacticals",
-        "Ssrelim",
-        "Ssrview",
-        "Ssrbwd",
-        "Ssrequality",
-        "Ssripats",
-        "Ssrfwd",
-        "Ssrparser",
-        "Ssrvernac",
-]
-
-SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in SUBMODS
-]
-
-########
-genrule(
-    name = "gen_plugin_resolver",
-    outs = [
-        "ssreflect_plugin.ml"
-    ],
-    cmd = "\n".join(SUBMODULES),
 )
 
 ################################################################
@@ -81,8 +45,8 @@ ocaml_signature(
     opts = ["-rectypes"],
     deps = [
         "//kernel:_Names",
-        "//plugins/ltac",
-        "//plugins/ssrmatching"
+        "//plugins/ltac:ltac_plugin",
+        "//plugins/ssrmatching:ssrmatching_plugin"
     ],
 )
 
@@ -159,7 +123,7 @@ ocaml_signature(
     src  = "ssrelim.mli",
     opts = ["-rectypes"],
     deps = [
-        "//plugins/ssrmatching",
+        "//plugins/ssrmatching:ssrmatching_plugin",
         ":_Ssrast.cmi"
     ],
 )
@@ -186,7 +150,7 @@ ocaml_signature(
     src  = "ssrequality.mli",
     opts = ["-rectypes"],
     deps = [
-        "//plugins/ssrmatching",
+        "//plugins/ssrmatching:ssrmatching_plugin",
         ":_Ssrast.cmi"
     ],
 )
@@ -214,7 +178,7 @@ ocaml_signature(
     opts = ["-rectypes"],
     deps = [
         "//kernel:_Names",
-        "//plugins/ltac",
+        "//plugins/ltac:ltac_plugin",
         ":_Ssrast.cmi",
         ":_Ssrequality"
     ],
@@ -290,8 +254,8 @@ ocaml_signature(
     src  = "ssrparser.mli",
     opts = ["-rectypes"],
     deps = [
-        "//plugins/ltac",
-        "//plugins/ssrmatching",
+        "//plugins/ltac:ltac_plugin",
+        "//plugins/ssrmatching:ssrmatching_plugin",
         ":_Ssrast.cmi",
         ":_Ssrequality"
     ],
@@ -340,8 +304,8 @@ ocaml_signature(
     src  = "ssrtacticals.mli",
     opts = ["-rectypes"],
     deps = [
-        "//plugins/ltac",
-        "//plugins/ssrmatching",
+        "//plugins/ltac:ltac_plugin",
+        "//plugins/ssrmatching:ssrmatching_plugin",
         ":_Ssrast.cmi"
     ],
 )
@@ -362,7 +326,7 @@ ocaml_module(
         "//kernel:_Constr",
         "//kernel:_Names",
         "//parsing:_Pcoq",
-        "//plugins/ltac",
+        "//plugins/ltac:ltac_plugin",
         "//vernac:_Pvernac",
         ":_Ssrcommon",
         ":_Ssrprinters",

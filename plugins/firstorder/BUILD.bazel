@@ -13,8 +13,13 @@ DEPS_OPAM = []
 COQPP = "//coqpp"
 
 ################################################################
+# coq_plugin(
 ocaml_archive(
-    name = "firstorder",
+    name     = "ground_plugin",
+    resolver = "Ground_plugin",
+    shared   = True,
+    opts = ["-rectypes"],
+    # grammar  = [":_G_ground"],
     modules = [
         ":_Formula",
         ":_Unify",
@@ -23,43 +28,8 @@ ocaml_archive(
         ":_Instances",
         ":_Ground",
         ":_G_ground",
-        ":_Ground_plugin"
+        # ":_Ground_plugin"
     ]
-)
-
-#############
-ocaml_module(
-    name   = "_Ground_plugin",
-    struct = "ground_plugin.ml",
-    opts   = [
-        "-rectypes",
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-    ],
-)
-
-SUBMODS = [
-    "Formula",
-    "Unify",
-    "Sequent",
-    "Rules",
-    "Instances",
-    "Ground",
-    "G_ground",
-]
-
-SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in SUBMODS
-]
-
-########
-genrule(
-    name = "gen_plugin_resolver",
-    outs = [
-        "ground_plugin.ml"
-    ],
-    cmd = "\n".join(SUBMODULES),
 )
 
 ################################################################
@@ -99,7 +69,7 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac",
+        "//plugins/ltac:ltac_plugin",
         ":_Instances",
         ":_Rules"
     ],
@@ -217,6 +187,20 @@ ocaml_signature(
 )
 
 ################################################################
+# coq_extension_module(
+#     name = "g_ground",
+#     src  = "g_ground.mlg",
+#     opts = [
+#         "-rectypes",
+#         "-w", "-27" # unused variable
+#     ],
+#     deps = [
+#         "//plugins/ltac:ltac_plugin",
+#         ":_Formula",
+#         ":_Ground",
+#         ":_Sequent"
+#     ],
+# )
 
 #############
 ocaml_module(
@@ -227,13 +211,12 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
-        "//plugins/ltac",
+        "//plugins/ltac:ltac_plugin",
         ":_Formula",
         ":_Ground",
         ":_Sequent"
     ],
 )
-
 
 ########
 genrule(

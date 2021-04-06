@@ -7,51 +7,19 @@ load(
 
 package(default_visibility = ["//visibility:public"])
 
-DEPS = []
-DEPS_OPAM = []
-
 COQPP = "//coqpp"
 
 ################################################################
 ocaml_archive(
-    name   = "rtauto",
+    name    = "rtauto_plugin",
+    resolver = "Rtauto_plugin",
+    shared  = True,
+    opts = ["-rectypes"],
     modules = [
         ":_Proof_search",
         ":_Refl_tauto",
         ":_G_rtauto",
-        ":_Rtauto_plugin"
     ]
-)
-
-#############
-ocaml_module(
-    name   = "_Rtauto_plugin",
-    struct = "rtauto_plugin.ml",
-    opts   = [
-        # "-rectypes",
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-    ],
-)
-
-SUBMODS = [
-    "Proof_search",
-    "Refl_tauto",
-    "G_rtauto",
-]
-
-SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in SUBMODS
-]
-
-########
-genrule(
-    name = "gen_plugin_resolver",
-    outs = [
-        "rtauto_plugin.ml"
-    ],
-    cmd = "\n".join(SUBMODULES),
 )
 
 ################################################################
@@ -88,7 +56,7 @@ ocaml_module(
     opts = ["-rectypes"],
     deps = [
         "//lib:_Explore",
-        "//plugins/ltac"
+        "//plugins/ltac:ltac_plugin"
     ],
 )
 
@@ -117,7 +85,7 @@ ocaml_module(
     ],
     deps = [
         "//kernel:_Constr",
-        "//plugins/ltac",
+        "//plugins/ltac:ltac_plugin",
         ":_Refl_tauto"
     ],
 )

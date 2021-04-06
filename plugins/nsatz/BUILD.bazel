@@ -14,46 +14,17 @@ COQPP = "//coqpp"
 
 ################################################################
 ocaml_archive(
-    name   = "nsatz",
+    name    = "nsatz_plugin",
+    resolver = "Nsatz_plugin",
+    shared  = True,
+    opts = ["-rectypes"],
     modules = [
+        ":_Utile",
+        ":_Polynom",
         ":_Ideal",
         ":_Nsatz",
-        ":_Polynom",
-        ":_Utile",
-        ":_Nsatz_plugin"
+        ":_G_nsatz",
     ]
-)
-
-#############
-ocaml_module(
-    name   = "_Nsatz_plugin",
-    struct = "nsatz_plugin.ml",
-    opts   = [
-        # "-rectypes",
-        "-no-alias-deps",
-        "-w", "-49", # no cmi file was found in path for module
-    ],
-)
-
-SUBMODS = [
-    "Ideal",
-    "Nsatz",
-    "Polynom",
-    "Utile"
-]
-
-SUBMODULES = [
-    'echo "module {m} = {m}" >> $@'.format( m = SUBMOD )
-    for SUBMOD in SUBMODS
-]
-
-########
-genrule(
-    name = "gen_plugin_resolver",
-    outs = [
-        "nsatz_plugin.ml"
-    ],
-    cmd = "\n".join(SUBMODULES),
 )
 
 ################################################################
@@ -170,6 +141,8 @@ ocaml_module(
         "-w", "-27" # unused variable
     ],
     deps = [
+        "//plugins/ltac:ltac_plugin",
+        ":_Nsatz"
     ],
 )
 
